@@ -1,0 +1,163 @@
+from app import db
+from datetime import datetime
+
+
+class Category(db.Model):
+
+    __tablename__ = "categories"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, unique=True, nullable=False)
+    slug = db.Column(db.String, unique=True, nullable=False)
+
+    community_reviews = db.relationship(
+        'CommunityReview',
+        backref='category',
+        lazy='dynamic'
+    )
+
+    def __unicode__(self):
+        return self.name
+
+
+class Role(db.Model):
+
+    __tablename__ = "roles"
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False, unique=True)
+
+    users = db.relationship(
+        'User',
+        backref='role',
+        lazy='dynamic'
+    )
+
+    def __unicode__(self):
+        return self.name
+
+
+class User(db.Model):
+
+    __tablename__ = "users"
+
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, nullable=False, unique=True)
+    role_id = db.Column(
+        db.Integer,
+        db.ForeignKey('roles.id'),
+        nullable=False
+    )
+
+    community_reviews = db.relationship(
+        'CommunityReview',
+        backref='user',
+        lazy='dynamic'
+    )
+
+    user_reviews = db.relationship(
+        'UserReview',
+        backref='user',
+        lazy='dynamic'
+    )
+
+    def __unicode__(self):
+        return self.username
+
+
+# create association table for Group/CommunityReview relationship
+memberships = db.Table(
+    'memberships',
+    db.Column(
+        'community_review_id',
+        db.Integer,
+        db.ForeignKey('community_reviews.id')
+    ),
+    db.Column(
+        'group_id',
+        db.Integer,
+        db.ForeignKey('groups.id')
+    )
+)
+
+
+class Group(db.Model):
+
+    __tablename__ = 'groups'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False, unique=True)
+    slug = db.Column(db.String, unique=True, nullable=False)
+
+    def __unicode__(self):
+        return self.name
+
+
+class CommunityReview(db.Model):
+
+    __tablename__ = "community_reviews"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
+        nullable=False
+    )
+    title = db.Column(db.String, nullable=False)
+    slug = db.Column(db.String, nullable=False)
+    category_id = db.Column(
+        db.Integer,
+        db.ForeignKey('categories.id'),
+        nullable=False
+    )
+    reddit_id = db.Column(db.String, unique=True)
+    reddit_permalink = db.Column(db.String, unique=True)
+    subreddit = db.Column(db.String, nullable=False)
+    date_posted = db.Column(
+        db.DateTime,
+        default=datetime.utcnow(),
+        nullable=False
+    )
+    open_for_comments = db.Column(db.Boolean, default=True, nullable=False)
+    last_crawl = db.Column(db.DateTime)
+
+    groups = db.relationship(
+        'Group',
+        secondary=memberships,
+        backref=db.backref('community_reviews', lazy='dynamic'),
+        lazy='dynamic')
+
+    user_reviews = db.relationship(
+        'UserReview',
+        order_by="desc(UserReview.date_posted)",
+        backref='community_review'
+    )
+
+    def __unicode__(self):
+        return self.title + ' - ' + str(self.category_id)
+
+
+class UserReview(db.Model):
+
+    __tablename__ = "user_reviews"
+
+    id = db.Column(db.Integer, primary_key=True)
+    community_review_id = db.Column(
+        db.Integer,
+        db.ForeignKey('community_reviews.id'),
+        nullable=False
+    )
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey('users.id'),
+        nullable=False
+    )
+    reddit_id = db.Column(db.String, nullable=False, unique=True)
+    date_posted = db.Column(db.DateTime, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)
+    review = db.Column(db.String)
+    reddit_score = db.Column(db.Integer, nullable=False)
+    edited_stamp = db.Column(db.Integer, nullable=False)
+
+    def __unicode__(self):
+        return self.reddit_id

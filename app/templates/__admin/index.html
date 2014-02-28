@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include 'flash.html' %}
+
+<div class="col-sm-12 blog-main">
+
+    <h2 class="page-title"><a href="{{ url_for('admin') }}">Dashboard</a>{% if title %} - {{ title }}{% endif %}</h2>
+
+    <ul>
+        <li><a href="{{ url_for('admin_platforms') }}">Platforms</a></li>
+        <li><a href="{{ url_for('admin_games') }}">Games</a></li>
+        <li><a href="{{ url_for('admin_community_reviews') }}">Community Reviews</a></li>
+    </ul>
+
+</div>
+
+{% endblock %}

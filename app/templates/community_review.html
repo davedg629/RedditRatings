@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include 'flash.html' %}
+
+<div class="col-sm-12">
+
+    <h2 class="page-title review-title">{{ community_review.game.title }} - {{ community_review.game.platform.title }}</h2>
+
+    <p class="meta">
+
+        {% if community_review.reddit_permalink %}
+
+        <a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Created by /r/{{ community_review.subreddit }}, starting on {{ community_review.date_posted.strftime('%b %d, %Y') }}</a><br />
+
+            {% if last_crawl %}
+            <span class="last-updated">Last updated {{ last_crawl }}</span>
+            {% endif %}
+
+        {% endif %}
+
+        {% if session.logged_in %}
+        | <a href="{{ url_for('admin_community_review', community_review_id=community_review.id) }}">Edit</a>
+        {% endif %}
+
+    </p>
+
+</div>
+
+<div class="col-sm-8 blog-main">
+
+    {% if user_reviews %}
+
+    <table class="sidebar-module-inset game-ratings">
+
+        <tr>
+            <td class="rating">            
+                <h3 class="rating-label">Community Rating <span id="explain-rating" class="explain">(<a href="#" class="tooltip-link" data-toggle="tooltip" title="Community Rating is the average rating of all submitted reviews.">?</a>)</span>:</h3>
+                <div class="rating-value">{{ "{0:.2f}".format(avg_rating[0][0]) }} <span class="out-of">/ 10</span></div>
+
+            </td>
+            <td class="rating">
+                <h3 class="rating-label">Total Reviews <span id="explain-total" class="explain">(<a href="#" class="tooltip-link" data-toggle="tooltip" title="Total Reviews is the total # of reviews collected, including reviews that did not have a Details section and are therefore not listed below.">?</a>)</span>:</h3>
+                <div class="rating-value">{{ user_reviews_count[0][0] }}</div>
+            </td>
+        </tr>
+
+    </table>
+
+    <div class="reddit-credit"><a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">All user reviews sourced from /r/{{ community_review.subreddit }}</a></div>
+
+    <div class="user-reviews">
+
+        <h3>User Reviews (sorted by reddit score):</h3>
+
+        {% for user_review in user_reviews %}
+        <div class="user-review">
+
+            <h4><a class="redditor" href="{{ community_review.reddit_permalink}}{{ user_review.reddit_id }}" target="_blank">{{ user_review.user.username }}</a> | {{ user_review.rating }} <span>out of 10</span></h4>
+
+            {% if user_review.review != '' %}
+            <div class="review">
+                {{ user_review.review }}
+            </div>
+            {% endif %}
+
+            <div class="review-details">
+                <strong>Reddit Score:</strong> {{ user_review.reddit_score }}
+            </div>
+
+            {% if session.logged_in %}
+            <div class="actions">
+                <a href="{{ url_for('admin_delete_user_review', user_review_id=user_review.id) }}">Delete</a>
+            </div>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+
+    <p><strong><a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Click here to contribute to this reddit review</a></strong></p>
+
+    {% endif %}
+
+</div>
+
+<div class="col-sm-3 col-sm-offset-1 blog-sidebar">
+
+    {% if community_review.open_for_comments %}
+    <div class="sidebar-module sidebar-module-inset">
+
+        <div class="submit-review"><a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Submit your review on reddit</a></div>
+
+    </div>
+    {% endif %}
+
+    {% if community_review.official_url %}
+    <div class="sidebar-module review-links">
+
+        <strong><a href="{{ community_review.official_url }}" target="_blank">Learn more about this game</a></strong>
+
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

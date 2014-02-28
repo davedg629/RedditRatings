@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Reddit Game Reviews</title>
+        {% else %}
+        <title>Reddit Game Reviews</title>
+        {% endif %}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+        <!-- Bootstrap -->
+        <link href="{{ url_for('.static', filename = 'css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('.static', filename = 'css/bootstrap-theme.css') }}" rel="stylesheet">
+
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+            <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', '{{ config.GA_TRACKING_ID }}', '{{ config.GA_DEFAULT_URL }}');
+          ga('send', 'pageview');
+
+        </script>
+
+    </head>
+    <body>
+
+        <div class="blog-masthead">
+
+            <div class="container">
+
+            <div class="blog-header">
+
+                <h1 class="blog-title"><a href="{{ url_for('index') }}">Reddit Game Reviews</a></h1>
+                <p class="lead blog-description">Using reddit to create video game reviews, together.</p>
+            </div>
+
+
+                <nav class="blog-nav" role="navigation">
+                    <a class="blog-nav-item" href="{{ url_for('index') }}">Community Reviews</a>
+                    <a class="blog-nav-item" href="{{ url_for('how_it_works') }}">How It Works</a>
+                    <a class="blog-nav-item" href="{{ url_for('about') }}">About</a>
+                    <a class="blog-nav-item" href="https://github.com/davedg629/reddit-game-reviews" target="_blank">Code</a>
+                    {% if session.logged_in %}
+                    <a class="blog-nav-item" href="{{ url_for('admin') }}">Dashboard</a>
+                    <a class="blog-nav-item" href="{{ url_for('logout') }}">Logout</a>
+                    {% endif %}
+                </nav>
+
+            </div>
+
+        </div>
+
+        <div id="content" class="container">
+
+            <div class="row">
+
+                {% block content %}{% endblock %}
+
+            </div>
+
+        </div>
+
+        <div class="blog-footer">
+            <p>Reddit Game Reviews was created as a <a href="http://groupsrc.com" target="_blank">GroupSRC.com</a> project as well as a portfolio project for <a href="http://davedigiovanni.com" target="_blank">Dave DiGiovanni</a>.<br />Reddit Game Reviews is not affiliated with "reddit" or "reddit.com".</p>
+        </div>
+
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+        <script src="https://code.jquery.com/jquery.js"></script>
+        <!-- Include all compiled plugins (below), or include individual files as needed -->
+        <script src="{{ url_for('.static', filename = 'js/bootstrap.min.js') }}"></script>
+        <script>
+        $(document).ready(function() {
+            $('a.tooltip-link').tooltip();
+        });
+        </script>
+
+    </body>
+</html>

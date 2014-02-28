@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include 'flash.html' %}
+
+<div class="col-sm-12 blog-main">
+
+    <h2 class="page-title">{{ title }}</h2>
+
+    <form action="" method="post" name="delete_game">
+        <div class="form-row">
+            <p>Delete <em>{{ game.title }} - {{ game.platform.title }}</em>?</p>
+        </div>
+        <div class="form-row form-submit">
+            <input type="submit" value="Delete" />
+            <a href="{{ url_for('admin_games') }}">Cancel</a>
+        </div>
+    </form>
+
+</div>
+
+{% endblock %}

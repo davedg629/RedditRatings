@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include 'flash.html' %}
+
+<div class="col-sm-12 blog-main">
+
+    <h2 class="page-title"><a href="{{ url_for('admin') }}">Dashboard</a> - <a href="{{ url_for('admin_games') }}">Games</a> - {{ title }}</h2>
+
+    <form class="admin-form" action="" method="post" name="edit_game" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="form-row">
+            <label>{{ form.title.label }}</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+            <ul class="errors">
+                {% for error in form.title.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="form-row">
+            <label>{{ form.platform_id.label }}</label>
+            {{ form.platform_id }}
+            {% if form.platform_id.errors %}
+            <ul class="errors">
+                {% for error in form.platform_id.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="form-row">
+            <label>{{ form.release_date.label }}</label>
+            {{ form.release_date }}
+            {% if form.release_date.errors %}
+            <ul class="errors">
+                {% for error in form.release_date.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="form-row">
+            <label>{{ form.official_url.label }}</label>
+            {{ form.official_url }}
+            {% if form.official_url.errors %}
+            <ul class="errors">
+                {% for error in form.official_url.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="form-row">
+            <label>{{ form.amazon_url.label }}</label>
+            {{ form.amazon_url }}
+            {% if form.amazon_url.errors %}
+            <ul class="errors">
+                {% for error in form.amazon_url.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="form-row form-submit">
+            <input type="submit" value="Submit" />
+        </div>
+    </form>
+
+    <p><strong><a href="{{ url_for('admin_new_community_review', game_id=game.id) }}">+ Add a Community Review for this Game</a></strong></p>
+
+    {% if game.community_reviews %}
+    <h3>Community Reviews for <a href="#">{{ game.title }} - {{ game.platform.title }}</a></h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Date Posted</th>
+                <th>Subreddit</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    {% for community_review in game.community_reviews %}
+        <tr>
+            <td>{{ community_review.date_posted.strftime('%Y-%m-%d %I:%M %p') }}</td>
+            <td>{{ community_review.subreddit }}</td>
+            <td>
+                <a href="{{ url_for('community_review', platform_slug=community_review.game.platform.slug, game_slug=community_review.game.slug, community_review_id=community_review.id) }}">View</a> | 
+                <a href="{{ url_for('admin_community_review', community_review_id=community_review.id) }}">Edit</a> | 
+                <a href="{{ url_for('admin_delete_community_review', community_review_id=community_review.id) }}">Delete</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+    {% else %}
+    <h3>No Community Reviews created yet.</h3>
+    {% endif %}
+
+</div>
+
+{% endblock %}

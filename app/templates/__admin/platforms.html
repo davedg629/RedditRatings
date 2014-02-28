@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include 'flash.html' %}
+
+<div class="col-sm-12 blog-main">
+
+    <h2 class="page-title"><a href="{{ url_for('admin') }}">Dashboard</a>{% if title %} - {{ title }}{% endif %}</h2>
+
+    <form class="admin-form" action="" method="post" name="new_platform">
+        {{ form.hidden_tag() }}
+        <div class="form-row">
+            <label>{{ form.title.label }}</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+            <ul class="errors">
+                {% for error in form.title.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div class="form-row form-submit">
+            <input type="submit" value="Submit" />
+        </div>
+    </form>
+
+    {% if platforms %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Slug</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+    {% for platform in platforms %}
+        <tr>
+            <td>{{ platform.title}}</td>
+            <td>{{ platform.slug }}</td>
+            <td>
+                {% if not platform.games %}
+                <a href="{{ url_for('admin_delete_platform', platform_id=platform.id) }}">Delete</a>
+                {% else %}
+                N/A
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include 'flash.html' %}
+
+<div class="single-user-review col-sm-12">
+
+    {% if user_review %}
+    <h2 class="page-title">User Review by /u/{{ user_review.user.username }} on <a href="{{ url_for('community_review', platform_slug=user_review.community_review.game.platform.slug, game_slug=user_review.community_review.game.slug, community_review_id=user_review.community_review.id) }}">{{ user_review.community_review.game.title }} - #{{ user_review.community_review.id }}</a></h2>
+
+    <p class="meta">
+    <a href="{{ user_review.community_review.reddit_permalink }}{{ user_review.reddit_id }}" target="_blank">Posted on {{ user_review.date_posted.strftime('%Y-%m-%d %I:%M %p') }}</a>
+        {% if session.logged_in %}
+            | <a href="#">Delete</a>
+        {% endif %}
+    </p>
+
+    <div class="user-review">
+        <div class="review"><h3><span class="redditor">{{ user_review.user.username }} says:</span></h3>{{ user_review.review }}</div>
+        <div class="rating">
+            <strong>Rating:</strong> {{ user_review.rating }}<br />
+            <strong>Reddit Score:</strong> {{ user_review.reddit_score }}
+        </div>
+    </div>
+
+    {% else %}
+    <p>Sorry, we could not find that user review.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}
