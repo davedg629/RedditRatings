@@ -41,7 +41,7 @@ else:
 
 if os.environ.get('REDDIT_USER_AGENT') is None:
     REDDIT_USER_AGENT = "your app name ver 0.1 by /u/your_user_name, "\
-        "http://github.com/davedg629/reddit-game-reviews/"
+        "https://github.com/davedg629/redditreviewbot"
 else:
     REDDIT_USER_AGENT = os.environ.get('REDDIT_USER_AGENT')
 
