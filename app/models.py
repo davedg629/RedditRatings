@@ -1,5 +1,6 @@
 from app import db
 from datetime import datetime
+from app.utils import make_slug
 
 
 class Category(db.Model):
@@ -104,14 +105,23 @@ class CommunityReview(db.Model):
         nullable=False
     )
     title = db.Column(db.String, nullable=False)
-    slug = db.Column(db.String, nullable=False)
+
+    def get_slug(context):
+        return make_slug(context.current_parameters['title'])
+    slug = db.Column(
+        db.String,
+        nullable=False,
+        default=get_slug,
+        onupdate=get_slug
+    )
+
     category_id = db.Column(
         db.Integer,
         db.ForeignKey('categories.id'),
         nullable=False
     )
-    reddit_id = db.Column(db.String, unique=True)
-    reddit_permalink = db.Column(db.String, unique=True)
+    reddit_id = db.Column(db.String)
+    reddit_permalink = db.Column(db.String)
     subreddit = db.Column(db.String, nullable=False)
     date_posted = db.Column(
         db.DateTime,

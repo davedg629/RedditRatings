@@ -1,5 +1,5 @@
 from app import app, db
-from flask import Flask, flash, redirect, render_template, request, \
+from flask import flash, redirect, render_template, request, \
     session, url_for, g
 from app.forms import LoginForm
 from app.models import Category, Role, User, Group, CommunityReview, \
@@ -41,7 +41,7 @@ def about():
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if 'logged_in' in session:
-        return redirect(url_for('admin'))
+        return redirect(url_for('admin.index'))
     form = LoginForm()
     error = None
     if form.validate_on_submit():
@@ -49,7 +49,7 @@ def login():
                 request.form['password'] == app.config['ADMIN_PASSWORD']:
             session['logged_in'] = True
             flash('Login successful.')
-            return redirect(url_for('admin'))
+            return redirect(url_for('admin.index'))
         else:
             error = 'Invalid username or password.'
     return render_template('login.html',

@@ -1,7 +1,6 @@
 from __future__ import division
 from app import app, db
 from flask import flash
-from models import UserReview
 from sqlalchemy.sql import func
 import re
 from unicodedata import normalize

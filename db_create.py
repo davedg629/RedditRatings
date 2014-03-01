@@ -4,13 +4,53 @@ from datetime import datetime, date
 
 db.create_all()
 
-## users
-#db.session.add(
-#    User(
-#        username="redditreviewbot"
-#    )
-#)
-#
+db.session.add(
+    Category(
+        name='Video Games',
+        slug='video-games'
+    ),
+    Category(
+        name='Movies',
+        slug='movies'
+    ),
+    Category(
+        name='Podcasts',
+        slug='podcasts'
+    ),
+    Category(
+        name='Books',
+        slug='books'
+    ),
+    Category(
+        name='Music',
+        slug='music'
+    ),
+    Category(
+        name='Other',
+        slug='other'
+    )
+)
+
+db.session.add(
+    Role(
+        name='Admin'
+    )
+)
+
+db.session.add(
+    User(
+        username="redditreviewbot",
+        role_id=1
+    )
+)
+
+db.session.add(
+    Group(
+        name="Test Group",
+        slug="test-group"
+    )
+)
+
 ## community reviews
 #db.session.add(
 #    CommunityReview(

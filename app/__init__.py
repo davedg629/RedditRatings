@@ -11,7 +11,6 @@ admin = Admin(app)
 
 from app import models, views, admin_views
 
-
 if not app.debug and os.environ.get('HEROKU') is None:
     import logging
 

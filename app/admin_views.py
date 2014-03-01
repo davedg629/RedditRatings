@@ -1,26 +1,55 @@
 from app import db, admin, models
+from flask import session, redirect, url_for
+from flask.ext.admin import AdminIndexView, expose
 from flask.ext.admin.contrib.sqla import ModelView
+from wtforms.validators import InputRequired
+from forms import unique_slug
 
 
-class CategoryView(ModelView):
+class AdminIndexView(AdminIndexView):
+
+    @expose('/')
+    def index(self):
+        if not 'logged_in' in session:
+            return redirect(url_for('login'))
+
+
+class AuthMixin(object):
+    def is_accessible(self):
+        return 'logged_in' in session
+
+    def _handle_view(self, name, **kwargs):
+        if not self.is_accessible():
+            return redirect(url_for('login'))
+
+
+class AdminModelView(AuthMixin, ModelView):
+    pass
+
+
+class CategoryView(AdminModelView):
     form_excluded_columns = ['community_reviews', ]
 
 
-class RoleView(ModelView):
+class RoleView(AdminModelView):
     form_excluded_columns = ['users', ]
 
 
-class UserView(ModelView):
+class UserView(AdminModelView):
     form_excluded_columns = ['community_reviews', 'user_reviews', ]
 
 
-class GroupView(ModelView):
+class GroupView(AdminModelView):
     form_excluded_columns = ['community_reviews', ]
 
 
-class CommunityReviewView(ModelView):
-    form_excluded_columns = ['user_reviews', 'last_crawl', ]
+class CommunityReviewView(AdminModelView):
+    form_excluded_columns = ['user_reviews', 'slug', 'last_crawl', ]
+    form_args = dict(
+        title=dict(validators=[InputRequired(), unique_slug])
+    )
 
+# add admin views
 admin.add_view(CategoryView(
     models.Category,
     db.session,
@@ -42,7 +71,7 @@ admin.add_view(CommunityReviewView(
     db.session,
     name='Community Reviews'
 ))
-admin.add_view(ModelView(
+admin.add_view(AdminModelView(
     models.UserReview,
     db.session,
     name='User Reviews'
