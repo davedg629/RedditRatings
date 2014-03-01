@@ -80,4 +80,4 @@ Also, please let me know if you do give it a try on reddit. You can send me a <a
 
 <hr />
 
-<strong>Reddit Game Reviews is under the GNU GENERAL PUBLIC LICENSE.</strong>
+<strong>Reddit Review is under the GNU GENERAL PUBLIC LICENSE.</strong>
