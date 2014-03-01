@@ -1,6 +1,6 @@
-<h1>Reddit Review</h1>
+<h1>Reddit Review Bot</h1>
 
-Reddit Review is a Flask app that allows redditors to create Community Reviews of anything by commenting on a reddit thread using a specific review format.
+Reddit Review Bot is a Flask app that allows redditors to create Community Reviews of anything by commenting on a reddit thread using a specific review format.
 
 A working example of the app can be found at http://RedditReview.com
 
@@ -80,4 +80,4 @@ Also, please let me know if you do give it a try on reddit. You can send me a <a
 
 <hr />
 
-<strong>Reddit Review is under the GNU GENERAL PUBLIC LICENSE.</strong>
+<strong>Reddit Review Bot is under the GNU GENERAL PUBLIC LICENSE.</strong>
