@@ -1,34 +1,12 @@
-{% extends "base.html" %}
+{% extends "my_base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
 
 {% block content %}
+<div class="container">
+    
+    {{super()}}
 
-{% include 'flash.html' %}
-
-    <div class="col-sm-8 blog-main">
-
-        <form class="form-horizontal" action="" method="post" name="login">
-            {{ form.hidden_tag() }}
-            <div class="control-group{% if form.errors.username %} error{% endif %}">
-                {{ form.username.label }} {{ form.username }}
-                {% for error in form.errors.username %}
-                    <div class="help-inline">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <div class="control-group{% if form.errors.password %} error{% endif %}">
-                {{ form.password.label }} {{ form.password }}
-                {% for error in form.errors.password %}
-                    <div class="help-inline">{{ error }}</div>
-                {% endfor %}
-            </div>
-            <div class="control-group">
-                <div class="controls">
-                    <input class="btn btn-primary" type="submit" value="Login" />
-                </div>
-            </div>
-        </form>
-
-    </div>
-
-    {% include 'sidebar.html' %}
-
+    {{ wtf.quick_form(form) }}
+    
+</div>
 {% endblock %}

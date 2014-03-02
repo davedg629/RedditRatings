@@ -43,7 +43,6 @@ def login():
     if 'logged_in' in session:
         return redirect(url_for('admin.index'))
     form = LoginForm()
-    error = None
     if form.validate_on_submit():
         if request.form['username'] == app.config['ADMIN_USERNAME'] and \
                 request.form['password'] == app.config['ADMIN_PASSWORD']:
@@ -51,9 +50,10 @@ def login():
             flash('Login successful.')
             return redirect(url_for('admin.index'))
         else:
-            error = 'Invalid username or password.'
+            flash('Invalid username or password.')
+            return redirect(url_for('login'))
     return render_template('login.html',
-                           title="Login", form=form, error=error)
+                           title="Admin Login", form=form)
 
 
 @app.route('/logout/')
@@ -67,11 +67,13 @@ def logout():
 # FRONT END
 @app.route('/')
 def index():
-    community_reviews = db.session.query(CommunityReview).order_by(
-        CommunityReview.date_posted.desc()
-    ).all()
+    community_reviews = db.session.query(CommunityReview)\
+        .order_by(CommunityReview.date_posted.desc())\
+        .limit(10)\
+        .all()
     return render_template(
         'index.html',
+        title='Creating reviews together, on reddit.',
         community_reviews=community_reviews
     )
 

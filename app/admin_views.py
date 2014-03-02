@@ -134,7 +134,11 @@ class CommunityReviewView(AdminModelView):
                            return_url=return_url)
 
 # Admin construtor
-admin = Admin(name="RedditReviewBot", index_view=MyAdminIndexView())
+admin = Admin(
+    name="RedditReviewBot",
+    index_view=MyAdminIndexView(),
+    base_template="admin/my_base.html"
+)
 
 # add admin views
 admin.add_view(CategoryView(
