@@ -105,7 +105,9 @@ def community_review(category_slug, community_review_slug):
                                avg_rating=avg_rating,
                                last_crawl=last_crawl,
                                user_reviews=user_reviews,
-                               user_reviews_count=user_reviews_count
+                               user_reviews_count=user_reviews_count,
+                               title=community_review.title,
+                               page_title=community_review.title
                                )
     else:
         return render_template('404.html')
