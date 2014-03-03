@@ -74,16 +74,21 @@ def index():
     return render_template(
         'index.html',
         title='Creating reviews together, on reddit.',
+        page_title='Latest Community Reviews',
         community_reviews=community_reviews
     )
 
 
-@app.route('/<platform_slug>/<game_slug>/<int:community_review_id>')
-def community_review(platform_slug, game_slug, community_review_id):
+@app.route('/<category_slug>/<community_review_slug>/')
+def community_review(category_slug, community_review_slug):
+    category = db.session.query(Category)\
+        .filter_by(slug=category_slug)\
+        .first()
     community_review = db.session.query(CommunityReview)\
-        .filter_by(id=community_review_id).first()
-    if community_review and community_review.game.slug == game_slug \
-            and community_review.game.platform.slug == platform_slug:
+        .filter_by(category_id=category.id)\
+        .filter_by(slug=community_review_slug)\
+        .first()
+    if community_review:
         last_crawl = None
         avg_rating = None
         user_reviews = None

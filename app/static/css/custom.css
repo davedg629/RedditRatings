@@ -1,6 +1,6 @@
+/* CUSTOM STYLES */
 body {
-  padding-top: 70px;
-  padding-bottom: 30px;
+  padding-top: 90px;
 }
 
 .theme-dropdown .dropdown-menu {
@@ -9,4 +9,12 @@ body {
   margin-bottom: 20px;
 }
 
+.well h3, .well h4 {margin-top: 0;}
+
+.page-header, .page-header h2, .page-header h1 {margin-top: 0;}
+
 .navbar-inverse .navbar-brand {color: #FFFFFF;}
+
+#content {padding: 0 0 30px;}
+
+#footer {border-top: 1px solid #DDDDDD; padding: 20px 0; text-align: center;}

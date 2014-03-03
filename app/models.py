@@ -108,6 +108,7 @@ class CommunityReview(db.Model):
 
     def get_slug(context):
         return make_slug(context.current_parameters['title'])
+
     slug = db.Column(
         db.String,
         nullable=False,

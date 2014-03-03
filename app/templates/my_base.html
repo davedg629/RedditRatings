@@ -1,6 +1,8 @@
 {% extends "bootstrap/base.html" %}
 {% import "bootstrap/fixes.html" as fixes %}
 
+{% block html_attribs %} lang="en"{% endblock %}
+
 {% block head %}
 {{super()}}
 {{fixes.ie8()}}
@@ -9,12 +11,12 @@
 {% block title %}{% if title %}{{ title }} | {% endif %}RedditReviewBot.com{% endblock %}
 
 {% block styles %}
-{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='css/bootstrap.min.css')}}">
 <link rel="stylesheet" href="{{url_for('.static', filename='css/custom.css')}}">
 {% endblock %}
 
 {% block navbar %}
-<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -30,11 +32,11 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li{% if index == request.index %} class="active"{% endif %}><a href="#">Community Reviews</a></li>
-        <li{% if endpoint == request.endpoint %} class="active"{% endif %}><a href="#">Subreddits</a></li>
-        <li{% if endpoint == request.endpoint %} class="active"{% endif %}><a href="#">Groups</a></li>
-        <li{% if endpoint == request.endpoint %} class="active"{% endif %}><a href="#">How It Works</a></li>
-        <li{% if endpoint == request.endpoint %} class="active"{% endif %}><a href="#">About</a></li>
+        <li{% if 'index' == request.endpoint %} class="active"{% endif %}><a href="#">Community Reviews</a></li>
+        <li{% if 'list_subreddits' == request.endpoint %} class="active"{% endif %}><a href="#">Subreddits</a></li>
+        <li{% if 'list_groups' == request.endpoint %} class="active"{% endif %}><a href="#">Groups</a></li>
+        <li{% if 'how_it_works' == request.endpoint %} class="active"{% endif %}><a href="#">How It Works</a></li>
+        <li{% if 'about' == request.endpoint %} class="active"{% endif %}><a href="#">About</a></li>
     </ul>
     {% if session.logged_in %}
     <ul class="nav navbar-nav navbar-right">
@@ -48,8 +50,44 @@
 
 
 {% block content %}
+<div id="content">
+    <div class="container">
 
     {% include 'flash.html' %}
+
+    <div class="row">
+
+        <div class="col-sm-8"> 
+        {% block page_content %}
+
+            {% if page_title %}
+            <div class="page-header"><h2>{{ page_title }}</h2></div>
+            {% endif %}
+
+        {% endblock %}
+        </div>
+
+        <div class="col-sm-4">
+        {% block sidebar %}
+
+            {% include 'default_sidebar.html' %}
+
+        {% endblock %}
+        </div>
+
+    </div>
+
+    </div>
+</div>
+
+<div id="footer">
+    <div class="container">
+    {% block footer %}
+    <p>RedditReviewBot is a <a href="http://groupsrc.com" target="_blank">GroupSRC.com</a> project. The code is under the GNU General Public License and can be found <a href="https://github.com/davedg629/redditreviewbot" target="_blank">here</a>.</p>
+    <p>RedditReviewBot is not affiliated with reddit inc.</p>
+    {% endblock %}
+    </div>
+</div>
 
 {% endblock %}
 

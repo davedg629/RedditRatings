@@ -1,10 +1,43 @@
 {% extends "my_base.html" %}
 
-{% block content %}
-<div class="container">
-{{super()}}
+{% block page_content %}
+<div class="listing">
 
-    <h1>Hello, world!</h1>
+    {{super()}}
 
-</div>
+    {% if community_reviews %}
+
+    {% for community_review in community_reviews %}
+
+    <div class="list-item">
+
+        <h3 class="blog-post-title"><a href="{{ url_for('community_review', category_slug=community_review.category.slug, community_review_slug=community_review.slug) }}">{{ community_review.title }}</a></h3>
+
+        <p class="meta">
+            {% if community_review.reddit_permalink %}
+            Created by /r/{{ community_review.subreddit }} users, starting on {{ community_review.date_posted.strftime('%b %d, %Y') }}
+            {% endif %}
+        </p>
+
+        {% if community_review.user_reviews %}
+
+        <p class="ratings">
+            {% set avg_rating=get_avg_rating(community_review.id) %}
+            <strong class="serif">Community Rating:</strong> &nbsp; <span class="highlight">{{ "{0:.2f}".format(avg_rating[0][0]) }}</span> out of 10 
+            <br />
+            {% set review_count=get_review_count(community_review.id) %}
+            <strong class="serif">Total Reviews:</strong> &nbsp; <span class="highlight">{{ review_count[0][0] }}</span>
+        </p>
+
+        {% endif %}
+
+        <a class="more" href="{{ url_for('community_review', category_slug=community_review.category.slug, community_review_slug=community_review.slug) }}">More</a>
+
+    </div>
+
+    {% endfor %}
+
+    {% endif %}
+
+</div>    
 {% endblock %}
