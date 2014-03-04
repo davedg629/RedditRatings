@@ -1,6 +1,7 @@
 from app import db
 from datetime import datetime
 from app.utils import make_slug
+from sqlalchemy.sql import func
 
 
 class Category(db.Model):
@@ -112,8 +113,7 @@ class CommunityReview(db.Model):
     slug = db.Column(
         db.String,
         nullable=False,
-        default=get_slug,
-        onupdate=get_slug
+        default=get_slug
     )
 
     category_id = db.Column(
@@ -123,6 +123,7 @@ class CommunityReview(db.Model):
     )
     reddit_id = db.Column(db.String)
     reddit_permalink = db.Column(db.String)
+    reddit_score = db.Column(db.Integer, nullable=False, default=1)
     subreddit = db.Column(db.String, nullable=False)
     date_posted = db.Column(
         db.DateTime,
@@ -143,6 +144,18 @@ class CommunityReview(db.Model):
         order_by="desc(UserReview.date_posted)",
         backref='community_review'
     )
+
+    def get_avg_rating(self):
+        avg_rating = db.session\
+            .query(func.avg(UserReview.rating))\
+            .filter_by(community_review_id=self.id)
+        return "{0:.2f}".format(avg_rating[0][0])
+
+    def get_review_count(self):
+        review_count = db.session\
+            .query(func.count(UserReview.id))\
+            .filter_by(community_review_id=self.id)
+        return review_count[0][0]
 
     def __unicode__(self):
         return self.title + ' - ' + str(self.category_id)

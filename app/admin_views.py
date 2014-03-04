@@ -44,7 +44,7 @@ class GroupView(AdminModelView):
 
 
 class CommunityReviewView(AdminModelView):
-    form_excluded_columns = ['user_reviews', 'slug', 'last_crawl', ]
+    form_excluded_columns = ['user_reviews', 'slug', 'reddit_score', 'last_crawl', ]
     list_template = 'admin/community_review_list.html'
 
     @expose('/new/', methods=('GET', 'POST'))
@@ -116,6 +116,8 @@ class CommunityReviewView(AdminModelView):
                 .filter_by(slug=new_slug).first()
 
         if validate_form_on_submit(form) and not slug_check:
+            if new_slug != model.slug:
+                model.slug = new_slug
             if self.update_model(form, model):
                 if '_continue_editing' in request.form:
                     flash(gettext('Model was successfully saved.'))
@@ -144,28 +146,33 @@ admin = Admin(
 admin.add_view(CategoryView(
     models.Category,
     db.session,
-    name='Categories'
+    name='Categories',
+    endpoint='category_model_view'
 ))
 admin.add_view(RoleView(
     models.Role,
     db.session,
-    name='Roles'
+    name='Roles',
+    endpoint='role_model_view'
 ))
 admin.add_view(UserView(
     models.User,
     db.session,
-    name='Users'
+    name='Users',
+    endpoint='user_model_view'
 ))
 admin.add_view(GroupView(models.Group, db.session))
 admin.add_view(CommunityReviewView(
     models.CommunityReview,
     db.session,
-    name='Community Reviews'
+    name='Community Reviews',
+    endpoint='communityreview_model_view'
 ))
 admin.add_view(AdminModelView(
     models.UserReview,
     db.session,
-    name='User Reviews'
+    name='User Reviews',
+    endpoint='userreview_model_view'
 ))
 
 logout_link = MenuLink(name='Logout', url='/logout')

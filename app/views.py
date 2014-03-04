@@ -1,12 +1,10 @@
 from app import app, db
 from flask import flash, redirect, render_template, request, \
-    session, url_for, g
+    session, url_for
 from app.forms import LoginForm
 from app.models import Category, Role, User, Group, CommunityReview, \
     UserReview
-from datetime import datetime
-from app.utils import make_slug, get_avg_rating, get_review_count, \
-    pretty_date
+from app.utils import pretty_date
 from app.decorators import login_required
 
 
@@ -52,8 +50,11 @@ def login():
         else:
             flash('Invalid username or password.')
             return redirect(url_for('login'))
-    return render_template('login.html',
-                           title="Admin Login", form=form)
+    return render_template(
+        'login.html',
+        title="Admin Login",
+        page_title="Login",
+        form=form)
 
 
 @app.route('/logout/')
@@ -90,22 +91,16 @@ def community_review(category_slug, community_review_slug):
         .first()
     if community_review:
         last_crawl = None
-        avg_rating = None
         user_reviews = None
-        user_reviews_count = 0
         if community_review.user_reviews:
             last_crawl = pretty_date(community_review.last_crawl)
-            avg_rating = get_avg_rating(community_review.id)
             user_reviews = db.session.query(UserReview)\
                 .filter_by(community_review_id=community_review.id)\
                 .order_by(UserReview.reddit_score.desc())
-            user_reviews_count = get_review_count(community_review.id)
         return render_template('community_review.html',
                                community_review=community_review,
-                               avg_rating=avg_rating,
                                last_crawl=last_crawl,
                                user_reviews=user_reviews,
-                               user_reviews_count=user_reviews_count,
                                title=community_review.title,
                                page_title=community_review.title
                                )

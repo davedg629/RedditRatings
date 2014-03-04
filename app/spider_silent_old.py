@@ -1,5 +1,5 @@
-from app import app, db
-from app.models import UserReview, User, CommunityReview
+from app import db
+from app.models import User, CommunityReview, UserReview
 from config import REDDIT_USERNAME, REDDIT_PASSWORD, \
     REDDIT_USER_AGENT
 from app.utils import is_number
@@ -99,7 +99,8 @@ def add_user(username):
     # if user not in db, add to db
     if not user_check:
         new_user = User(
-            username=username
+            username=username,
+            role_id=2
         )
         db.session.add(new_user)
         db.session.commit()
@@ -169,7 +170,7 @@ def update_review(comment_body, comment_edited, reddit_id):
         .filter_by(reddit_id=reddit_id)\
         .update({
             "review": editedReview,
-            "edited": comment_edited
+            "edited_stamp": comment_edited
         })
     db.session.commit()
 
@@ -183,18 +184,14 @@ r = praw.Reddit(user_agent=user_agent)
 # login with reddit username/password
 r.login(REDDIT_USERNAME, REDDIT_PASSWORD)
 
-# list old style reviews
-reddit_ids = [
-    '1ycqin'
-]
+# get all reviews uploaded to site
+community_reviews = db.session.query(CommunityReview)\
+    .filter_by(open_for_comments=True)\
+    .filter(CommunityReview.reddit_id != '')\
+    .all()
 
 # get comments for each review
-for reddit_id in reddit_ids:
-
-    community_review = db.session.query(CommunityReview)\
-        .filter_by(open_for_comments=True)\
-        .filter_by(reddit_id=reddit_id)\
-        .first()
+for community_review in community_reviews:
 
     # get submission from reddit, store comments in variable
     try:
@@ -260,7 +257,7 @@ for reddit_id in reddit_ids:
                             rating=int(comment_params['Rating']) * 2,
                             review=comment_params['Details'],
                             reddit_score=comment.ups - comment.downs,
-                            edited=this_last_edited
+                            edited_stamp=this_last_edited
                         )
                         db.session.add(new_user_review)
                         db.session.commit()
@@ -282,6 +279,7 @@ for reddit_id in reddit_ids:
                     })
                 db.session.commit()
 
-    # update last_update datetime for review
+    # update last_crawl and reddit_score for review
     community_review.last_crawl = datetime.datetime.now()
+    community_review.reddit_score = submission.ups - submission.downs
     db.session.commit()

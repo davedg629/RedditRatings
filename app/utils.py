@@ -1,7 +1,5 @@
 from __future__ import division
-from app import app, db
 from flask import flash
-from sqlalchemy.sql import func
 import re
 from unicodedata import normalize
 
@@ -35,24 +33,6 @@ def make_slug(text, delim=u'-'):
         if word:
             result.append(word)
     return unicode(delim.join(result))
-
-
-# get average rating for a community review
-def get_avg_rating(community_review_id):
-    return db.session\
-        .query(func.avg(UserReview.rating))\
-        .filter_by(community_review_id=community_review_id)
-
-# add get_avg_rating to jinja template
-app.jinja_env.globals.update(get_avg_rating=get_avg_rating)
-
-
-# get review count
-def get_review_count(community_review_id):
-    return db.session\
-        .query(func.count(UserReview.id))\
-        .filter_by(community_review_id=community_review_id)
-app.jinja_env.globals.update(get_review_count=get_review_count)
 
 
 # get time ago from datetime

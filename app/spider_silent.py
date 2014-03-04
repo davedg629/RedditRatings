@@ -1,7 +1,7 @@
 from app import app, db
-from app.models import UserReview, User, CommunityReview
+from app.models import User, CommunityReview, UserReview
 from config import REDDIT_USERNAME, REDDIT_PASSWORD, \
-    REDDIT_USER_AGENT
+    REDDIT_USER_AGENT, SERVER_NAME
 from app.utils import is_number
 import praw
 import datetime
@@ -99,7 +99,8 @@ def add_user(username):
     # if user not in db, add to db
     if not user_check:
         new_user = User(
-            username=username
+            username=username,
+            role_id=2
         )
         db.session.add(new_user)
         db.session.commit()
@@ -169,7 +170,7 @@ def update_review(comment_body, comment_edited, reddit_id):
         .filter_by(reddit_id=reddit_id)\
         .update({
             "review": editedReview,
-            "edited": comment_edited
+            "edited_stamp": comment_edited
         })
     db.session.commit()
 
@@ -256,10 +257,21 @@ for community_review in community_reviews:
                             rating=int(comment_params['Rating']),
                             review=comment_params['Review'],
                             reddit_score=comment.ups - comment.downs,
-                            edited=this_last_edited
+                            edited_stamp=this_last_edited
                         )
                         db.session.add(new_user_review)
                         db.session.commit()
+
+                        # reply with a success message
+                        r.user.send_message(
+                            comment.author.name,
+                            'Your review of ' + community_review.title +
+                            ' has been successfully added.' +
+                            '\n\nView the Community Review here: ' +
+                            'http://' + SERVER_NAME + '/' +
+                            community_review.category.slug + '/' +
+                            community_review.slug +
+                            '\n\nThanks!')
 
         # is the comment already in the db
         elif this_comment:
@@ -278,6 +290,7 @@ for community_review in community_reviews:
                     })
                 db.session.commit()
 
-    # update last_update datetime for review
+    # update last_crawl and reddit_score for review
     community_review.last_crawl = datetime.datetime.now()
+    community_review.reddit_score = submission.ups - submission.downs
     db.session.commit()

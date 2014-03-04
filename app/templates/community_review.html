@@ -3,7 +3,16 @@
 {% block page_content %}
 <div class="listing">
 
-    {{super()}}
+    {% if page_title %}
+    <div class="page-header">
+        <h2>
+            {{ page_title }}
+            {% if session.logged_in %}
+            <small> | <a href="{{ url_for('communityreview_model_view.edit_view', id=community_review.id) }}">Edit</a></small>
+            {% endif %}
+        </h2>
+    </div>
+    {% endif %}
 
     <p class="meta">
 
@@ -17,10 +26,6 @@
 
         {% endif %}
 
-        {% if session.logged_in %}
-        | <a href="{{ url_for('admin_community_review', community_review_id=community_review.id) }}">Edit</a>
-        {% endif %}
-
     </p>
 
     {% if user_reviews %}
@@ -30,12 +35,12 @@
         <tr>
             <td class="rating">            
                 <h3 class="rating-label">Community Rating <span id="explain-rating" class="explain">(<a href="#" class="tooltip-link" data-toggle="tooltip" title="Community Rating is the average rating of all submitted reviews.">?</a>)</span>:</h3>
-                <div class="rating-value">{{ "{0:.2f}".format(avg_rating[0][0]) }} <span class="out-of">/ 10</span></div>
+                <div class="rating-value">{{ community_review.get_avg_rating() }} <span class="out-of">/ 10</span></div>
 
             </td>
             <td class="rating">
                 <h3 class="rating-label">Total Reviews <span id="explain-total" class="explain">(<a href="#" class="tooltip-link" data-toggle="tooltip" title="Total Reviews is the total # of reviews collected, including reviews that did not have a Details section and are therefore not listed below.">?</a>)</span>:</h3>
-                <div class="rating-value">{{ user_reviews_count[0][0] }}</div>
+                <div class="rating-value">{{ community_review.get_review_count() }}</div>
             </td>
         </tr>
 
@@ -64,7 +69,7 @@
 
             {% if session.logged_in %}
             <div class="actions">
-                <a href="{{ url_for('admin_delete_user_review', user_review_id=user_review.id) }}">Delete</a>
+                <a href="#">Delete</a>
             </div>
             {% endif %}
 
