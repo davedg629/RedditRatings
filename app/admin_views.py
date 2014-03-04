@@ -135,6 +135,10 @@ class CommunityReviewView(AdminModelView):
                            form_opts=form_opts,
                            return_url=return_url)
 
+
+class UserReviewView(AdminModelView):
+    column_filters = ['community_review']
+
 # Admin construtor
 admin = Admin(
     name="RedditReviewBot",
@@ -168,7 +172,7 @@ admin.add_view(CommunityReviewView(
     name='Community Reviews',
     endpoint='communityreview_model_view'
 ))
-admin.add_view(AdminModelView(
+admin.add_view(UserReviewView(
     models.UserReview,
     db.session,
     name='User Reviews',

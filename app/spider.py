@@ -263,10 +263,11 @@ for community_review in community_reviews:
                         db.session.commit()
 
                         # reply with a success message
-                        r.user.send_message(
+                        r.send_message(
                             comment.author.name,
-                            'Your review of ' + community_review.title +
-                            ' has been successfully added.' +
+                            'Success!',
+                            'Your review of **' + community_review.title +
+                            '** has been successfully added.' +
                             '\n\nView the Community Review here: ' +
                             'http://' + SERVER_NAME + '/' +
                             community_review.category.slug + '/' +

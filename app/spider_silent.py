@@ -1,4 +1,4 @@
-from app import app, db
+from app import db
 from app.models import User, CommunityReview, UserReview
 from config import REDDIT_USERNAME, REDDIT_PASSWORD, \
     REDDIT_USER_AGENT, SERVER_NAME
@@ -261,17 +261,6 @@ for community_review in community_reviews:
                         )
                         db.session.add(new_user_review)
                         db.session.commit()
-
-                        # reply with a success message
-                        r.user.send_message(
-                            comment.author.name,
-                            'Your review of ' + community_review.title +
-                            ' has been successfully added.' +
-                            '\n\nView the Community Review here: ' +
-                            'http://' + SERVER_NAME + '/' +
-                            community_review.category.slug + '/' +
-                            community_review.slug +
-                            '\n\nThanks!')
 
         # is the comment already in the db
         elif this_comment:

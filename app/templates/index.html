@@ -22,11 +22,9 @@
         {% if community_review.user_reviews %}
 
         <p class="ratings">
-            {% set avg_rating=get_avg_rating(community_review.id) %}
-            <strong class="serif">Community Rating:</strong> &nbsp; <span class="highlight">{{ "{0:.2f}".format(avg_rating[0][0]) }}</span> out of 10 
+            <strong class="serif">Community Rating:</strong> &nbsp; <span class="highlight">{{ community_review.get_avg_rating() }}</span> out of 10 
             <br />
-            {% set review_count=get_review_count(community_review.id) %}
-            <strong class="serif">Total Reviews:</strong> &nbsp; <span class="highlight">{{ review_count[0][0] }}</span>
+            <strong class="serif">Total Reviews:</strong> &nbsp; <span class="highlight">{{ community_review.get_review_count() }}</span>
         </p>
 
         {% endif %}
