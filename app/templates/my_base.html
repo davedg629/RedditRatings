@@ -33,7 +33,7 @@
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
         <li{% if 'index' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('index') }}">Community Reviews</a></li>
-        <li{% if 'list_categories' == request.endpoint %} class="active"{% endif %}><a href="#">Categories</a></li>
+        <li{% if 'list_categories' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_categories') }}">Categories</a></li>
         <li{% if 'list_subreddits' == request.endpoint %} class="active"{% endif %}><a href="#">Subreddits</a></li>
         <li{% if 'list_groups' == request.endpoint %} class="active"{% endif %}><a href="#">Groups</a></li>
         <li{% if 'how_it_works' == request.endpoint %} class="active"{% endif %}><a href="#">How It Works</a></li>

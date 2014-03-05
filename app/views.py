@@ -88,32 +88,44 @@ def index():
     )
 
 
-@app.route('/<category_slug>/')
-def community_review(category_slug, community_review_slug):
+@app.route('/categories/')
+def list_categories():
+    categories = db.session.query(Category).all()
+    return render_template(
+        'list_categories.html',
+        categories=categories,
+        title="Categories",
+        page_title="Categories"
+    )
+
+
+@app.route('/category/<category_slug>')
+def category(category_slug):
     category = db.session.query(Category)\
         .filter_by(slug=category_slug)\
         .first()
-    community_review = db.session.query(CommunityReview)\
-        .filter_by(category_id=category.id)\
-        .filter_by(slug=community_review_slug)\
-        .first()
-    if community_review:
-        last_crawl = None
-        user_reviews = None
-        if community_review.user_reviews:
-            last_crawl = pretty_date(community_review.last_crawl)
-            user_reviews = db.session.query(UserReview)\
-                .filter_by(community_review_id=community_review.id)\
-                .order_by(UserReview.reddit_score.desc())
-        return render_template('community_review.html',
-                               community_review=community_review,
-                               last_crawl=last_crawl,
-                               user_reviews=user_reviews,
-                               title=community_review.title,
-                               page_title=community_review.title
-                               )
+    community_reviews = category.community_reviews.all()
+    if category:
+        return render_template(
+            'category.html',
+            category=category,
+            community_reviews=community_reviews,
+            title=category.name,
+            page_title="Category: " + category.name
+        )
     else:
         abort(404)
+
+
+@app.route('/subreddits/')
+def list_subreddits():
+    subreddits = db.session.query(CommunityReview.subreddit).distinct()
+    return render_template(
+        'subreddits.html',
+        subreddits=subreddits,
+        title="Subreddits",
+        page_title="Subreddits"
+    )
 
 
 @app.route('/<category_slug>/<community_review_slug>')

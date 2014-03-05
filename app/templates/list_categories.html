@@ -1,0 +1,25 @@
+{% extends "my_base.html" %}
+
+{% block page_content %}
+<div class="listing">
+
+    {{super()}}
+
+    {% if categories %}
+
+    {% for category in categories %}
+
+    {% if category.community_reviews.all() %}
+    <div class="list-item">
+
+        <strong><a href="{{ url_for('category', category_slug=category.slug) }}">{{ category.name }}</a></strong>
+
+    </div>
+    {% endif %}
+
+    {% endfor %}
+
+    {% endif %}
+
+</div>    
+{% endblock %}
