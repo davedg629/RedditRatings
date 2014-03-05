@@ -88,6 +88,7 @@ def index():
     )
 
 
+# list categories
 @app.route('/categories/')
 def list_categories():
     categories = db.session.query(Category).all()
@@ -99,16 +100,16 @@ def list_categories():
     )
 
 
+# category page
 @app.route('/category/<category_slug>')
 def category(category_slug):
     category = db.session.query(Category)\
         .filter_by(slug=category_slug)\
         .first()
-    community_reviews = category.community_reviews.all()
     if category:
         return render_template(
             'filtered_community_reviews.html',
-            community_reviews=community_reviews,
+            community_reviews=category.community_reviews.all(),
             title=category.name,
             page_title="Category: " + category.name
         )
@@ -116,6 +117,7 @@ def category(category_slug):
         abort(404)
 
 
+# list subreddits
 @app.route('/subreddits/')
 def list_subreddits():
     subreddits = db.session.query(CommunityReview.subreddit).distinct()
@@ -127,6 +129,7 @@ def list_subreddits():
     )
 
 
+# subreddit page
 @app.route('/subreddit/<subreddit>')
 def subreddit(subreddit):
     community_reviews = db.session.query(CommunityReview)\
@@ -134,7 +137,6 @@ def subreddit(subreddit):
     if community_reviews:
         return render_template(
             'filtered_community_reviews.html',
-            subreddit=subreddit,
             community_reviews=community_reviews,
             title=subreddit,
             page_title="Subreddit: r/" + subreddit
@@ -143,34 +145,69 @@ def subreddit(subreddit):
         abort(404)
 
 
+# list groups
+@app.route('/groups/')
+def list_groups():
+    groups = db.session.query(Group).all()
+    return render_template(
+        'list_groups.html',
+        groups=groups,
+        title="Groups",
+        page_title="Groups"
+    )
+
+
+# group page
+@app.route('/group/<group_slug>')
+def group(group_slug):
+    group = db.session.query(Group)\
+        .filter_by(slug=group_slug)\
+        .first()
+    if group:
+        return render_template(
+            'filtered_community_reviews.html',
+            community_reviews=group.community_reviews.all(),
+            title=group.name,
+            page_title="Group: " + group.name
+        )
+    else:
+        abort(404)
+
+
+# community review single
 @app.route('/<category_slug>/<community_review_slug>')
 def community_review(category_slug, community_review_slug):
     category = db.session.query(Category)\
         .filter_by(slug=category_slug)\
         .first()
-    community_review = db.session.query(CommunityReview)\
-        .filter_by(category_id=category.id)\
-        .filter_by(slug=community_review_slug)\
-        .first()
-    if community_review:
-        last_crawl = None
-        user_reviews = None
-        if community_review.user_reviews:
-            last_crawl = pretty_date(community_review.last_crawl)
-            user_reviews = db.session.query(UserReview)\
-                .filter_by(community_review_id=community_review.id)\
-                .order_by(UserReview.reddit_score.desc())
-        return render_template('community_review.html',
-                               community_review=community_review,
-                               last_crawl=last_crawl,
-                               user_reviews=user_reviews,
-                               title=community_review.title,
-                               page_title=community_review.title
-                               )
+    if category:
+        community_review = db.session.query(CommunityReview)\
+            .filter_by(category_id=category.id)\
+            .filter_by(slug=community_review_slug)\
+            .first()
+        if community_review:
+            last_crawl = None
+            user_reviews = None
+            if community_review.user_reviews:
+                last_crawl = pretty_date(community_review.last_crawl)
+                user_reviews = db.session.query(UserReview)\
+                    .filter_by(community_review_id=community_review.id)\
+                    .order_by(UserReview.reddit_score.desc())
+            return render_template(
+                'community_review.html',
+                community_review=community_review,
+                last_crawl=last_crawl,
+                user_reviews=user_reviews,
+                title=community_review.title,
+                page_title=community_review.title
+            )
+        else:
+            abort(404)
     else:
         abort(404)
 
 
+# user review single
 @app.route('/user-review/<int:user_review_id>')
 def user_review(user_review_id):
     user_review = db.session.query(UserReview)\
