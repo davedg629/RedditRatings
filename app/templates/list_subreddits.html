@@ -1,0 +1,23 @@
+{% extends "my_base.html" %}
+
+{% block page_content %}
+<div class="listing">
+
+    {{super()}}
+
+    {% if subreddits %}
+
+    {% for subreddit in subreddits %}
+
+    <div class="list-item">
+
+        <strong><a href="{{ url_for('subreddit', subreddit=subreddit[0]) }}">{{ subreddit[0] }}</a></strong>
+
+    </div>
+
+    {% endfor %}
+
+    {% endif %}
+
+</div>    
+{% endblock %}

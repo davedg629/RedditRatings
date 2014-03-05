@@ -107,8 +107,7 @@ def category(category_slug):
     community_reviews = category.community_reviews.all()
     if category:
         return render_template(
-            'category.html',
-            category=category,
+            'filtered_community_reviews.html',
             community_reviews=community_reviews,
             title=category.name,
             page_title="Category: " + category.name
@@ -121,11 +120,27 @@ def category(category_slug):
 def list_subreddits():
     subreddits = db.session.query(CommunityReview.subreddit).distinct()
     return render_template(
-        'subreddits.html',
+        'list_subreddits.html',
         subreddits=subreddits,
         title="Subreddits",
         page_title="Subreddits"
     )
+
+
+@app.route('/subreddit/<subreddit>')
+def subreddit(subreddit):
+    community_reviews = db.session.query(CommunityReview)\
+        .filter_by(subreddit=subreddit).all()
+    if community_reviews:
+        return render_template(
+            'filtered_community_reviews.html',
+            subreddit=subreddit,
+            community_reviews=community_reviews,
+            title=subreddit,
+            page_title="Subreddit: r/" + subreddit
+        )
+    else:
+        abort(404)
 
 
 @app.route('/<category_slug>/<community_review_slug>')
