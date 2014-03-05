@@ -1,0 +1,11 @@
+{% extends "my_base.html" %}
+
+{% block page_content %}
+
+    {{super()}}
+
+    <p><strong>Sorry, the page you were looking for was not found.</strong></p>
+
+    <p><a href="{{ url_for('index') }}">Go to home page</a></p>
+
+{% endblock %}

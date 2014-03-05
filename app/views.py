@@ -1,6 +1,6 @@
 from app import app, db
 from flask import flash, redirect, render_template, request, \
-    session, url_for
+    session, url_for, abort
 from app.forms import LoginForm
 from app.models import Category, Role, User, Group, CommunityReview, \
     UserReview
@@ -11,13 +11,21 @@ from app.decorators import login_required
 # ERROR HANDLERS
 @app.errorhandler(404)
 def page_not_found_error(error):
-    return render_template('404.html'), 404
+    return render_template(
+        '404.html',
+        title="Page Not Found",
+        page_title="Page Not Found"
+    ), 404
 
 
 @app.errorhandler(500)
 def internal_error(error):
     db.session.rollback()
-    return render_template('500.html'), 500
+    return render_template(
+        '500.html',
+        title="Error",
+        page_title="Error!"
+    ), 500
 
 
 # BASIC PAGES
@@ -80,7 +88,7 @@ def index():
     )
 
 
-@app.route('/<category_slug>/<community_review_slug>/')
+@app.route('/<category_slug>/')
 def community_review(category_slug, community_review_slug):
     category = db.session.query(Category)\
         .filter_by(slug=category_slug)\
@@ -105,7 +113,35 @@ def community_review(category_slug, community_review_slug):
                                page_title=community_review.title
                                )
     else:
-        return render_template('404.html')
+        abort(404)
+
+
+@app.route('/<category_slug>/<community_review_slug>')
+def community_review(category_slug, community_review_slug):
+    category = db.session.query(Category)\
+        .filter_by(slug=category_slug)\
+        .first()
+    community_review = db.session.query(CommunityReview)\
+        .filter_by(category_id=category.id)\
+        .filter_by(slug=community_review_slug)\
+        .first()
+    if community_review:
+        last_crawl = None
+        user_reviews = None
+        if community_review.user_reviews:
+            last_crawl = pretty_date(community_review.last_crawl)
+            user_reviews = db.session.query(UserReview)\
+                .filter_by(community_review_id=community_review.id)\
+                .order_by(UserReview.reddit_score.desc())
+        return render_template('community_review.html',
+                               community_review=community_review,
+                               last_crawl=last_crawl,
+                               user_reviews=user_reviews,
+                               title=community_review.title,
+                               page_title=community_review.title
+                               )
+    else:
+        abort(404)
 
 
 @app.route('/user-review/<int:user_review_id>')
@@ -117,4 +153,4 @@ def user_review(user_review_id):
                                user_review=user_review
                                )
     else:
-        return render_template('404.html')
+        abort(404)

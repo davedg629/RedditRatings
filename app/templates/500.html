@@ -1,0 +1,11 @@
+{% extends "my_base.html" %}
+
+{% block page_content %}
+
+    {{super()}}
+
+    <p><strong>Sorry, there has been an error. It has been recorded in our logs and we will fix it soon.</strong></p>
+
+    <p><a href="{{ url_for('index') }}">Go to home page</a></p>
+
+{% endblock %}
