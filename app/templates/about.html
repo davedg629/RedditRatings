@@ -1,0 +1,16 @@
+{% extends "my_base.html" %}
+
+{% block page_content %}
+
+    {{super()}}
+
+        <p>RedditReviewBot is a 3rd party reddit app that allows redditors to create Community Reviews of anything by commenting on reddit posts using a specific review format. <a href="{{ url_for('how_it_works') }}">Click here to learn how it works</a>.</p>
+
+        <p>RedditReviewBot was created as a <a href="http://groupsrc.com" target="_blank">GroupSRC.com</a> project. GroupSRC was started by brothers <a href="http://twitter.com/daviddigiovanni" target="_blank">David DiGiovanni</a> and <a href="http://twitter.com/pauliedigi" target="_blank">Paul DiGiovanni</a> to explore the possibilities of reddit to facilitate communication between leaders and audiences.</p>
+
+        <p>RedditReviewBot fits into the GroupSRC mission by allowing reddit communities to create content together and articulate their opinions collectively. At its core, RedditReviewBot is a content management system that allows subreddits to create pieces of content together without leaving the reddit interface.</a>
+
+        <p><strong>RedditReviewBot demonstrates a interesting potential for reddit communities. Reviewing things is just one way redditors can create content together. The app allows redditors to create many different types of reviews together and learn more about what they collectively think.</strong></p>
+
+{% endblock %}
+

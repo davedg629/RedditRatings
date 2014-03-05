@@ -2,7 +2,7 @@ from app import app, db
 from flask import flash, redirect, render_template, request, \
     session, url_for, abort
 from app.forms import LoginForm
-from app.models import Category, Role, User, Group, CommunityReview, \
+from app.models import Category, Group, CommunityReview, \
     UserReview
 from app.utils import pretty_date
 from app.decorators import login_required
@@ -31,16 +31,20 @@ def internal_error(error):
 # BASIC PAGES
 @app.route('/how-it-works/', methods=['GET'])
 def how_it_works():
-    return render_template('how_it_works.html',
-                           title="How Reddit Game Reviews Works"
-                           )
+    return render_template(
+        'how_it_works.html',
+        title="How RedditReviewBot Works",
+        page_title="How RedditReviewBot Works"
+    )
 
 
 @app.route('/about/', methods=['GET'])
 def about():
-    return render_template('about.html',
-                           title="About Reddit Game Reviews"
-                           )
+    return render_template(
+        'about.html',
+        title="About RedditReviewBot",
+        page_title="About RedditReviewBot"
+    )
 
 
 # LOGIN AND LOGOUT
