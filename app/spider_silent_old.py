@@ -18,9 +18,9 @@ def parse_comment_rating(labelPos, label, comment_body):
         if is_number(comment_body[i]):
             if comment_body[i] == '1' \
                     and comment_body[i + 1] == '0':
-                return comment_body[i:i + 2]
+                return int(comment_body[i:i + 2]) * 2
             else:
-                return comment_body[i]
+                return int(comment_body[i]) * 2
 
     return 0
 
@@ -252,7 +252,7 @@ for community_review in community_reviews:
                     # parse comment
                     comment_params = parse_comment(comment.body)
 
-                    if 1 <= int(comment_params['Rating']) <= 10:
+                    if 1 <= comment_params['Rating'] <= 10:
 
                         # add user if not already in db and get user_id
                         if not this_user:
@@ -273,28 +273,13 @@ for community_review in community_reviews:
                             reddit_id=comment.id,
                             date_posted=datetime.datetime
                             .utcfromtimestamp(comment.created_utc),
-                            rating=int(comment_params['Rating']) * 2,
+                            rating=comment_params['Rating'],
                             review=comment_params['Details'],
                             reddit_score=comment.ups - comment.downs,
                             edited_stamp=this_last_edited
                         )
                         db.session.add(new_user_review)
                         db.session.commit()
-
-                        # reply with a success message if user wants it
-                        if 'verifyreview' or 'VerifyReview' in comment.body:
-                            r.send_message(
-                                comment.author.name,
-                                'Success!',
-                                'Your review of **' + community_review.title +
-                                '** has been successfully added.' +
-                                '\n\nView the Community Review here: ' +
-                                'http://' + SERVER_NAME + '/' +
-                                community_review.category.slug + '/' +
-                                community_review.slug +
-                                '\n\n*You received this message because you ' +
-                                'included a verifyreview tag in your review.*'
-                            )
 
         # is the comment already in the db
         elif this_comment:
