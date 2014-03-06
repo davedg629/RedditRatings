@@ -149,7 +149,7 @@ class CommunityReview(db.Model):
         avg_rating = db.session\
             .query(func.avg(UserReview.rating))\
             .filter_by(community_review_id=self.id)
-        return "{0:.2f}".format(avg_rating[0][0])
+        return avg_rating[0][0]
 
     def get_review_count(self):
         review_count = db.session\
