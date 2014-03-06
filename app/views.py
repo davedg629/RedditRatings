@@ -194,9 +194,9 @@ def community_review(category_slug, community_review_slug):
             user_reviews = None
             if community_review.user_reviews:
                 last_crawl = pretty_date(community_review.last_crawl)
-                user_reviews = db.session.query(UserReview)\
-                    .filter_by(community_review_id=community_review.id)\
-                    .order_by(UserReview.reddit_score.desc())
+                user_reviews = community_review.user_reviews\
+                    .order_by(UserReview.reddit_score.desc())\
+                    .all()
             return render_template(
                 'community_review.html',
                 community_review=community_review,

@@ -15,55 +15,47 @@
     {% endif %}
 
     <p class="meta">
-
         Posted on {{ community_review.date_posted.strftime('%b %d, %Y') }}
-        
-        {% if community_review.reddit_permalink %}to <a href="{{ community_review.reddit_permalink }}" target="_blank">r/{{ community_review.subreddit }}</a>{% endif %}<br /> 
-
-        {% if last_crawl %}
-        <span class="last-updated">Last updated {{ last_crawl }}</span>
-        {% endif %}
-
+        {% if community_review.reddit_permalink %}to <a href="{{ community_review.reddit_permalink }}" target="_blank">r/{{ community_review.subreddit }}</a>{% endif %}
     </p>
 
+    <ul class="details">
+
+        {% if user_reviews %}
+        <li><span class="detail-label">Community Rating:</span> &nbsp; {{ community_review.get_avg_rating() }} out of 10</li>
+
+        <li><span class="detail-label"># of User Reviews:</span> &nbsp; {{ community_review.get_review_count() }}
+        {% endif %}
+
+        <li><span class="detail-label">Reddit Score:</span> &nbsp; {{ community_review.reddit_score }}</li>
+
+        <li><span class="detail-label">Category:</span> &nbsp; <a href="{{ url_for('category', category_slug=community_review.category.slug) }}">{{ community_review.category }}</a></li>
+
+        {% if community_review.groups %}
+        <li><span class="detail-label">Grouped in:</span> &nbsp;
+        {% for group in community_review.groups %}
+        <a href="{{ url_for('group', group_slug=group.slug) }}">{{ group }}</a>{% if not loop.last %} | {% endif %}            
+        {% endfor %}
+        {% endif %}
+        </li>
+    </ul>
+
     {% if user_reviews %}
-
-    <table class="sidebar-module-inset game-ratings">
-
-        <tr>
-            <td class="rating">            
-                <h3 class="rating-label">Community Rating <span id="explain-rating" class="explain">(<a href="#" class="tooltip-link" data-toggle="tooltip" title="Community Rating is the average rating of all submitted reviews.">?</a>)</span>:</h3>
-                <div class="rating-value">{{ community_review.get_avg_rating() }} <span class="out-of">/ 10</span></div>
-
-            </td>
-            <td class="rating">
-                <h3 class="rating-label">Total Reviews <span id="explain-total" class="explain">(<a href="#" class="tooltip-link" data-toggle="tooltip" title="Total Reviews is the total # of reviews collected, including reviews that did not have a Details section and are therefore not listed below.">?</a>)</span>:</h3>
-                <div class="rating-value">{{ community_review.get_review_count() }}</div>
-            </td>
-        </tr>
-
-    </table>
-
-    <div class="reddit-credit"><a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">All user reviews sourced from /r/{{ community_review.subreddit }}</a></div>
 
     <div class="user-reviews">
 
         <h3>User Reviews (sorted by reddit score):</h3>
 
         {% for user_review in user_reviews %}
-        <div class="user-review">
+        <div class="user-review{% if loop.last %} last{% endif %}">
 
-            <h4><a class="redditor" href="{{ community_review.reddit_permalink}}{{ user_review.reddit_id }}" target="_blank">{{ user_review.user.username }}</a> | {{ user_review.rating }} <span>out of 10</span></h4>
+            <h4><a class="redditor" href="{{ community_review.reddit_permalink}}{{ user_review.reddit_id }}" target="_blank">{{ user_review.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ user_review.rating }} <span>out of 10</span> &nbsp; | &nbsp; <strong>Reddit Score:</strong> {{ user_review.reddit_score }}</span></h4>
 
             {% if user_review.review != '' %}
             <div class="review">
                 {{ user_review.review }}
             </div>
             {% endif %}
-
-            <div class="review-details">
-                <strong>Reddit Score:</strong> {{ user_review.reddit_score }}
-            </div>
 
             {% if session.logged_in %}
             <div class="actions">
@@ -77,7 +69,7 @@
 
     {% else %}
 
-    <p><strong><a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Click here to contribute to this reddit review</a></strong></p>
+    <p><strong>No user reviews have been submitted yet!</strong></p>
 
     {% endif %}
 
@@ -86,13 +78,14 @@
 
 {% block sidebar %}
 
-{% if community_review.open_for_comments %}
-<div class="sidebar-module well">
+    {% if community_review.open_for_comments %}
+    <div class="sidebar-module well submit-review">
 
-    <div class="submit-review"><a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Submit a review for "{{ community_review.title }}" on reddit</a></div>
+        <a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Submit a review for<br />"{{ community_review.title }}"</a>
 
-</div>
-{% endif %}
+    </div>
+    {% endif %}
 
-{{super()}}
+    {{super()}}
+    
 {% endblock %}

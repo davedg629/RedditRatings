@@ -1,6 +1,7 @@
 /* CUSTOM STYLES */
 body {
   padding-top: 100px;
+  line-height: 1.52857143;
 }
 
 .theme-dropdown .dropdown-menu {
@@ -39,4 +40,9 @@ ul.details li span.detail-label {font-weight: bold;}
 .listing .list-item a.more {font-size: 18px;}
 
 /** community review **/
-.submit-review {font-weight: bold; font-size: 20px; line-height: 24px; text-align: center;}
+.user-reviews {border-top: 1px solid #ecf0f1; margin-top: 20px;} 
+.user-reviews .user-review {border-bottom: 1px solid #ecf0f1; margin-bottom: 15px; padding-bottom: 15px;}
+.user-reviews .user-review.last {border-bottom: 0 none; margin-bottom: 0; padding-bottom: 0;}
+.user-reviews .user-review h4 span.review-details {font-size: 14px;}
+
+.submit-review {font-weight: bold; font-size: 20px; line-height: 28px; padding: 10px; text-align: center;}

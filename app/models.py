@@ -141,8 +141,8 @@ class CommunityReview(db.Model):
 
     user_reviews = db.relationship(
         'UserReview',
-        order_by="desc(UserReview.date_posted)",
-        backref='community_review'
+        backref='community_review',
+        lazy='dynamic'
     )
 
     def get_avg_rating(self):

@@ -23,12 +23,12 @@
             {% if community_review.user_reviews %}
             <li><span class="detail-label">Community Rating:</span> &nbsp; {{ community_review.get_avg_rating() }} out of 10</li>
 
-            <li><span class="detail-label">Total Reviews:</span> &nbsp; {{ community_review.get_review_count() }}
+            <li><span class="detail-label"># of User Reviews:</span> &nbsp; {{ community_review.get_review_count() }}
             {% endif %}
 
             <li><span class="detail-label">Reddit Score:</span> &nbsp; {{ community_review.reddit_score }}</li>
 
-            <li><span class="detail-label">Category:</span> &nbsp; {{ community_review.category }}</li>
+            <li><span class="detail-label">Category:</span> &nbsp; <a href="{{ url_for('category', category_slug=community_review.category.slug) }}">{{ community_review.category }}</a></li>
 
             {% if community_review.groups %}
             <li><span class="detail-label">Grouped in:</span> &nbsp;
