@@ -282,7 +282,8 @@ for community_review in community_reviews:
                         db.session.commit()
 
                         # reply with a success message if user wants it
-                        if 'verifyreview' or 'VerifyReview' in comment.body:
+                        if ('verifyreview' in comment.body) \
+                                or ('VerifyReview' in comment.body):
                             r.send_message(
                                 comment.author.name,
                                 'Success!',
@@ -293,7 +294,7 @@ for community_review in community_reviews:
                                 community_review.category.slug + '/' +
                                 community_review.slug +
                                 '\n\n(You received this message because you ' +
-                                'included a verifyreview tag in your review)'
+                                'included a verifyreview tag in your review.*'
                             )
 
         # is the comment already in the db
