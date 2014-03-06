@@ -28,7 +28,7 @@
             <li><span class="detail-label">Total Reviews:</span> &nbsp; <span class="highlight">{{ community_review.get_review_count() }}</span>
             {% endif %}
 
-            {% if community_review.groups %}
+            {% if community_review.groups.first() %}
             <li><span class="detail-label">Grouped in:</span> &nbsp;
             {% for group in community_review.groups %}
             {{ group }}
