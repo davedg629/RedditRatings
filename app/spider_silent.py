@@ -1,12 +1,82 @@
 from app import db
 from app.models import User, CommunityReview, UserReview
 from config import REDDIT_USERNAME, REDDIT_PASSWORD, \
-    REDDIT_USER_AGENT, SERVER_NAME
+    REDDIT_USER_AGENT
 from app.utils import is_number
 import praw
 import datetime
 import time
 from requests import HTTPError
+
+
+def parse_comment_rating(labelPos, label, comment_body):
+    """Parse rating from comment, given the rating label,
+    label position, and the comment body."""
+
+    for i in range(labelPos + len(label) + 1,
+                   labelPos + len(label) + 5):
+        if is_number(comment_body[i]):
+            if comment_body[i] == '1' \
+                    and comment_body[i + 1] == '0':
+                return comment_body[i:i + 2]
+            else:
+                return comment_body[i]
+
+    return 0
+
+
+def parse_comment_review(labelPos, label, comment_body):
+    """Parse review from comment, given the review label,
+    label position, and comment body."""
+
+    endPos = 0
+    endPos = comment_body.find('---', labelPos)
+
+    if comment_body[labelPos - 2:
+                    labelPos +
+                    len(label) + 3] == '**' + label + ':**':
+        return \
+            comment_body[
+                labelPos +
+                len(label) +
+                + 3:endPos
+            ].strip() \
+            if endPos != -1 else \
+            comment_body[
+                labelPos +
+                len(label) +
+                + 3:
+            ].strip()
+
+    elif comment_body[labelPos - 1:
+                      labelPos +
+                      len(label) + 2] == '*' + label + ':*':
+        return \
+            comment_body[
+                labelPos +
+                len(label) +
+                + 2:endPos
+            ].strip() \
+            if endPos != -1 else \
+            comment_body[
+                labelPos +
+                len(label) +
+                + 2:
+            ].strip()
+
+    else:
+        return \
+            comment_body[
+                labelPos +
+                len(label) +
+                + 1:endPos
+            ].strip() \
+            if endPos != -1 else \
+            comment_body[
+                labelPos +
+                len(label) +
+                + 1:
+            ].strip()
 
 
 def parse_comment(comment_body):
@@ -16,73 +86,22 @@ def parse_comment(comment_body):
         'Review'
     ]
 
-    endPos = 0
     comment_params = {}
 
     for label in labels:
+
         labelPos = comment_body.find(label + ':')
         if labelPos >= 0:
+
             # parse Rating
             if label == 'Rating':
-                comment_params[label] = 0
-                for i in range(labelPos + len(label) + 1,
-                               labelPos + len(label) + 5):
-                    if is_number(comment_body[i]):
-                        if comment_body[i] == '1' \
-                                and comment_body[i + 1] == '0':
-                            comment_params[label] = comment_body[i:i + 2]
-                        else:
-                            comment_params[label] = comment_body[i]
-                        break
+                comment_params[label] = \
+                    parse_comment_rating(labelPos, label, comment_body)
+
             # parse Review
             else:
-                endPos = comment_body.find('---', labelPos)
-
-                if comment_body[labelPos - 2:
-                                labelPos +
-                                len(label) + 3] == '**' + label + ':**':
-                    comment_params[label] = \
-                        comment_body[
-                            labelPos +
-                            len(label) +
-                            + 3:endPos
-                        ].strip() \
-                        if endPos != -1 else \
-                        comment_body[
-                            labelPos +
-                            len(label) +
-                            + 3:
-                        ].strip()
-
-                elif comment_body[labelPos - 1:
-                                  labelPos +
-                                  len(label) + 2] == '*' + label + ':*':
-                    comment_params[label] = \
-                        comment_body[
-                            labelPos +
-                            len(label) +
-                            + 2:endPos
-                        ].strip() \
-                        if endPos != -1 else \
-                        comment_body[
-                            labelPos +
-                            len(label) +
-                            + 2:
-                        ].strip()
-
-                else:
-                    comment_params[label] = \
-                        comment_body[
-                            labelPos +
-                            len(label) +
-                            + 1:endPos
-                        ].strip() \
-                        if endPos != -1 else \
-                        comment_body[
-                            labelPos +
-                            len(label) +
-                            + 1:
-                        ].strip()
+                comment_params[label] = \
+                    parse_comment_review(labelPos, label, comment_body)
 
         else:
             comment_params[label] = ''
