@@ -21,6 +21,11 @@ body {
 
 .meta {font-size: 14px;}
 
+/** sidebar **/
+.sidebar-module {margin-bottom: 20px;}
+
+.sidebar-module ul {margin-bottom: 0; padding-left: 20px;}
+
 /** listing **/
 .listing .list-item {border-bottom: 1px solid #ecf0f1; margin-bottom: 17px; padding-bottom: 20px;} 
 

@@ -1,8 +1,12 @@
-<h1>Reddit Review Bot</h1>
+<h1>RedditReviewBot</h1>
 
-Reddit Review Bot is a Flask app that allows redditors to create Community Reviews of anything by commenting on a reddit thread using a specific review format.
+RedditReviewBot is a Flask app that allows reddit communities to create Community Reviews of anything by commenting on a reddit thread using a specific review format.
 
-A working example of the app can be found at http://RedditReview.com
+A working example of the app can be found at http://RedditReviewBot.com
+
+Ideas, issues, and requests can be discussed at http://reddit.com/r/RedditReviewBot
+
+You can follow @RedditReviewBot on Twitter - http://twitter.com/redditreviewbot
 
 <hr />
 

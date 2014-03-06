@@ -18,11 +18,11 @@
         
         <p><strong>This is the format for leaving a review in the comments section:</strong></p>
 
-        <div class="review-format">
+        <div class="review-format well">
             
             <p><strong>Rating:</strong> [Provide a rating from 1 to 10 here, integers only, required]</p>
 
-            <p><strong>Rating:</strong></p>
+            <p><strong>Review:</strong></p>
             
             <p>[Write your review here, keep it short &amp; focus on your experience, optional]</p>
 
@@ -33,12 +33,12 @@
         </div>
 
         <h3>3. /u/RedditReviewBot scans for comments and pulls reviews into a database</h3>
-        <p>The user reviews are aggregated by a crawler script to create the Community Review. The Community Review is displayed on this website and features an average rating, recommendation results, and the top user reviews (based on reddit score).</p>
+        <p>The user reviews are aggregated by a crawler script to create the Community Review. The Community Review is displayed on this website and features an average rating, the top user reviews (based on reddit score), and other relevant information.</p>
 
         <hr />
 
         <p><strong>If you have any questions or ideas, <a href="http://www.reddit.com/message/compose/?to=redditreviewbot" target="_blank">send me a PM</a> or a <a href="http://twitter.com/redditreviewbot" target="_blank">tweet</a>.</strong></p>
 
-        <p><strong><a href="{{ url_for('about') }}">Click here to learn more about Reddit Game Reviews</a></strong></p>
+        <p><strong><a href="{{ url_for('about') }}">Click here to learn more about RedditReviewBot and why I created it.</a></strong></p>
     
 {% endblock %}
