@@ -22,7 +22,7 @@
 
             <li><span class="detail-label">Category:</span> &nbsp; {{ community_review.category }}</li>
 
-            {% if community_review.user_reviews %}
+            {% if community_review.user_reviews.first() %}
             <li><span class="detail-label">Community Rating:</span> &nbsp; <span class="highlight">{{ community_review.get_avg_rating() }}</span> out of 10</li>
 
             <li><span class="detail-label">Total Reviews:</span> &nbsp; <span class="highlight">{{ community_review.get_review_count() }}</span>
