@@ -294,7 +294,8 @@ for community_review in community_reviews:
                                 community_review.category.slug + '/' +
                                 community_review.slug +
                                 '\n\n(You received this message because you ' +
-                                'included a verifyreview tag in your review.*'
+                                'included a \'verifyreview\' tag in your ' +
+                                'review.)'
                             )
 
         # is the comment already in the db
