@@ -16,14 +16,12 @@
 
     <p class="meta">
 
-        {% if community_review.reddit_permalink %}
+        Posted on {{ community_review.date_posted.strftime('%b %d, %Y') }}
+        
+        {% if community_review.reddit_permalink %}to <a href="{{ community_review.reddit_permalink }}" target="_blank">r/{{ community_review.subreddit }}</a>{% endif %}<br /> 
 
-        <a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Created by /r/{{ community_review.subreddit }}, starting on {{ community_review.date_posted.strftime('%b %d, %Y') }}</a><br />
-
-            {% if last_crawl %}
-            <span class="last-updated">Last updated {{ last_crawl }}</span>
-            {% endif %}
-
+        {% if last_crawl %}
+        <span class="last-updated">Last updated {{ last_crawl }}</span>
         {% endif %}
 
     </p>
@@ -91,17 +89,10 @@
 {% if community_review.open_for_comments %}
 <div class="sidebar-module well">
 
-    <div class="submit-review"><a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Submit your review on reddit</a></div>
+    <div class="submit-review"><a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Submit a review for "{{ community_review.title }}" on reddit</a></div>
 
 </div>
 {% endif %}
 
-{% if community_review.official_url %}
-<div class="sidebar-module review-links">
-
-    <strong><a href="{{ community_review.official_url }}" target="_blank">Learn more about this game</a></strong>
-
-</div>
-{% endif %}
-
+{{super()}}
 {% endblock %}
