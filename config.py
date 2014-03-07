@@ -64,3 +64,9 @@ if os.environ.get('GA_DEFAULT_URL') is None:
     GA_DEFAULT_URL = 'your-domain.com'
 else:
     GA_DEFAULT_URL = os.environ.get('GA_DEFAULT_URL')
+
+# favicon url
+if os.environ.get('FAVICON_URL') is None:
+    FAVICON_URL = 'url_to_favicon_here'
+else:
+    FAVICON_URL = os.environ.get('FAVICON_URL')

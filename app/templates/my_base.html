@@ -6,9 +6,12 @@
 {% block head %}
 {{super()}}
 {{fixes.ie8()}}
+
+{% if config['FAVICON_URL'] %}
 <link rel="icon" 
       type="image/png" 
-      href="http://groupsrc.com/redditreviewbot/favicon.png">
+      href="{{ config['FAVICON_URL'] }}" />
+{% endif %}
 {% endblock %}
 
 {% block title %}{% if title %}{{ title }} | {% endif %}RedditReviewBot.com{% endblock %}
