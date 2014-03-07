@@ -32,9 +32,9 @@
         <li><span class="detail-label">Category:</span> &nbsp; <a href="{{ url_for('category', category_slug=community_review.category.slug) }}">{{ community_review.category }}</a></li>
 
         {% if community_review.groups.first() %}
-        <li><span class="detail-label">Grouped in:</span> &nbsp;
+        <li><span class="detail-label">Tagged in:</span> &nbsp;
         {% for group in community_review.groups %}
-        <a href="{{ url_for('group', group_slug=group.slug) }}">{{ group }}</a>{% if not loop.last %} | {% endif %}            
+        <a href="{{ url_for('tag', tag_slug=group.slug) }}">{{ group }}</a>{% if not loop.last %} | {% endif %}            
         {% endfor %}
         {% endif %}
         </li>

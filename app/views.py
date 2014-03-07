@@ -149,30 +149,30 @@ def subreddit(subreddit):
         abort(404)
 
 
-# list groups
-@app.route('/groups/')
-def list_groups():
+# list tags
+@app.route('/tags/')
+def list_tags():
     groups = db.session.query(Group).all()
     return render_template(
-        'list_groups.html',
+        'list_tags.html',
         groups=groups,
-        title="Groups",
-        page_title="Groups"
+        title="Tags",
+        page_title="Tags"
     )
 
 
-# group page
-@app.route('/group/<group_slug>')
-def group(group_slug):
+# tag page
+@app.route('/tag/<tag_slug>')
+def tag(tag_slug):
     group = db.session.query(Group)\
-        .filter_by(slug=group_slug)\
+        .filter_by(slug=tag_slug)\
         .first()
     if group:
         return render_template(
             'filtered_community_reviews.html',
             community_reviews=group.community_reviews.all(),
             title=group.name,
-            page_title="Group: " + group.name
+            page_title="Tag: " + group.name
         )
     else:
         abort(404)

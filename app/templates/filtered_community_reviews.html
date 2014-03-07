@@ -29,9 +29,9 @@
             {% endif %}
 
             {% if community_review.groups.first() %}
-            <li><span class="detail-label">Grouped in:</span> &nbsp;
+            <li><span class="detail-label">Tagged in:</span> &nbsp;
             {% for group in community_review.groups %}
-            {{ group }}
+            <a href="{{ url_for('tag', tag_slug=group.slug) }}">{{ group }}</a>{% if not loop.last %} | {% endif %}
             {% endfor %}
             {% endif %}
             </li>
