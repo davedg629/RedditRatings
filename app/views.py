@@ -109,7 +109,8 @@ def index():
 # list categories
 @app.route('/categories/')
 def list_categories():
-    categories = db.session.query(Category).all()
+    categories = db.session.query(Category)\
+        .all()
     return render_template(
         'list_categories.html',
         categories=categories,

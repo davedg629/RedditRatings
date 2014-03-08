@@ -9,7 +9,7 @@
 
     {% for community_review in community_reviews %}
 
-    <div class="list-item{% if loop.last %} list-item-last{% endif %}">
+    <div class="list-item{% if loop.last %} last{% endif %}">
 
         <h3><a href="{{ url_for('community_review', category_slug=community_review.category.slug, community_review_slug=community_review.slug) }}">{{ community_review.title }}</a></h3>
 
