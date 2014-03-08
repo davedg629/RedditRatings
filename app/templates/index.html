@@ -16,7 +16,7 @@
         {% import "community_review_details.html" as details %}
         {{ details.community_review_details(community_review, False) }}
 
-        <a class="more" href="{{ url_for('community_review', category_slug=community_review.category.slug, community_review_slug=community_review.slug) }}">Details</a>
+        <a class="more" href="{{ url_for('community_review', category_slug=community_review.category.slug, community_review_slug=community_review.slug) }}">Read User Reviews</a>
 
     </div>
 

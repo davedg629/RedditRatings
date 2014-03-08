@@ -83,7 +83,7 @@
 
     <div class="row">
 
-        <div class="col-sm-8"> 
+        <div id="main" class="col-sm-8"> 
         {% block page_content %}
 
             {% if page_title %}
@@ -93,7 +93,7 @@
         {% endblock %}
         </div>
 
-        <div class="col-sm-4">
+        <div id="sidebar" class="col-sm-4">
         {% block sidebar %}
 
             {% include 'default_sidebar.html' %}
