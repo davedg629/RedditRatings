@@ -39,7 +39,7 @@ class UserView(AdminModelView):
     form_excluded_columns = ['community_reviews', 'user_reviews', ]
 
 
-class GroupView(AdminModelView):
+class TagView(AdminModelView):
     form_excluded_columns = ['community_reviews', ]
 
 
@@ -165,7 +165,7 @@ admin.add_view(UserView(
     name='Users',
     endpoint='user_model_view'
 ))
-admin.add_view(GroupView(models.Group, db.session))
+admin.add_view(TagView(models.Tag, db.session))
 admin.add_view(CommunityReviewView(
     models.CommunityReview,
     db.session,
