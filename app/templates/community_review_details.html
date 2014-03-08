@@ -1,20 +1,20 @@
 {% macro community_review_details(community_review, self) %}
 {% if community_review.user_reviews.first() %}
 <div class="pull-right community-rating">
+    <div class="pull-right rating-avg">
 
-    <div class="rating">
         {{ community_review.get_avg_rating() }}
         <div class="out-of">out of 10</div>
-    </div>
 
-    <div class="count">
+    </div>
+    <div class="clear"></div>
+    <div class="rating-count">
         {% if not self %}
         Based on <a href="{{ url_for('community_review', category_slug=community_review.category.slug, community_review_slug=community_review.slug) }}">{{ community_review.get_review_count() }}</a>
         {% else %}
         Based on {{ community_review.get_review_count() }}
         {% endif %}
     </div>
-
 </div>
 {% endif %}
 

@@ -7,6 +7,9 @@
 
 {% block head %}
 {{super()}}
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
 {{fixes.ie8()}}
 
 {% if config['FAVICON_URL'] %}
