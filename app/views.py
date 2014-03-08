@@ -2,7 +2,7 @@ from app import app, db
 from flask import flash, redirect, render_template, request, \
     session, url_for, abort
 from app.forms import LoginForm
-from app.models import Category, Group, CommunityReview, \
+from app.models import Category, Tag, CommunityReview, \
     UserReview
 from app.utils import pretty_date
 from app.decorators import login_required
@@ -166,10 +166,10 @@ def subreddit(subreddit):
 # list tags
 @app.route('/tags/')
 def list_tags():
-    groups = db.session.query(Group).all()
+    tags = db.session.query(Tag).all()
     return render_template(
         'list_tags.html',
-        groups=groups,
+        tags=tags,
         title="Tags",
         page_title="Tags"
     )
@@ -178,15 +178,15 @@ def list_tags():
 # tag page
 @app.route('/tag/<tag_slug>')
 def tag(tag_slug):
-    group = db.session.query(Group)\
+    tag = db.session.query(Tag)\
         .filter_by(slug=tag_slug)\
         .first()
-    if group:
+    if tag:
         return render_template(
             'filtered_community_reviews.html',
-            community_reviews=group.community_reviews.all(),
-            title=group.name,
-            page_title="Tag: " + group.name
+            community_reviews=tag.community_reviews.all(),
+            title=tag.name,
+            page_title="Tag: " + tag.name
         )
     else:
         abort(404)

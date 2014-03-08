@@ -5,14 +5,14 @@
 
     {{super()}}
 
-    {% if groups %}
+    {% if tags %}
 
-    {% for group in groups %}
+    {% for tag in tags %}
 
-    {% if group.community_reviews.all() %}
+    {% if tag.community_reviews.all() %}
     <div class="list-item">
 
-        <strong><a href="{{ url_for('tag', tag_slug=group.slug) }}">{{ group.name }}</a></strong>
+        <strong><a href="{{ url_for('tag', tag_slug=tag.slug) }}">{{ tag.name }}</a></strong>
 
     </div>
     {% endif %}

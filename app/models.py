@@ -67,25 +67,25 @@ class User(db.Model):
         return self.username
 
 
-# create association table for Group/CommunityReview relationship
-memberships = db.Table(
-    'memberships',
+# create association table for Tag/CommunityReview relationship
+tag_assocs = db.Table(
+    'tag_assocs',
     db.Column(
         'community_review_id',
         db.Integer,
         db.ForeignKey('community_reviews.id')
     ),
     db.Column(
-        'group_id',
+        'tag_id',
         db.Integer,
-        db.ForeignKey('groups.id')
+        db.ForeignKey('tags.id')
     )
 )
 
 
-class Group(db.Model):
+class Tag(db.Model):
 
-    __tablename__ = 'groups'
+    __tablename__ = 'tags'
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String, nullable=False, unique=True)
@@ -133,9 +133,9 @@ class CommunityReview(db.Model):
     open_for_comments = db.Column(db.Boolean, default=True, nullable=False)
     last_crawl = db.Column(db.DateTime)
 
-    groups = db.relationship(
-        'Group',
-        secondary=memberships,
+    tags = db.relationship(
+        'Tag',
+        secondary=tag_assocs,
         backref=db.backref('community_reviews', lazy='dynamic'),
         lazy='dynamic')
 

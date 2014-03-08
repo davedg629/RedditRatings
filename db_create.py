@@ -1,5 +1,5 @@
 from app import db
-from app.models import Category, Role, User, Group, CommunityReview, UserReview
+from app.models import Category, Role, User, Tag, CommunityReview, UserReview
 from datetime import datetime, date
 
 db.create_all()
@@ -84,19 +84,19 @@ db.session.add(
     )
 )
 
-group1 = Group(
-    name="Test Group 1",
-    slug="test-group-1"
+tag1 = Tag(
+    name="Tag 1",
+    slug="tag-1"
 )
 
-group2 = Group(
-    name="Test Group 2",
-    slug="test-group-2"
+tag2 = Tag(
+    name="Tag 2",
+    slug="tag-2"
 )
 
 
-db.session.add(group1)
-db.session.add(group2)
+db.session.add(tag1)
+db.session.add(tag2)
 
 community_review = CommunityReview(
     user_id=1,
@@ -109,8 +109,8 @@ community_review = CommunityReview(
     open_for_comments=True,
     last_crawl=datetime.now()
 )
-community_review.groups.append(group1)
-community_review.groups.append(group2)
+community_review.tags.append(tag1)
+community_review.tags.append(tag2)
 db.session.add(community_review)
 
 ## user reviews
