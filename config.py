@@ -5,6 +5,12 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 CSRF_ENABLED = True
 DEBUG = True
 
+# set to 'heroku' if hosting with heroku
+if os.environ.get('ENVIRONMENT') is None:
+    ENVIRONMENT = 'dev'
+else:
+    ENVIRONMENT = os.environ.get('ENVIRONMENT')
+
 # server name
 if os.environ.get('SERVER_NAME') is None:
     SERVER_NAME = 'localhost:5000'

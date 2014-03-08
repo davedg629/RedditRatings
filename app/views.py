@@ -8,6 +8,20 @@ from app.utils import pretty_date
 from app.decorators import login_required
 
 
+# redirect to www
+if app.config['ENVIRONMENT'] == 'heroku':
+    from urlparse import urlparse, urlunparse
+
+    @app.before_request
+    def redirect_nonwww():
+        """Redirect non-www requests to www."""
+        urlparts = urlparse(request.url)
+        if urlparts.netloc == 'example.com':
+            urlparts_list = list(urlparts)
+            urlparts_list[1] = 'www.example.com'
+            return redirect(urlunparse(urlparts_list), code=301)
+
+
 # ERROR HANDLERS
 @app.errorhandler(404)
 def page_not_found_error(error):
