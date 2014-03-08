@@ -51,9 +51,9 @@
         <li class="dropdown{% if 'list_categories' == request.endpoint or 'list_subreddits' == request.endpoint or 'list_tags' == request.endpoint %} active{% endif %}">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filter By <b class="caret"></b></a>
             <ul class="dropdown-menu">
-                <li{% if 'list_categories' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_categories') }}">Categories</a></li>
-                <li{% if 'list_subreddits' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_subreddits') }}">Subreddits</a></li>
-                <li{% if 'list_tags' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_tags') }}">Tags</a></li>
+                <li{% if 'list_categories' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_categories') }}">Category</a></li>
+                <li{% if 'list_subreddits' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_subreddits') }}">Subreddit</a></li>
+                <li{% if 'list_tags' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_tags') }}">Tag</a></li>
             </ul>
         </li>
         <li{% if 'how_it_works' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('how_it_works') }}">How It Works</a></li>
