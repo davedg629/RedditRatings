@@ -155,7 +155,11 @@ class CommunityReview(db.Model):
         review_count = db.session\
             .query(func.count(UserReview.id))\
             .filter_by(community_review_id=self.id)
-        return review_count[0][0]
+        if review_count[0][0] == 1:
+            review_count_string = str(review_count[0][0]) + ' rating'
+        else:
+            review_count_string = str(review_count[0][0]) + ' ratings'
+        return review_count_string
 
     def __unicode__(self):
         return self.title + ' - ' + str(self.category_id)

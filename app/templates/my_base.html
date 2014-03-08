@@ -3,6 +3,8 @@
 
 {% block html_attribs %} lang="en"{% endblock %}
 
+{% import "bootstrap/google.html" as google %}
+
 {% block head %}
 {{super()}}
 {{fixes.ie8()}}
@@ -12,6 +14,10 @@
       type="image/png" 
       href="{{ config['FAVICON_URL'] }}" />
 {% endif %}
+
+{{google.uanalytics(id=config['GA_TRACKING_ID'],
+                    domain=config['GA_DEFAULT_URL'])}}
+
 {% endblock %}
 
 {% block title %}{% if title %}{{ title }} | {% endif %}RedditReviewBot.com{% endblock %}
@@ -106,12 +112,4 @@
     </div>
 </div>
 
-{% endblock %}
-
-{% import "bootstrap/google.html" as google %}
-
-{% block scripts %}
-{{super()}}
-{{google.uanalytics(id=config['GA_TRACKING_ID'],
-                    domain=config['GA_DEFAULT_URL'])}}
 {% endblock %}

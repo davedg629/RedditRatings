@@ -13,32 +13,9 @@
 
         <h3><a href="{{ url_for('community_review', category_slug=community_review.category.slug, community_review_slug=community_review.slug) }}">{{ community_review.title }}</a></h3>
 
-        <ul class="details">
+        {% import "community_review_details.html" as details %}
+        {{ details.community_review_details(community_review, False) }}
 
-            <li>
-                Posted on {{ community_review.date_posted.strftime('%b %d, %Y') }}
-                {% if community_review.reddit_permalink %}to <a href="{{ community_review.reddit_permalink }}" target="_blank">r/{{ community_review.subreddit }}</a>{% endif %}
-            </li>
-
-            {% if community_review.user_reviews.first() %}
-            <li><span class="detail-label">Community Rating:</span> &nbsp; {{ community_review.get_avg_rating() }} out of 10</li>
-
-            <li><span class="detail-label"># of User Reviews:</span> &nbsp; {{ community_review.get_review_count() }}
-            {% endif %}
-
-            <li><span class="detail-label">Reddit Score:</span> &nbsp; {{ community_review.reddit_score }}</li>
-
-            <li><span class="detail-label">Category:</span> &nbsp; <a href="{{ url_for('category', category_slug=community_review.category.slug) }}">{{ community_review.category }}</a></li>
-
-            {% if community_review.groups.first() %}
-            <li><span class="detail-label">Tagged:</span> &nbsp;
-            {% for group in community_review.groups %}
-            <a href="{{ url_for('tag', tag_slug=group.slug) }}">{{ group }}</a>{% if not loop.last %} | {% endif %}            
-            {% endfor %}
-            {% endif %}
-            </li>
-        </ul>
-        
         <a class="more" href="{{ url_for('community_review', category_slug=community_review.category.slug, community_review_slug=community_review.slug) }}">Details</a>
 
     </div>
