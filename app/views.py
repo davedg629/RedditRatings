@@ -16,9 +16,9 @@ if app.config['ENVIRONMENT'] == 'heroku':
     def redirect_nonwww():
         """Redirect non-www requests to www."""
         urlparts = urlparse(request.url)
-        if urlparts.netloc == 'example.com':
+        if urlparts.netloc == app.config['NAKED_SERVER_NAME']:
             urlparts_list = list(urlparts)
-            urlparts_list[1] = 'www.example.com'
+            urlparts_list[1] = app.config['SERVER_NAME']
             return redirect(urlunparse(urlparts_list), code=301)
 
 

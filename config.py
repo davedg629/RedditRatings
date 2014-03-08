@@ -17,6 +17,12 @@ if os.environ.get('SERVER_NAME') is None:
 else:
     SERVER_NAME = os.environ.get('SERVER_NAME')
 
+# naked server name, set to example.com if ENVIROMENT is set to 'heroku'
+if os.environ.get('NAKED_SERVER_NAME') is None:
+    NAKED_SERVER_NAME = 'localhost:5000'
+else:
+    NAKED_SERVER_NAME = os.environ.get('NAKED_SERVER_NAME')
+
 # flask secret key
 if os.environ.get('SECRET_KEY') is None:
     SECRET_KEY = 'a_really_good_secret_key'
