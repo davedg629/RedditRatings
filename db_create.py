@@ -106,7 +106,7 @@ community_review = CommunityReview(
     reddit_permalink="http://www.reddit.com/r/3DS/comments/1ycqin/i_created_an_app_that_allows_us_to_review_games/",
     subreddit="3DS",
     date_posted=datetime(2014, 2, 19),
-    open_for_comments=True,
+    open_for_comments=False,
     last_crawl=datetime.now()
 )
 community_review.tags.append(tag1)
