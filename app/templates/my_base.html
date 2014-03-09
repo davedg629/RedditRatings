@@ -46,30 +46,31 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-        <li{% if 'index' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('index') }}">Community Reviews</a></li>
-        <li class="dropdown{% if 'list_categories' == request.endpoint or 'list_subreddits' == request.endpoint or 'list_tags' == request.endpoint %} active{% endif %}">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Filter By <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-                <li{% if 'list_categories' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_categories') }}">Category</a></li>
-                <li{% if 'list_subreddits' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_subreddits') }}">Subreddit</a></li>
-                <li{% if 'list_tags' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_tags') }}">Tag</a></li>
-            </ul>
-        </li>
-        <li{% if 'how_it_works' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('how_it_works') }}">How It Works</a></li>
-        <li{% if 'about' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('about') }}">About</a></li>
-    </ul>
-    {% if session.logged_in %}
-    <ul class="nav navbar-nav navbar-right">
-        <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-                <li><a href="{{ url_for('admin.index') }}">Dashboard</a></li>
-                <li><a href="{{ url_for('logout') }}">Logout</a></li>
-            </ul>
-        </li>
-    </ul>
-    {% endif %}
+        <ul class="nav navbar-nav">
+            {% set community_review_endpoints = ['index', 'list_categories', 'list_subreddits', 'list_tags', 'community_review', 'tag', 'subreddit', 'category'] %}
+            <li class="dropdown{% if request.endpoint in community_review_endpoints %} active{% endif %}">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Community Reviews <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li{% if 'index' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('index') }}">Latest</a></li>
+                    <li{% if 'list_categories' == request.endpoint or 'category' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_categories') }}">By Category</a></li>
+                    <li{% if 'list_subreddits' == request.endpoint or 'subreddit' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_subreddits') }}">By Subreddit</a></li>
+                    <li{% if 'list_tags' == request.endpoint or 'tag' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('list_tags') }}">By Tag</a></li>
+                </ul>
+            </li>
+            <li{% if 'how_it_works' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('how_it_works') }}">How It Works</a></li>
+            <li{% if 'about' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('about') }}">About</a></li>
+        </ul>
+        {% if session.logged_in %}
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ url_for('admin.index') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
+            </li>
+        </ul>
+        {% endif %}
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>{% endblock %}
