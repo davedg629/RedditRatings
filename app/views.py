@@ -218,8 +218,7 @@ def community_review(category_slug, community_review_slug):
                 community_review=community_review,
                 last_crawl=last_crawl,
                 user_reviews=user_reviews,
-                title=community_review.title,
-                page_title=community_review.title
+                title=community_review.title
             )
         else:
             abort(404)

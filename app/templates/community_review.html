@@ -1,21 +1,10 @@
 {% extends "my_base.html" %}
 
 {% block page_content %}
-<div class="listing">
+<div class="community-review">
 
-    {% if page_title %}
-    <div class="page-header">
-        <h2>
-            {{ page_title }}
-            {% if session.logged_in %}
-            <small> | <a href="{{ url_for('communityreview_model_view.edit_view', id=community_review.id) }}">Edit</a></small>
-            {% endif %}
-        </h2>
-    </div>
-    {% endif %}
-
-    {% import "community_review_details.html" as details %}
-    {{ details.community_review_details(community_review, True) }}
+    {% import "community_review_macros.html" as community_review_macros %}
+    {{ community_review_macros.loop(community_review, True) }}
 
     {% if user_reviews %}
 
