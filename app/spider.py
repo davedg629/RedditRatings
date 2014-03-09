@@ -194,6 +194,21 @@ def update_review(comment_body, comment_edited, reddit_id):
     db.session.commit()
 
 
+def send_pm(author, community_review):
+    r.send_message(
+        author,
+        'Success!',
+        'Your review of **' + community_review.title +
+        '** has been successfully added.' +
+        '\n\nView the Community Review here: ' +
+        'http://' + SERVER_NAME + '/' +
+        community_review.category.slug + '/' +
+        community_review.slug +
+        '\n\n(You received this message because you ' +
+        'included a \'verifyreview\' tag in your ' +
+        'review.)'
+    )
+
 # get reddit user agent
 user_agent = (REDDIT_USER_AGENT)
 
@@ -285,19 +300,7 @@ for community_review in community_reviews:
                         # reply with a success message if user wants it
                         if ('verifyreview' in comment.body) \
                                 or ('VerifyReview' in comment.body):
-                            r.send_message(
-                                comment.author.name,
-                                'Success!',
-                                'Your review of **' + community_review.title +
-                                '** has been successfully added.' +
-                                '\n\nView the Community Review here: ' +
-                                'http://' + SERVER_NAME + '/' +
-                                community_review.category.slug + '/' +
-                                community_review.slug +
-                                '\n\n(You received this message because you ' +
-                                'included a \'verifyreview\' tag in your ' +
-                                'review.)'
-                            )
+                            send_pm(comment.author.name, community_review)
 
         # is the comment already in the db
         elif this_comment:
@@ -314,7 +317,7 @@ for community_review in community_reviews:
                 this_comment.downvotes = comment.downs
                 db.session.commit()
 
-    # update last_crawl and reddit_score for review
+    # update last_crawl and up/downvotes for review
     community_review.last_crawl = datetime.datetime.now()
     if community_review.upvotes != submission.ups:
         community_review.upvotes = submission.ups

@@ -23,10 +23,9 @@
 
         <h3 id="user-ratings">Most Helpful User Reviews:</h3>
 
-        {% import "user_review.html" as review %}
-        {% for user_review in user_reviews %}
-            {{ review.user_review_macro(user_review) }}
-        {% endfor %}
+        {% import "user_review.html" as user_review_macros %}
+        {{ user_review_macros.user_review_loop(user_reviews) }}
+
     </div>
 
     {% else %}

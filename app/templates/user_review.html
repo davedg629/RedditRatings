@@ -1,7 +1,8 @@
-{% macro user_review_macro(user_review) %}
+{% macro user_review_loop(user_reviews) %}
+{% for user_review in user_reviews %}
 <div class="user-review{% if loop.last %} last{% endif %}">
 
-    <h4><a class="redditor" href="{{ community_review.reddit_permalink}}{{ user_review.reddit_id }}" target="_blank">{{ user_review.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ user_review.rating }} <span>out of 10</span> &nbsp; | &nbsp; <strong>Reddit Score:</strong> {{ user_review.reddit_score }}</span></h4>
+    <h4><a class="redditor" href="{{ user_review.community_review.reddit_permalink }}{{ user_review.reddit_id }}" target="_blank">{{ user_review.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ user_review.rating }} <span>out of 10</span> &nbsp; | &nbsp; <strong>Votes:</strong> {{ user_review.upvotes }} up, {{ user_review.downvotes }} down</span></h4>
 
     {% if user_review.review != '' %}
     <div class="review">
@@ -16,4 +17,5 @@
     {% endif %}
 
 </div>
+{% endfor %}
 {% endmacro %}

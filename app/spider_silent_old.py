@@ -1,7 +1,7 @@
 from app import db
 from app.models import User, CommunityReview, UserReview
 from config import REDDIT_USERNAME, REDDIT_PASSWORD, \
-    REDDIT_USER_AGENT, SERVER_NAME
+    REDDIT_USER_AGENT
 from app.utils import is_number
 import praw
 import datetime
@@ -275,7 +275,8 @@ for community_review in community_reviews:
                             .utcfromtimestamp(comment.created_utc),
                             rating=comment_params['Rating'],
                             review=comment_params['Details'],
-                            reddit_score=comment.ups - comment.downs,
+                            upvotes=comment.ups,
+                            downvotes=comment.downs,
                             edited_stamp=this_last_edited
                         )
                         db.session.add(new_user_review)
@@ -289,16 +290,17 @@ for community_review in community_reviews:
                 if comment.edited > this_comment.edited:
                     update_review(comment.body, comment.edited, comment.id)
 
-            if (comment.ups - comment.downs) !=\
-                    this_comment.reddit_score:
-                db.session.query(UserReview)\
-                    .filter_by(reddit_id=this_comment.reddit_id)\
-                    .update({
-                        "reddit_score": comment.ups - comment.downs
-                    })
+            if comment.ups != this_comment.upvotes:
+                this_comment.upvotes = comment.ups
+                db.session.commit()
+            if comment.downs != this_comment.downvotes:
+                this_comment.downvotes = comment.downs
                 db.session.commit()
 
-    # update last_crawl and reddit_score for review
+    # update last_crawl and up/downvotes for review
     community_review.last_crawl = datetime.datetime.now()
-    community_review.reddit_score = submission.ups - submission.downs
+    if community_review.upvotes != submission.ups:
+        community_review.upvotes = submission.ups
+    if community_review.downvotes != submission.downs:
+        community_review.downvotes = submission.downs
     db.session.commit()

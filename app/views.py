@@ -210,8 +210,9 @@ def community_review(category_slug, community_review_slug):
             if community_review.user_reviews:
                 last_crawl = pretty_date(community_review.last_crawl)
                 user_reviews = community_review.user_reviews\
-                    .order_by(UserReview.reddit_score.desc())\
-                    .all()
+                    .order_by(
+                        (UserReview.upvotes - UserReview.downvotes).desc()
+                    ).all()
             return render_template(
                 'community_review.html',
                 community_review=community_review,
