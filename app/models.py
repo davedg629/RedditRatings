@@ -123,8 +123,9 @@ class CommunityReview(db.Model):
     )
     reddit_id = db.Column(db.String)
     reddit_permalink = db.Column(db.String)
-    reddit_score = db.Column(db.Integer, nullable=False, default=1)
     subreddit = db.Column(db.String, nullable=False)
+    upvotes = db.Column(db.Integer, nullable=False, default=1)
+    downvotes = db.Column(db.Integer, nullable=False, default=0)
     date_posted = db.Column(
         db.DateTime,
         default=datetime.utcnow(),
@@ -184,7 +185,8 @@ class UserReview(db.Model):
     date_posted = db.Column(db.DateTime, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
     review = db.Column(db.String)
-    reddit_score = db.Column(db.Integer, nullable=False)
+    upvotes = db.Column(db.Integer, nullable=False)
+    downvotes = db.Column(db.Integer, nullable=False)
     edited_stamp = db.Column(db.Integer, nullable=False)
 
     def __unicode__(self):

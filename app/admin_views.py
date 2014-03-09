@@ -44,7 +44,13 @@ class TagView(AdminModelView):
 
 
 class CommunityReviewView(AdminModelView):
-    form_excluded_columns = ['user_reviews', 'slug', 'reddit_score', 'last_crawl', ]
+    form_excluded_columns = [
+        'user_reviews',
+        'slug',
+        'upvotes',
+        'downvotes',
+        'last_crawl'
+    ]
     list_template = 'admin/community_review_list.html'
 
     @expose('/new/', methods=('GET', 'POST'))

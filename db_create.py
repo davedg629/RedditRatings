@@ -1,6 +1,6 @@
 from app import db
 from app.models import Category, Role, User, Tag, CommunityReview, UserReview
-from datetime import datetime, date
+from datetime import datetime
 
 db.create_all()
 
@@ -122,7 +122,8 @@ db.session.add(community_review)
 ##        date_posted=datetime(2014, 2, 19),
 ##        rating=10,
 ##        review="Ultimated the successor to Final Fantasy...",
-##        reddit_score=8,
+##        upvotes=1,
+##        downvotes=0,
 #        edited=1
 #    )
 #)

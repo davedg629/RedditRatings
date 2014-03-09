@@ -25,7 +25,7 @@
         {% if community_review.reddit_permalink %}to <a href="{{ community_review.reddit_permalink }}" target="_blank">r/{{ community_review.subreddit }}</a>{% endif %}
     </li>
 
-    <li><span class="detail-label">Reddit Score:</span> &nbsp; {{ community_review.reddit_score }}</li>
+    <li><span class="detail-label">Reddit Up/Downvotes:</span> &nbsp; {{ community_review.upvotes }}/{{ community_review.downvotes}}</li>
 
     <li><span class="detail-label">Subreddit:</span> &nbsp; <a href="{{ url_for('subreddit', subreddit=community_review.subreddit) }}">{{ community_review.subreddit }}</a></li>
 

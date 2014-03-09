@@ -1,0 +1,19 @@
+{% macro user_review_macro(user_review) %}
+<div class="user-review{% if loop.last %} last{% endif %}">
+
+    <h4><a class="redditor" href="{{ community_review.reddit_permalink}}{{ user_review.reddit_id }}" target="_blank">{{ user_review.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ user_review.rating }} <span>out of 10</span> &nbsp; | &nbsp; <strong>Reddit Score:</strong> {{ user_review.reddit_score }}</span></h4>
+
+    {% if user_review.review != '' %}
+    <div class="review">
+        {{ user_review.review }}
+    </div>
+    {% endif %}
+
+    {% if session.logged_in %}
+    <div class="actions">
+        <a href="#">Delete</a>
+    </div>
+    {% endif %}
+
+</div>
+{% endmacro %}
