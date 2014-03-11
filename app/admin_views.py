@@ -52,6 +52,7 @@ class CommunityReviewView(AdminModelView):
         'last_crawl'
     ]
     list_template = 'admin/community_review_list.html'
+    column_default_sort = ('date_posted', True)
 
     @expose('/new/', methods=('GET', 'POST'))
     def create_view(self):

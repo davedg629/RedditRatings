@@ -96,7 +96,6 @@ def logout():
 def index():
     community_reviews = db.session.query(CommunityReview)\
         .order_by(CommunityReview.date_posted.desc())\
-        .limit(10)\
         .all()
     return render_template(
         'index.html',
