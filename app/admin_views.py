@@ -145,6 +145,7 @@ class CommunityReviewView(AdminModelView):
 
 class UserReviewView(AdminModelView):
     column_filters = ['community_review']
+    column_default_sort = ('date_posted', True)
 
 # Admin construtor
 admin = Admin(
