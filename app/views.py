@@ -125,9 +125,12 @@ def category(category_slug):
         .filter_by(slug=category_slug)\
         .first()
     if category:
+        community_reviews = category.community_reviews\
+            .order_by(CommunityReview.date_posted.desc())\
+            .all()
         return render_template(
             'filtered_community_reviews.html',
-            community_reviews=category.community_reviews.all(),
+            community_reviews=community_reviews,
             title=category.name,
             page_title="Category: " + category.name
         )
@@ -151,7 +154,9 @@ def list_subreddits():
 @app.route('/subreddit/<subreddit>')
 def subreddit(subreddit):
     community_reviews = db.session.query(CommunityReview)\
-        .filter_by(subreddit=subreddit).all()
+        .filter_by(subreddit=subreddit)\
+        .order_by(CommunityReview.date_posted.desc())\
+        .all()
     if community_reviews:
         return render_template(
             'filtered_community_reviews.html',
@@ -182,9 +187,12 @@ def tag(tag_slug):
         .filter_by(slug=tag_slug)\
         .first()
     if tag:
+        community_reviews = tag.community_reviews\
+            .order_by(CommunityReview.date_posted.desc())\
+            .all()
         return render_template(
             'filtered_community_reviews.html',
-            community_reviews=tag.community_reviews.all(),
+            community_reviews=community_reviews,
             title=tag.name,
             page_title="Tag: " + tag.name
         )
