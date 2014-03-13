@@ -221,81 +221,84 @@ for community_review in community_reviews:
 
     for comment in top_lvl_comments:
 
-        # check if this comment has already been parsed
-        this_comment = db.session.query(UserReview)\
-            .filter_by(reddit_id=comment.id).first()
+        if comment.author:
 
-        # get time since comment was created
-        t = datetime.datetime.now()
-        time_since_created = \
-            time.mktime(t.timetuple()) - comment.created_utc
+            # check if this comment has already been parsed
+            this_comment = db.session.query(UserReview)\
+                .filter_by(reddit_id=comment.id).first()
 
-        # has the comment not been parsed yet and is it at least 3 minutes old
-        if not this_comment and time_since_created > 180:
+            # get time since comment was created
+            t = datetime.datetime.now()
+            time_since_created = \
+                time.mktime(t.timetuple()) - comment.created_utc
 
-            # check if this user has already commented
-            # on this review
-            this_user_check = None
-            this_user = db.session.query(User)\
-                .filter_by(username=comment.author.name)\
-                .first()
-            if this_user:
-                this_user_check = db.session.query(UserReview)\
-                    .filter_by(community_review_id=community_review.id)\
-                    .filter_by(user_id=this_user.id)\
+            # has the comment not been parsed yet and
+            # is it at least 3 minutes old
+            if not this_comment and time_since_created > 180:
+
+                # check if this user has already commented
+                # on this review
+                this_user_check = None
+                this_user = db.session.query(User)\
+                    .filter_by(username=comment.author.name)\
                     .first()
+                if this_user:
+                    this_user_check = db.session.query(UserReview)\
+                        .filter_by(community_review_id=community_review.id)\
+                        .filter_by(user_id=this_user.id)\
+                        .first()
 
-            if not this_user_check:
+                if not this_user_check:
 
-                if 'Rating:' in comment.body:
+                    if 'Rating:' in comment.body:
 
-                    # parse comment
-                    comment_params = parse_comment(comment.body)
+                        # parse comment
+                        comment_params = parse_comment(comment.body)
 
-                    if 1 <= comment_params['Rating'] <= 10:
+                        if 1 <= comment_params['Rating'] <= 10:
 
-                        # add user if not already in db and get user_id
-                        if not this_user:
-                            user_id = add_user(comment.author.name)
-                        else:
-                            user_id = this_user.id
+                            # add user if not already in db and get user_id
+                            if not this_user:
+                                user_id = add_user(comment.author.name)
+                            else:
+                                user_id = this_user.id
 
-                        # make sure last_edited value is an int
-                        if not comment.edited:
-                            this_last_edited = 0
-                        else:
-                            this_last_edited = comment.edited
+                            # make sure last_edited value is an int
+                            if not comment.edited:
+                                this_last_edited = 0
+                            else:
+                                this_last_edited = comment.edited
 
-                        # add comment to db as a user review
-                        new_user_review = UserReview(
-                            community_review_id=community_review.id,
-                            user_id=user_id,
-                            reddit_id=comment.id,
-                            date_posted=datetime.datetime
-                            .utcfromtimestamp(comment.created_utc),
-                            rating=comment_params['Rating'],
-                            review=comment_params['Details'],
-                            upvotes=comment.ups,
-                            downvotes=comment.downs,
-                            edited_stamp=this_last_edited
-                        )
-                        db.session.add(new_user_review)
-                        db.session.commit()
+                            # add comment to db as a user review
+                            new_user_review = UserReview(
+                                community_review_id=community_review.id,
+                                user_id=user_id,
+                                reddit_id=comment.id,
+                                date_posted=datetime.datetime
+                                .utcfromtimestamp(comment.created_utc),
+                                rating=comment_params['Rating'],
+                                review=comment_params['Details'],
+                                upvotes=comment.ups,
+                                downvotes=comment.downs,
+                                edited_stamp=this_last_edited
+                            )
+                            db.session.add(new_user_review)
+                            db.session.commit()
 
-        # is the comment already in the db
-        elif this_comment:
+            # is the comment already in the db
+            elif this_comment:
 
-            if time_since_created < 3600:
+                if time_since_created < 3600:
 
-                if comment.edited > this_comment.edited:
-                    update_review(comment.body, comment.edited, comment.id)
+                    if comment.edited > this_comment.edited:
+                        update_review(comment.body, comment.edited, comment.id)
 
-            if comment.ups != this_comment.upvotes:
-                this_comment.upvotes = comment.ups
-                db.session.commit()
-            if comment.downs != this_comment.downvotes:
-                this_comment.downvotes = comment.downs
-                db.session.commit()
+                if comment.ups != this_comment.upvotes:
+                    this_comment.upvotes = comment.ups
+                    db.session.commit()
+                if comment.downs != this_comment.downvotes:
+                    this_comment.downvotes = comment.downs
+                    db.session.commit()
 
     # update last_crawl and up/downvotes for review
     community_review.last_crawl = datetime.datetime.now()
