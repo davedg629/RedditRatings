@@ -124,6 +124,8 @@ class CommunityReview(db.Model):
     reddit_id = db.Column(db.String)
     reddit_permalink = db.Column(db.String)
     subreddit = db.Column(db.String, nullable=False)
+    link_url = db.Column(db.String)
+    link_text = db.Column(db.String)
     upvotes = db.Column(db.Integer, nullable=False, default=1)
     downvotes = db.Column(db.Integer, nullable=False, default=0)
     date_posted = db.Column(
@@ -181,7 +183,7 @@ class UserReview(db.Model):
     reddit_id = db.Column(db.String, nullable=False, unique=True)
     date_posted = db.Column(db.DateTime, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
-    review = db.Column(db.String)
+    review = db.Column(db.Text)
     upvotes = db.Column(db.Integer, nullable=False)
     downvotes = db.Column(db.Integer, nullable=False)
     edited_stamp = db.Column(db.Integer, nullable=False)
