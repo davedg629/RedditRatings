@@ -57,7 +57,8 @@ ul.details li span.detail-label {font-weight: bold;}
 .user-reviews .user-review.last {border-bottom: 0 none; margin-bottom: 0; padding-bottom: 0;}
 .user-reviews .user-review h4 span.review-details {font-size: 14px;}
 
-.submit-review {font-weight: bold; font-size: 20px; line-height: 28px; padding: 10px; text-align: center;}
+.submit-review {border: 2px solid #2c3e50; font-size: 18px; line-height: 24px;}
+.submit-review ul {margin: 0 0 0 10px; padding: 0 0 0 20px;}
 
 @media screen and (max-width: 768px) {
 

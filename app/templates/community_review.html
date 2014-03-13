@@ -28,10 +28,22 @@
 
 {% block sidebar %}
 
-    {% if community_review.open_for_comments %}
+    {% if community_review.open_for_comments or (community_review.link_url and community_review.link_text) %}
     <div class="sidebar-module well submit-review">
 
-        <a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Submit a review for<br />"{{ community_review.title }}"</a>
+        <h4>Helpful Links</h4>
+
+        <ul>
+
+            {% if community_review.open_for_comments %}
+            <li><a href="http://redd.it/{{ community_review.reddit_id }}" target="_blank">Submit a review for "{{ community_review.title }}"</a></li>
+            {% endif %}
+
+            {% if community_review.link_url and community_review.link_text %}
+            <li><a href="{{ community_review.link_url }}" target="_blank">{{ community_review.link_text }}</a></li>
+            {% endif %}
+
+        </ul>
 
     </div>
     {% endif %}
