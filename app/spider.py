@@ -310,7 +310,7 @@ for community_review in community_reviews:
 
                 if time_since_created < 3600:
 
-                    if comment.edited > this_comment.edited:
+                    if comment.edited > this_comment.edited_stamp:
                         update_review(comment.body, comment.edited, comment.id)
 
                 if comment.ups != this_comment.upvotes:
