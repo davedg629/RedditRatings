@@ -1,14 +1,17 @@
 Flask==0.10.1
 Flask-Admin==1.0.7
 Flask-Bootstrap==3.1.1.2
+Flask-Migrate==1.2.0
 Flask-SQLAlchemy==1.0
 Flask-Script==0.6.7
 Flask-WTF==0.9.3
 Jinja2==2.7.1
+Mako==0.9.1
 MarkupSafe==0.18
 SQLAlchemy==0.8.4
 WTForms==1.0.5
 Werkzeug==0.9.4
+alembic==0.6.3
 decorator==3.4.0
 distribute==0.7.3
 gunicorn==18.0
