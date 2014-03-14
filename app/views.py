@@ -239,8 +239,10 @@ def user_review(user_review_id):
     user_review = db.session.query(UserReview)\
         .filter_by(id=user_review_id).first()
     if user_review:
-        return render_template('user_review.html',
-                               user_review=user_review
-                               )
+        return render_template(
+            'user_review.html',
+            user_review=user_review,
+            title="User Review of " + user_review.community_review.title
+        )
     else:
         abort(404)

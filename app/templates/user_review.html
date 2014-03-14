@@ -1,21 +1,15 @@
-{% macro user_review_loop(user_reviews) %}
-{% for user_review in user_reviews %}
-<div class="user-review{% if loop.last %} last{% endif %}">
+{% extends "my_base.html" %}
 
-    <h4><a class="redditor" href="{{ user_review.community_review.reddit_permalink }}{{ user_review.reddit_id }}" target="_blank">{{ user_review.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ user_review.rating }} <span>out of 10</span> &nbsp; | &nbsp; <strong>Votes:</strong> {{ user_review.upvotes }} up, {{ user_review.downvotes }} down</span></h4>
+{% block page_content %}
 
-    {% if user_review.review != '' %}
-    <div class="review">
-        {{ user_review.review }}
-    </div>
-    {% endif %}
+<div class="page-header"><h2>User Review of <a href="{{ url_for('community_review', category_slug=user_review.community_review.category.slug, community_review_slug=user_review.community_review.slug) }}">{{ user_review.community_review.title }}</a></h2></div>
 
-    {% if session.logged_in %}
-    <div class="actions">
-        <a href="#">Delete</a>
-    </div>
-    {% endif %}
+<div class="user-review">
+
+    {% import "user_review_macros.html" as user_review_macros %}
+
+    {{ user_review_macros.user_review_loop(user_review) }}
 
 </div>
-{% endfor %}
-{% endmacro %}
+
+{% endblock %}

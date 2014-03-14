@@ -12,8 +12,15 @@
 
         <h3 id="user-ratings">Most Helpful User Reviews:</h3>
 
-        {% import "user_review.html" as user_review_macros %}
-        {{ user_review_macros.user_review_loop(user_reviews) }}
+        {% import "user_review_macros.html" as user_review_macros %}
+
+        {% for user_review in user_reviews %}
+        <div class="user-review{% if loop.last %} last{% endif %}">
+
+            {{ user_review_macros.user_review_loop(user_review) }}
+
+        </div>
+        {% endfor %}
 
     </div>
 
@@ -29,7 +36,7 @@
 {% block sidebar %}
 
     {% if community_review.open_for_comments or (community_review.link_url and community_review.link_text) %}
-    <div class="sidebar-module well submit-review">
+    <div class="sidebar-module well helpful-links">
 
         <h4>Helpful Links</h4>
 
