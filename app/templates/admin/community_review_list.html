@@ -30,7 +30,13 @@
                 {% for c, name in list_columns %}
                 <td>
                     {% if c == 'reddit_permalink' %}
+                    {% if get_value(row, c) %}
                     <a href="{{ get_value(row, c) }}" target="_blank">View on reddit</a>
+                    {% endif %}
+                    {% elif c == 'link_url' %}
+                    {% if get_value(row, c) %}
+                    <a href="{{ get_value(row, c) }}" target="_blank">Link</a>
+                    {% endif %}
                     {% else %}
                     {{ get_value(row, c) }}
                     {% endif %}
