@@ -4,8 +4,9 @@
     {% if community_review.user_reviews.first() %}
     {{ community_review.get_avg_rating() }}
     {% else %}
-    ??
+    ?
     {% endif %}
+    <span> / 10</span>
 
 </div>
 

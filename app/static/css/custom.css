@@ -41,9 +41,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-weight: bold;}
 .listing .list-item a.more {font-size: 17px; font-weight: bold;}
 
 /** community review details **/
-.rating-avg {background-color: #2c3e50; color: #ecf0f1; font-weight: bold; font-size: 28px; line-height: 34px; margin: 2px 15px 3px 0; padding: 10px 12px 10px; text-align: center;}
-.community-rating .rating-avg .out-of {font-size: 14px; font-weight: normal; line-height: 22px;}
-.community-rating .rating-count {font-size: 14px; text-align: center;}
+.rating-avg {background-color: #2c3e50; color: #ecf0f1; font-weight: bold; font-size: 28px; line-height: 34px; margin: 2px 15px 3px 0; padding: 7px 12px 4px; text-align: center;}
+.rating-avg span {color: #6C767F; font-size: 14px;}
 
 ul.details {display: block; margin: 0 0 10px; padding: 0;}
 ul.details li {font-size: 16px; list-style-type: none; margin: 0; padding: 0 0 4px;}
