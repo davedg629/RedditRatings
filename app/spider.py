@@ -230,6 +230,7 @@ for community_review in community_reviews:
     # get submission from reddit, store comments in variable
     try:
         submission = r.get_submission(submission_id=community_review.reddit_id)
+        submission.replace_more_comments(limit=None, threshold=0)
         top_lvl_comments = submission.comments
     except HTTPError:
         continue
