@@ -29,13 +29,19 @@ def parse_comment_review(labelPos, label, comment_body):
     """Parse review from comment, given the review label,
     label position, and comment body."""
 
-    endPos = 0
-    endPos = comment_body.find('---', labelPos)
+    if comment_body.find('---', labelPos) > 0:
+        endPos = comment_body.find('---', labelPos)
+    elif comment_body.find('___', labelPos) > 0:
+        endPos = comment_body.find('___', labelPos)
+    elif comment_body.find('***', labelPos) > 0:
+        endPos = comment_body.find('***', labelPos)
+    else:
+        endPos = -1
 
     if comment_body[labelPos - 2:
                     labelPos +
                     len(label) + 3] == '**' + label + ':**':
-        return \
+        review_body = \
             comment_body[
                 labelPos +
                 len(label) +
@@ -51,7 +57,7 @@ def parse_comment_review(labelPos, label, comment_body):
     elif comment_body[labelPos - 1:
                       labelPos +
                       len(label) + 2] == '*' + label + ':*':
-        return \
+        review_body = \
             comment_body[
                 labelPos +
                 len(label) +
@@ -65,7 +71,7 @@ def parse_comment_review(labelPos, label, comment_body):
             ].strip()
 
     else:
-        return \
+        review_body = \
             comment_body[
                 labelPos +
                 len(label) +
@@ -77,6 +83,8 @@ def parse_comment_review(labelPos, label, comment_body):
                 len(label) +
                 + 1:
             ].strip()
+
+    return review_body.replace("\n", "<br />")
 
 
 def parse_comment(comment_body):
@@ -136,7 +144,16 @@ def update_review(comment_body, comment_edited, reddit_id):
     label = 'Review'
     labelPos = comment_body.find(label)
     if labelPos >= 0:
-        endPos = comment_body.find('---', labelPos)
+
+        if comment_body.find('---', labelPos) > 0:
+            endPos = comment_body.find('---', labelPos)
+        elif comment_body.find('___', labelPos) > 0:
+            endPos = comment_body.find('___', labelPos)
+        elif comment_body.find('***', labelPos) > 0:
+            endPos = comment_body.find('***', labelPos)
+        else:
+            endPos = -1
+
         if comment_body[labelPos - 2:
                         labelPos +
                         len(label) + 3] == '**' + label + ':**':
@@ -188,7 +205,7 @@ def update_review(comment_body, comment_edited, reddit_id):
     db.session.query(UserReview)\
         .filter_by(reddit_id=reddit_id)\
         .update({
-            "review": editedReview,
+            "review": editedReview.replace("\n", "<br />"),
             "edited_stamp": comment_edited
         })
     db.session.commit()

@@ -4,7 +4,7 @@
 
     {% if user_review.review != '' %}
     <div class="review">
-        {{ user_review.review }}
+        {{ user_review.review|safe }}
     </div>
     {% endif %}
 
