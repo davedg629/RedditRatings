@@ -4,13 +4,15 @@
 
     {{super()}}
 
-        <p>RedditReviewBot is a 3rd party reddit app that allows redditors to create Community Reviews of anything by commenting on reddit posts using a specific review format.</p>
+    <p>RedditReviewBot is a 3rd party reddit app that enables subreddits to rate and review things together and then catalogs the reviews on this website.</p>
+    
+    <p>RedditReviewBot adds a rating system to any review thread on reddit, allowing subreddits to create an average rating for whatever they are reviewing. The ratings and reviews are then cataloged by <a href="{{ url_for('list_categories') }}">category</a>, <a href="{{ url_for('list_tags') }}">tag</a>, and <a href="{{ url_for('list_subreddits') }}">subreddit</a>.</p>
 
-        <p>RedditReviewBot was created as a <a href="http://groupsrc.com" target="_blank">GroupSRC.com</a> project. GroupSRC was started by brothers <a href="http://twitter.com/daviddigiovanni" target="_blank">David DiGiovanni</a> and <a href="http://twitter.com/pauliedigi" target="_blank">Paul DiGiovanni</a> to explore the possibilities of reddit to help crowds communicate more effectively.</p>
+    <p>The purpose of the RedditReviewBot app is to enable subreddits to create a more advanced type of content together. RedditReviewBot's average rating feature helps the subreddit articulate their collective opinion.</p>
 
-        <p>RedditReviewBot fits into the GroupSRC mission by allowing reddit communities to create content together and articulate their opinions collectively by creating Community Reviews. At its core, RedditReviewBot is a database of reviews curated by reddit communities.</a>
+    <p>RedditReviewBot is a <a href="http://groupsrc.com" target="_blank">GroupSRC</a> project. GroupSRC was started by brothers <a href="http://twitter.com/daviddigiovanni" target="_blank">David DiGiovanni</a> and <a href="http://twitter.com/pauliedigi" target="_blank">Paul DiGiovanni</a> to explore how technology can help crowds communicate more effectively. We believe reddit makes crowds smarter and want to develop tools expand the reddit platform..</p>
 
-        <p><strong>RedditReviewBot demonstrates a interesting potential for communities that utilize reddit as a platform for discussion. Reviewing things is just one way a community can create content together. What other types of content curation systems can be bolted onto the reddit interface?</strong></p>
+    <p><strong><a href="{{ url_for('how_it_works') }}">Learn how RedditReviewBot works</strong></p>
 
 {% endblock %}
 

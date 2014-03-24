@@ -4,15 +4,15 @@
 
     {{super()}}
 
-        <p>RedditReviewBot is a 3rd party reddit app that allows redditors to create Community Reviews of anything by commenting on reddit posts using a specific review format. Here is how it works:</p>
+        <p>RedditReviewBot is a 3rd party reddit app that enables subreddits to rate and review things together and then catalogs the reviews on this website. Here is how it works:</p>
 
-        <h3>1. Create a review thread on reddit</h3>
+        <h3>1. Create a "review thread" on reddit</h3>
        
-        <p>A thread is posted to reddit specifiying what is being reviewed and provides instructions on how to contribute a review.</p>
+        <p>In a typical review thread, users post their reviews of something as comments on the thread. RedditReviewBot threads are similar, except they instruct users to post their reviews in a specific, yet simple format.</p>
         
         <h3>2. Redditors submit reviews by leaving comments</h3>
        
-        <p>Using a specified format, redditors can leave a review in the comment section of the thread. Reviews consist of a Rating (1 to 10, integers only) and a Review.</p>
+        <p>Using a specified format, redditors can leave a review in the comment section of the thread. Reviews consist of a Rating and a Review.</p>
         
         <p><strong>This is the format for leaving a review in the comments section:</strong></p>
 
@@ -26,12 +26,14 @@
 
             <p>---</p>
 
-            <p>If you want to say something in your comment that is not part of your review, use a horizontal rule ("---") to divide your review from your non-review comments.</p>
+            <p>verifyreview<br />(include 'verifyreview' after the horizontal rule if you want to be notified when you review is parsed)</p>
+
+            <p>Anything you put under the horizontal rule ("---") will not be parsed by the bot.</p>
             
         </div>
 
-        <h3>3. /u/RedditReviewBot scans for comments and pulls reviews into a database</h3>
-        <p>The user reviews are aggregated by a crawler script to create the Community Review. The Community Review is displayed on this website and features an average rating, the top user reviews (based on reddit score), and other relevant information.</p>
+        <h3>3. /u/RedditReviewBot catalogs the review thread and calculates an average rating</h3>
+        <p>A crawler script aggregates the user reviews into a single "Community Review". The Community Review is cataloged on this website and features an average rating and other relevant information about the Community Review.</p>
 
         <hr />
 
