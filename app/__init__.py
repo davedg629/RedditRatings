@@ -13,7 +13,7 @@ migrate = Migrate(app, db)
 bootstrap = Bootstrap(app)
 
 # import Crawl command
-from spider_new import Crawl
+from spider import Crawl
 
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
