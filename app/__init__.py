@@ -12,16 +12,12 @@ migrate = Migrate(app, db)
 
 bootstrap = Bootstrap(app)
 
+# import Crawl command
 from spider_new import Crawl
+
 manager = Manager(app)
 manager.add_command('db', MigrateCommand)
 manager.add_command('crawl', Crawl)
-
-
-# test command
-@manager.command
-def hello(name="World"):
-    print "hello", name
 
 from app import models, views, admin_views
 from admin_views import admin
