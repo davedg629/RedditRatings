@@ -1,6 +1,6 @@
 {% macro user_review_loop(user_review) %}
 
-    <h4><a class="redditor" href="" target="_blank">{{ user_review.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ user_review.rating }} out of 10 &nbsp; | &nbsp; <strong>Votes:</strong> {{ user_review.upvotes }} up, {{ user_review.downvotes }} down</span></h4>
+    <h4><a class="redditor" href="{{ url_for('user_profile', username=user_review.user.username) }}">{{ user_review.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ user_review.rating }} out of 10 &nbsp; | &nbsp; <strong>Votes:</strong> {{ user_review.upvotes }} up, {{ user_review.downvotes }} down</span></h4>
 
     {% if user_review.review != '' %}
     <div class="review">
