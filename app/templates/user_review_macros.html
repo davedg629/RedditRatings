@@ -1,17 +1,27 @@
 {% macro user_review_loop(user_review) %}
 
-    <h4><a class="redditor" href="{{ user_review.community_review.reddit_permalink }}{{ user_review.reddit_id }}" target="_blank">{{ user_review.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ user_review.rating }} <span>out of 10</span> &nbsp; | &nbsp; <strong>Votes:</strong> {{ user_review.upvotes }} up, {{ user_review.downvotes }} down</span></h4>
+    <h4><a class="redditor" href="" target="_blank">{{ user_review.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ user_review.rating }} out of 10 &nbsp; | &nbsp; <strong>Votes:</strong> {{ user_review.upvotes }} up, {{ user_review.downvotes }} down</span></h4>
 
     {% if user_review.review != '' %}
     <div class="review">
-        {{ user_review.review|safe }}
+        <p>{{ user_review.review|safe }}</p>
     </div>
     {% endif %}
 
-    {% if session.logged_in %}
-    <div class="actions">
-        <a href="#">Delete</a>
-    </div>
-    {% endif %}
+    <p><a href="{{ user_review.community_review.reddit_permalink }}{{ user_review.reddit_id }}" target="_blank">View on reddit</a></p>
+
+{% endmacro %}
+
+{% macro user_review_list_loop(user_review) %}
+
+<h4><a href="{{ url_for('community_review', category_slug=user_review.community_review.category.slug, community_review_slug=user_review.community_review.slug) }}">{{ user_review.community_review.title }}</a></h4>
+
+<ul class="details">
+
+    <li><span class="detail-label">Rating:</span> &nbsp; {{ user_review.rating }} out of 10</li>
+    <li><span class="detail-label">Votes:</span> &nbsp; {{ user_review.upvotes }} up, {{ user_review.downvotes }} down</span></li>
+    <li><a href="{{ url_for('user_review', user_review_id=user_review.id) }}">See Full Review</a></li>
+
+</ul>
 
 {% endmacro %}

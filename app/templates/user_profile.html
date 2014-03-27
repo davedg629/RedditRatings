@@ -1,0 +1,31 @@
+{% extends "my_base.html" %}
+
+{% block page_content %}
+
+{{ super() }}
+
+<ul class="details">
+
+    <li><span class="detail-label">Average Rating:</span> &nbsp; {{ user.get_avg_rating() }} out of 10</li>
+    <li><span class="detail-label"># of Reviews:</span> &nbsp; {{ user.get_review_count() }}</li>
+    <li><span class="detail-label"><a href="http://reddit.com/user/{{ user.username }}" target="_blank">Reddit Profile</a></span></li>
+
+</ul>
+
+<div class="user-reviews">
+
+    <h3>User Reviews by {{ user.username }}</h3>
+
+    {% import "user_review_macros.html" as user_review_macros %}
+
+    {% for user_review in user.user_reviews %}
+    <div class="user-review{% if loop.last %} last{% endif %}">
+
+        {{ user_review_macros.user_review_list_loop(user_review) }}
+
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

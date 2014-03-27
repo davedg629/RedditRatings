@@ -52,9 +52,9 @@ ul.details li span.detail-label {font-weight: bold;}
 .community-review h2 {margin-bottom: 3px;}
 
 .user-reviews {border-top: 1px solid #ecf0f1; margin-top: 20px;} 
-.user-reviews .user-review {border-bottom: 1px solid #ecf0f1; margin-bottom: 15px; padding-bottom: 15px;}
-.user-reviews .user-review.last {border-bottom: 0 none; margin-bottom: 0; padding-bottom: 0;}
-.user-reviews .user-review h4 span.review-details {font-size: 14px;}
+.user-review {border-bottom: 1px solid #ecf0f1; margin-bottom: 15px; padding-bottom: 15px;}
+.user-review.last {border-bottom: 0 none; margin-bottom: 0; padding-bottom: 0;}
+.user-review h4 span.review-details {font-size: 14px;}
 
 .helpful-links {border: 2px solid #2c3e50; font-weight: bold; line-height: 22px;}
 .submit-review ul {margin: 0 0 0 10px; padding: 0 0 0 20px;}

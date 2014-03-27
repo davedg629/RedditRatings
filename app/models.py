@@ -63,6 +63,19 @@ class User(db.Model):
         lazy='dynamic'
     )
 
+    def get_avg_rating(self):
+        avg_rating = db.session\
+            .query(func.avg(UserReview.rating))\
+            .filter_by(user_id=self.id)
+        return "{0:.2f}".format(avg_rating[0][0])
+
+    def get_review_count(self):
+        review_count = db.session\
+            .query(func.count(UserReview.id))\
+            .filter_by(user_id=self.id)
+        review_count_string = str(review_count[0][0])
+        return review_count_string
+
     def __unicode__(self):
         return self.username
 

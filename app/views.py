@@ -3,7 +3,7 @@ from flask import flash, redirect, render_template, request, \
     session, url_for, abort
 from app.forms import LoginForm
 from app.models import Category, Tag, CommunityReview, \
-    UserReview
+    UserReview, User
 from app.utils import pretty_date
 from app.decorators import login_required
 
@@ -243,6 +243,22 @@ def user_review(user_review_id):
             'user_review.html',
             user_review=user_review,
             title="User Review of " + user_review.community_review.title
+        )
+    else:
+        abort(404)
+
+
+# user profile
+@app.route('/user/<username>')
+def user_profile(username):
+    user = db.session.query(User)\
+        .filter_by(username=username).first()
+    if user:
+        return render_template(
+            'user_profile.html',
+            user=user,
+            title="User Profile: " + user.username,
+            page_title="User Profile: " + user.username
         )
     else:
         abort(404)
