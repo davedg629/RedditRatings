@@ -53,7 +53,8 @@ class CommunityReviewView(AdminModelView):
     ]
     list_template = 'admin/community_review_list.html'
     column_default_sort = ('date_posted', True)
-    column_exclude_list = ('link_text')
+    column_exclude_list = ('link_text',)
+    column_searchable_list = ('title',)
 
     @expose('/new/', methods=('GET', 'POST'))
     def create_view(self):
