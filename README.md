@@ -1,12 +1,12 @@
-<h1>RedditReviewBot</h1>
+<h1>RedditRatings</h1>
 
-RedditReviewBot is a Flask app that allows reddit communities to create Community Reviews of anything by commenting on a reddit thread using a specific review format.
+RedditRatings is a Flask app that allows redditors to review things together.
 
-A working example of the app can be found at http://RedditReviewBot.com
+A working example of the app can be found at http://RedditRatings.com
 
-Ideas, issues, and requests can be discussed at http://reddit.com/r/RedditReviewBot
+Ideas, issues, and requests can be discussed at http://reddit.com/r/RedditRatings
 
-You can follow @RedditReviewBot on Twitter - http://twitter.com/redditreviewbot
+You can follow @RedditRatings on Twitter - http://twitter.com/redditratings
 
 <hr />
 
@@ -33,30 +33,33 @@ Using the app is a little clunky right now, but will be streamlined as I improve
 <ol>
 <li>Login at /login/ (use the username/password you set in the config file). This takes you to the "Dashboard".</li>
 
-<li>Find the "Create Community Review" link and click on it. Fill out the form, leaving "Reddit Post ID" and "Reddit Permalink" blank for now.</li>
+<li>Go to the "Community Ratings" tab and create a new Community Rating. Fill out the form, leaving "Reddit Post ID" and "Reddit Permalink" blank for now.</li>
 
 <li>Go to reddit and create a thread asking users to review the game you chose by leaving a comment in the following format:
 
 <pre>
-<strong>Rating:</strong> [Provide a rating from 1 to 10 here, integers only, required]
+<strong>Rating:</strong> Provide a rating from 1 to 10 here, integers only, required
 
-<strong>Review:</strong>
+<strong>Comment:</strong>
 
-[Write your review of the game here, keep it short &amp; focus on your experience, optional]
+Include any comments related to your rating here, encouraged but optional
 
 ---
 
 If you want to say something in your comment that is not part of your review,
 use a horizontal rule ("---") to divide your review from your non-review comments.
+
+If the text 'verifyrating' is included, then a PM will be sent to you when your
+review is parsed.
 </pre>
 </li>
 
-<li>After you make your post on reddit, go back to the app Dashboard, edit the Community Review and fill in the "Reddit Post ID" and "Reddit Permalink" fields.</li>
+<li>After you make your post on reddit, go back to the app Dashboard, edit the Community Rating and fill in the "Reddit Post ID" and "Reddit Permalink" fields.</li>
 
-<li>To pull in the user reviews run the spider script:
+<li>To pull in the user ratings run the spider script:
 
 <pre>
-python app/spider.py
+python manage.py crawl
 </pre>
 
 If you are serving the app on Heroku, you can use the following command to run the spider:
@@ -68,19 +71,19 @@ heroku run crawl
 The crawl process will post "Success" replies on reddit. You can also run a silent version of the spider script using the following command:
 
 <pre>
-heroku run silent_crawl
+heroku run crawl_silent
 </pre>
 
 <p>Or setup a cron task to run the spider script automatically.</p>
 
-<p><strong>Warning:</strong> When the crawl script is run, it will check for new comments on each of the Community Reviews that are "Open For Comments". If you don't want to crawl comments for one of the Community Reviews anymore, edit it from the Dashboard and uncheck the "Open For Comments" field.</p>
+<p><strong>Warning:</strong> When the crawl script is run, it will check for new comments on each of the Community Ratings that are "Open For Comments". If you don't want to crawl comments for one of the Community Ratings anymore, edit it from the Dashboard and uncheck the "Open For Comments" field.</p>
 </li>
 </ol>
 <hr />
 
 <strong>Note:</strong> This is new to most redditors and not something they will pick up on instantly. So if you decide to give it a try, make sure you explain how this all works in your reddit post.
 
-Also, please let me know if you do give it a try on reddit. You can send me a <a href="http://twitter.com/daviddigiovanni" target="_blank">tweet</a> or an <a href="http://groupsrc.com/contact" target="_blank">email</a>. I'm always looking for new and better ways to introduce these types of ideas to reddit.
+Also, please let me know if you do give it a try on reddit. You can send me a <a href="http://twitter.com/redditratings" target="_blank">tweet</a> or a <a href="http://www.reddit.com/message/compose/?to=redditratings" target="_blank">reddit PM</a>. I'm always looking for new and better ways to introduce these types of ideas to reddit.
 
 <hr />
 
