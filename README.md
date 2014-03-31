@@ -1,6 +1,6 @@
 <h1>RedditRatings</h1>
 
-RedditRatings is a Flask app that allows redditors to review things together.
+RedditRatings is a Flask app that allows redditors to rate things together.
 
 A working example of the app can be found at http://RedditRatings.com
 
@@ -33,9 +33,9 @@ Using the app is a little clunky right now, but will be streamlined as I improve
 <ol>
 <li>Login at /login/ (use the username/password you set in the config file). This takes you to the "Dashboard".</li>
 
-<li>Go to the "Community Ratings" tab and create a new Community Rating. Fill out the form, leaving "Reddit Post ID" and "Reddit Permalink" blank for now.</li>
+<li>Go to the "Community Ratings" tab and create a new Community Rating for something. Fill out the form, leaving "Reddit Post ID" and "Reddit Permalink" blank for now.</li>
 
-<li>Go to reddit and create a thread asking users to review the game you chose by leaving a comment in the following format:
+<li>Go to reddit and create a thread asking users to rate the thing you chose by leaving a comment in the following format:
 
 <pre>
 <strong>Rating:</strong> Provide a rating from 1 to 10 here, integers only, required
@@ -46,11 +46,11 @@ Include any comments related to your rating here, encouraged but optional
 
 ---
 
-If you want to say something in your comment that is not part of your review,
-use a horizontal rule ("---") to divide your review from your non-review comments.
+If you want to say something not directly related to your rating, put it below a horizontal rule ('---').
 
-If the text 'verifyrating' is included, then a PM will be sent to you when your
-review is parsed.
+verifyreview
+
+If the text "verifyrating" is included, then a PM will be sent to you when your review is parsed.
 </pre>
 </li>
 
