@@ -51,6 +51,8 @@ ul.details li span.detail-label {font-weight: bold;}
 /** community review **/
 .community-review h2 {margin-bottom: 3px;}
 
+#user-ratings {margin-bottom: 22px;}
+
 .user-reviews {border-top: 1px solid #ecf0f1; margin-top: 20px;} 
 .user-review {border-bottom: 1px solid #ecf0f1; margin-bottom: 15px; padding-bottom: 15px;}
 .user-review.last {border-bottom: 0 none; margin-bottom: 0; padding-bottom: 0;}
