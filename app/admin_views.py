@@ -1,4 +1,4 @@
-from app import db, models
+from app import app, db, models
 from flask import session, redirect, url_for, request, flash
 from flask.ext.admin import Admin, AdminIndexView, expose
 from flask.ext.admin.base import MenuLink
@@ -151,7 +151,7 @@ class UserReviewView(AdminModelView):
 
 # Admin construtor
 admin = Admin(
-    name="RedditReviewBot",
+    name=app.config['APP_NAME'],
     index_view=MyAdminIndexView(),
     base_template="admin/my_base.html"
 )

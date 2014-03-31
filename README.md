@@ -48,9 +48,9 @@ Include any comments related to your rating here, encouraged but optional
 
 If you want to say something not directly related to your rating, put it below a horizontal rule ('---').
 
-verifyreview
+verifyrating
 
-If the text "verifyrating" is included, then a PM will be sent to you when your review is parsed.
+If the text "verifyrating" is included, then a PM will be sent to you when your rating is parsed.
 </pre>
 </li>
 

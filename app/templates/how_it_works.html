@@ -4,41 +4,43 @@
 
     {{super()}}
 
-        <p>RedditReviewBot is a 3rd party reddit app that enables subreddits to rate and review things together and then catalogs the reviews on this website. Here is how it works:</p>
+    <p>{{ config['APP_NAME'] }} is a 3rd party reddit app that enables subreddits to rate things together and then archives the ratings on this website. Here is how it works:</p>
 
-        <h3>1. Create a "review thread" on reddit</h3>
+        <h3>1. Create a "rating thread" on reddit</h3>
        
-        <p>In a typical review thread, users post their reviews of something as comments on the thread. RedditReviewBot threads are similar, except they instruct users to post their reviews in a specific, yet simple format.</p>
+        <p>The rating thread presents something to be rated by the community and instruct users on how to submit a rating in the comments. Soon, you will be able to create your own rating threads from this website.</p>
         
-        <h3>2. Redditors submit reviews by leaving comments</h3>
+        <h3>2. Redditors submit ratings by leaving comments</h3>
        
-        <p>Using a specified format, redditors can leave a review in the comment section of the thread. Reviews consist of a Rating and a Review.</p>
+        <p>Using a specified format, redditors can leave a rating in the comment section of the thread. Ratings consist of a Rating and an optional Comment.</p>
         
-        <p><strong>This is the format for leaving a review in the comments section:</strong></p>
+        <p><strong>This is the format for leaving a rating in the comments section:</strong></p>
 
         <div class="review-format well">
             
-            <p><strong>Rating:</strong> [Provide a rating from 1 to 10 here, integers only, required]</p>
+            <p><strong>Rating:</strong>[  Provide a rating from 1 to 10 here, integers only, required</p>
 
-            <p><strong>Review:</strong></p>
+            <p><strong>Comment:</strong></p>
             
-            <p>[Write your review here, keep it short &amp; focus on your experience, optional]</p>
+            <p>Include any comments related to your rating here, encouraged but optional</p>
 
             <p>---</p>
 
-            <p>verifyreview<br />(include 'verifyreview' after the horizontal rule if you want to be notified when you review is parsed)</p>
+            <p>If you want to say something not directly related to your rating, put it below a horizontal rule ('---').</p>
+            
+            <p>verifyrating</p>
 
-            <p>Anything you put under the horizontal rule ("---") will not be parsed by the bot.</p>
+            <p>If the text "verifyrating" is included, then a PM will be sent to you when your rating is parsed.</p>
             
         </div>
 
-        <h3>3. /u/RedditReviewBot catalogs the review thread and calculates an average rating</h3>
-        <p>A crawler script aggregates the user reviews into a single "Community Review". The Community Review is cataloged on this website and features an average rating and other relevant information about the Community Review.</p>
+        <h3>3. /u/{{ config['APP_NAME'] }} catalogs the rating thread and calculates an average rating</h3>
+        <p>A crawler script aggregates the user ratings into a single "Community Rating". The Community Rating is cataloged on this website and features an average rating and other relevant information about the Community Rating.</p>
 
         <hr />
 
-        <p><strong>If you have any questions or ideas, <a href="http://www.reddit.com/message/compose/?to=redditreviewbot" target="_blank">send me a PM</a> or a <a href="http://twitter.com/redditreviewbot" target="_blank">tweet</a>.</strong></p>
+        <p><strong>If you have any questions or ideas, <a href="http://www.reddit.com/message/compose/?to={{ config['APP_NAME'] }}" target="_blank">send me a PM</a> or a <a href="http://twitter.com/{{ config['APP_NAME'] }}" target="_blank">tweet</a>.</strong></p>
 
-        <p><strong><a href="{{ url_for('about') }}">Click here to learn more about RedditReviewBot and why we created it.</a></strong></p>
+        <p><strong><a href="{{ url_for('about') }}">Click here to learn more about {{ config['APP_NAME'] }} and why we created it.</a></strong></p>
     
 {% endblock %}

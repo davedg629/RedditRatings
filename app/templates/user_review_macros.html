@@ -20,7 +20,7 @@
 
     <li><span class="detail-label">Rating:</span> &nbsp; {{ user_review.rating }} out of 10</li>
     <li><span class="detail-label">Votes:</span> &nbsp; {{ user_review.upvotes }} up, {{ user_review.downvotes }} down</span></li>
-    <li><a href="{{ url_for('user_review', user_review_id=user_review.id) }}">See Full Review</a></li>
+    <li><a href="{{ url_for('user_review', user_review_id=user_review.id) }}">See Full Rating</a></li>
 
 </ul>
 

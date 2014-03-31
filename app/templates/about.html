@@ -4,15 +4,13 @@
 
     {{super()}}
 
-    <p>RedditReviewBot is a 3rd party reddit app that enables subreddits to rate and review things together and then catalogs the reviews on this website.</p>
+    <p>{{ config['APP_NAME'] }} is a 3rd party reddit app that enables subreddits to rate things together and then archives those ratings on this website.</p>
     
-    <p>RedditReviewBot adds a rating system to any review thread on reddit, allowing subreddits to create an average rating for whatever they are reviewing. The ratings and reviews are then cataloged by <a href="{{ url_for('list_categories') }}">category</a>, <a href="{{ url_for('list_tags') }}">tag</a>, and <a href="{{ url_for('list_subreddits') }}">subreddit</a>.</p>
+    <p>The purpose of the {{ config['APP_NAME'] }} app is to enable subreddits to create a more advanced type of content together. {{ config['APP_NAME'] }} helps express their collective opinion which is useful for both the subreddit itself and outsiders that wish to interact with the subreddit.</p>
 
-    <p>The purpose of the RedditReviewBot app is to enable subreddits to create a more advanced type of content together. RedditReviewBot's average rating feature helps the subreddit articulate their collective opinion.</p>
+    <p>{{ config['APP_NAME'] }} is a <a href="http://groupsrc.com" target="_blank">GroupSRC</a> project. GroupSRC was started by brothers <a href="http://twitter.com/daviddigiovanni" target="_blank">David DiGiovanni</a> and <a href="http://twitter.com/pauliedigi" target="_blank">Paul DiGiovanni</a> to explore how technology can help crowds communicate more effectively. We believe reddit makes crowds smarter and want to develop tools that expand the reddit platform.</p>
 
-    <p>RedditReviewBot is a <a href="http://groupsrc.com" target="_blank">GroupSRC</a> project. GroupSRC was started by brothers <a href="http://twitter.com/daviddigiovanni" target="_blank">David DiGiovanni</a> and <a href="http://twitter.com/pauliedigi" target="_blank">Paul DiGiovanni</a> to explore how technology can help crowds communicate more effectively. We believe reddit makes crowds smarter and want to develop tools expand the reddit platform..</p>
-
-    <p><strong><a href="{{ url_for('how_it_works') }}">Learn how RedditReviewBot works</strong></p>
+    <p><strong><a href="{{ url_for('how_it_works') }}">Learn how {{ config['APP_NAME'] }} works</strong></a></p>
 
 {% endblock %}
 
@@ -20,16 +18,27 @@
 
 <div class="sidebar-module well">
 
+    <h4>Connect</h4>
+    <ul>
+        <li><a href="http://twitter.com/{{ config['APP_NAME'] }}" target="_blank">@{{ config['APP_NAME'] }} on Twitter</a></li>
+        <li class="last"><a href="http://reddit.com/r/{{ config['APP_NAME'] }}" target="_blank">Subscribe to /r/{{ config['APP_NAME'] }}</a></li>
+    </ul>
+
+</div>
+
+
+<div class="sidebar-module">
+
     <h4>How It Works</h4>
-    <p><a href="{{ url_for('how_it_works') }}">Learn how RedditReviewBot works with reddit</a></p>
+    <p><a href="{{ url_for('how_it_works') }}">Learn how {{ config['APP_NAME'] }} works with reddit</a></p>
 
 </div>
 
 <div class="sidebar-module">
 
     <h4>Feedback</h4>
-    <p>The next major feature added to RedditReviewBot will be the ability to create your own reviews. If you see any other issues or have an idea, please <a href="http://reddit.com/r/redditreviewbot" target="_blank">post it to /r/RedditReviewBot</a> or <a href="http://www.reddit.com/message/compose/?to=redditreviewbot&subject=Feedback" target="_blank">send me a pm on reddit</a>.</p>
-    <p>If want to help implement features and fix issues, <a href="https://github.com/davedg629/redditreviewbot" target="_blank">check out the code on github</a>.</p>
+    <p>The next major feature added to {{ config['APP_NAME'] }} will be the ability to create your own ratings. If you see any other issues or have an idea, please <a href="http://reddit.com/r/{{ config['APP_NAME'] }}" target="_blank">post it to /r/{{ config['APP_NAME'] }}</a> or <a href="http://www.reddit.com/message/compose/?to={{ config['APP_NAME'] }}&subject=Feedback" target="_blank">send me a pm on reddit</a>.</p>
+    <p>If want to help implement features and fix issues, <a href="https://github.com/davedg629/{{ config['APP_NAME'] }}" target="_blank">check out the code on github</a>.</p>
 
 </div>
 

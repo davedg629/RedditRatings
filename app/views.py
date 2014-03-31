@@ -47,8 +47,8 @@ def internal_error(error):
 def how_it_works():
     return render_template(
         'how_it_works.html',
-        title="How RedditReviewBot Works",
-        page_title="How RedditReviewBot Works"
+        title="How " + app.config['APP_NAME'] + " Works",
+        page_title="How " + app.config['APP_NAME'] + " Works"
     )
 
 
@@ -56,8 +56,8 @@ def how_it_works():
 def about():
     return render_template(
         'about.html',
-        title="About RedditReviewBot",
-        page_title="About RedditReviewBot"
+        title="About " + app.config['APP_NAME'],
+        page_title="About " + app.config['APP_NAME']
     )
 
 
@@ -100,7 +100,7 @@ def index():
     return render_template(
         'index.html',
         title='Creating reviews together, on reddit.',
-        page_title='Latest Community Reviews',
+        page_title='Latest Community Ratings',
         community_reviews=community_reviews
     )
 
@@ -242,7 +242,7 @@ def user_review(user_review_id):
         return render_template(
             'user_review.html',
             user_review=user_review,
-            title="User Review of " + user_review.community_review.title
+            title="User Rating of " + user_review.community_review.title
         )
     else:
         abort(404)

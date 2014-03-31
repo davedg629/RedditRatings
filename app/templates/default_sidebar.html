@@ -1,9 +1,9 @@
 <div class="sidebar-module well">
 
-    <h4>Follow RedditReviewBot</h4>
+    <h4>Connect</h4>
     <ul>
-        <li><a href="http://twitter.com/redditreviewbot" target="_blank">@RedditReviewBot on Twitter</a></li>
-        <li class="last"><a href="http://reddit.com/r/redditreviewbot" target="_blank">Subscribe to /r/RedditReviewBot</a></li>
+        <li><a href="http://twitter.com/{{ config['APP_NAME'] }}" target="_blank">@{{ config['APP_NAME'] }} on Twitter</a></li>
+        <li class="last"><a href="http://reddit.com/r/{{ config['APP_NAME'] }}" target="_blank">Subscribe to /r/{{ config['APP_NAME'] }}</a></li>
     </ul>
 
 </div>
@@ -11,8 +11,8 @@
 
 <div class="sidebar-module">
 
-    <h4>About RedditReviewBot</h4>
-    <p>RedditReviewBot adds a rating feature to review threads on reddit and catalogs the review threads on this website.</p>
+    <h4>About {{ config['APP_NAME'] }}</h4>
+    <p>{{ config['APP_NAME'] }} helps redditors rate things and archives those ratings on this website</p>
     <a class="more" href="{{ url_for('about') }}">Learn More</a>
 
 </div>
@@ -20,7 +20,7 @@
 <div class="sidebar-module">
 
     <h4>Feedback</h4>
-    <p>The next major feature added to RedditReviewBot will be the ability to create your own reviews. If you see any other issues or have an idea, please <a href="http://reddit.com/r/redditreviewbot" target="_blank">post it to /r/RedditReviewBot</a> or <a href="http://www.reddit.com/message/compose/?to=redditreviewbot&subject=Feedback" target="_blank">send me a pm on reddit</a>.</p>
-    <p>If want to help implement features and fix issues, <a href="https://github.com/davedg629/redditreviewbot" target="_blank">check out the code on github</a>.</p>
+    <p>The next major feature added to {{ config['APP_NAME'] }} will be the ability to create your own ratings. If you see any other issues or have an idea, please <a href="http://reddit.com/r/{{ config['APP_NAME'] }}" target="_blank">post it to /r/{{ config['APP_NAME'] }}</a> or <a href="http://www.reddit.com/message/compose/?to={{ config['APP_NAME'] }}&subject=Feedback" target="_blank">send me a pm on reddit</a>.</p>
+    <p>If want to help implement features and fix issues, <a href="https://github.com/davedg629/{{ config['APP_NAME'] }}" target="_blank">check out the code on github</a>.</p>
 
 </div>

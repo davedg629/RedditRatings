@@ -23,6 +23,12 @@ if os.environ.get('NAKED_SERVER_NAME') is None:
 else:
     NAKED_SERVER_NAME = os.environ.get('NAKED_SERVER_NAME')
 
+# app name
+if os.environ.get('APP_NAME') is None:
+    APP_NAME = 'RedditRatings'
+else:
+    APP_NAME = os.environ.get('APP_NAME')
+
 # flask secret key
 if os.environ.get('SECRET_KEY') is None:
     SECRET_KEY = 'a_really_good_secret_key'

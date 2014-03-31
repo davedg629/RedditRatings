@@ -43,7 +43,7 @@
 
 
     {% if community_review.user_reviews.first() %}
-    <li><span class="detail-label"># of User Reviews:</span> &nbsp; {{ community_review.get_review_count() }}</li>
+    <li><span class="detail-label"># of User Ratings:</span> &nbsp; {{ community_review.get_review_count() }}</li>
     {% endif %}
 
     <li><span class="detail-label">Reddit Votes:</span> &nbsp; {{ community_review.upvotes }} up, {{ community_review.downvotes}} down</li>
@@ -63,7 +63,7 @@
     {% if community_review.reddit_permalink %}
     <li><span class="detail-label">Status:</span> &nbsp;
     {% if community_review.open_for_comments %}
-    <a href="{{ community_review.reddit_permalink }}" target="_blank">Accepting reviews</a>
+    <a href="{{ community_review.reddit_permalink }}" target="_blank">Accepting ratings</a>
     {% else %}
     Closed
     {% endif %}
@@ -73,6 +73,6 @@
 </ul>
 
 {% if not self %}
-<a class="more" href="{{ url_for('community_review', category_slug=community_review.category.slug, community_review_slug=community_review.slug) }}">Read User Reviews</a>
+<a class="more" href="{{ url_for('community_review', category_slug=community_review.category.slug, community_review_slug=community_review.slug) }}">Read User Ratings</a>
 {% endif %}
 {% endmacro %}
