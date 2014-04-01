@@ -1,0 +1,78 @@
+{% macro loop(thread, self) %}
+<div class="pull-left rating-avg">
+
+    {% if thread.comments.first() %}
+    {{ thread.get_avg_rating() }}
+    {% else %}
+    ?
+    {% endif %}
+    <span> / 10</span>
+
+</div>
+
+{% if not self %}
+<h3>
+    
+    <a href="{{ url_for('thread', category_slug=thread.category.slug, thread_slug=thread.slug) }}">{{ thread.title }}</a>
+
+    {% if session.logged_in %}
+    <small> | <a href="{{ url_for('thread_model_view.edit_view', id=thread.id) }}">Edit</a></small>
+    {% endif %}
+
+</h3>
+{% else %}
+<h2>
+    
+    {{ thread.title }}
+
+    {% if session.logged_in %}
+    <small> | <a href="{{ url_for('thread_model_view.edit_view', id=thread.id) }}">Edit</a></small>
+    {% endif %}
+
+</h2>
+{% endif %}
+
+<p class="meta">
+    Posted on {{ thread.date_posted.strftime('%b %d, %Y') }}
+    {% if thread.reddit_permalink %}to <a href="{{ thread.reddit_permalink }}" target="_blank">r/{{ thread.subreddit }}</a>{% endif %}
+</p>
+
+<div class="clear"></div>
+
+<ul class="details">
+
+
+    {% if thread.comments.first() %}
+    <li><span class="detail-label"># of User Ratings:</span> &nbsp; {{ thread.get_comment_count() }}</li>
+    {% endif %}
+
+    <li><span class="detail-label">Reddit Votes:</span> &nbsp; {{ thread.upvotes }} up, {{ thread.downvotes}} down</li>
+
+    <li><span class="detail-label">Subreddit:</span> &nbsp; <a href="{{ url_for('subreddit', subreddit=thread.subreddit) }}">{{ thread.subreddit }}</a></li>
+
+    <li><span class="detail-label">Category:</span> &nbsp; <a href="{{ url_for('category', category_slug=thread.category.slug) }}">{{ thread.category }}</a></li>
+
+    {% if thread.tags.first() %}
+    <li><span class="detail-label">Tagged:</span> &nbsp;
+    {% for tag in thread.tags %}
+    <a href="{{ url_for('tag', tag_slug=tag.slug) }}">{{ tag }}</a>{% if not loop.last %} | {% endif %}      
+    {% endfor %}
+    {% endif %}
+    </li>
+
+    {% if thread.reddit_permalink %}
+    <li><span class="detail-label">Status:</span> &nbsp;
+    {% if thread.open_for_comments %}
+    <a href="{{ thread.reddit_permalink }}" target="_blank">Accepting ratings</a>
+    {% else %}
+    Closed
+    {% endif %}
+    </li>
+    {% endif %}
+
+</ul>
+
+{% if not self %}
+<a class="more" href="{{ url_for('thread', category_slug=thread.category.slug, thread_slug=thread.slug) }}">Read User Ratings</a>
+{% endif %}
+{% endmacro %}

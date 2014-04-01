@@ -1,0 +1,60 @@
+{% extends "my_base.html" %}
+
+{% block page_content %}
+<div class="thread">
+
+    {% import "thread_macros.html" as thread_macros %}
+    {{ thread_macros.loop(thread, True) }}
+
+    {% if comments %}
+
+    <div class="comments">
+
+        <h3 id="comments-title">User Ratings, sorted by reddit score:</h3>
+
+        {% import "comment_macros.html" as comment_macros %}
+
+        {% for comment in comments %}
+        <div class="comment{% if loop.last %} last{% endif %}">
+
+            {{ comment_macros.comment_loop(comment) }}
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+
+    <p><strong>No user ratings have been submitted yet!</strong></p>
+
+    {% endif %}
+
+</div>
+{% endblock %}
+
+{% block sidebar %}
+
+    {% if thread.open_for_comments or (thread.link_url and thread.link_text) %}
+    <div class="sidebar-module well helpful-links">
+
+        <h4>Helpful Links</h4>
+
+        <ul>
+
+            {% if thread.open_for_comments %}
+            <li><a href="http://redd.it/{{ thread.reddit_id }}" target="_blank">Submit a rating for "{{ thread.title }}"</a></li>
+            {% endif %}
+
+            {% if thread.link_url and thread.link_text %}
+            <li><a href="{{ thread.link_url }}" target="_blank">{{ thread.link_text }}</a></li>
+            {% endif %}
+
+        </ul>
+
+    </div>
+    {% endif %}
+
+    {{super()}}
+    
+{% endblock %}

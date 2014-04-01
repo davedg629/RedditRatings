@@ -9,7 +9,7 @@
 
     {% for category in categories %}
 
-    {% if category.community_reviews.first() %}
+    {% if category.threads.first() %}
     <div class="list-item{% if loop.last %} last{% endif %}">
 
         <strong><a href="{{ url_for('category', category_slug=category.slug) }}">{{ category.name }}</a></strong>

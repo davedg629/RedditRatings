@@ -1,0 +1,15 @@
+{% extends "my_base.html" %}
+
+{% block page_content %}
+
+<div class="page-header"><h2>User Rating of <a href="{{ url_for('thread', category_slug=comment.thread.category.slug, thread_slug=comment.thread.slug) }}">{{ comment.thread.title }}</a></h2></div>
+
+<div class="user-review">
+
+    {% import "comment_macros.html" as comment_macros %}
+
+    {{ comment_macros.comment_loop(comment) }}
+
+</div>
+
+{% endblock %}

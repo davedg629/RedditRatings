@@ -12,8 +12,8 @@ class Category(db.Model):
     name = db.Column(db.String, unique=True, nullable=False)
     slug = db.Column(db.String, unique=True, nullable=False)
 
-    community_reviews = db.relationship(
-        'CommunityReview',
+    threads = db.relationship(
+        'Thread',
         backref='category',
         lazy='dynamic'
     )
@@ -51,42 +51,42 @@ class User(db.Model):
         nullable=False
     )
 
-    community_reviews = db.relationship(
-        'CommunityReview',
+    threads = db.relationship(
+        'Thread',
         backref='user',
         lazy='dynamic'
     )
 
-    user_reviews = db.relationship(
-        'UserReview',
+    comments = db.relationship(
+        'Comment',
         backref='user',
         lazy='dynamic'
     )
 
     def get_avg_rating(self):
         avg_rating = db.session\
-            .query(func.avg(UserReview.rating))\
+            .query(func.avg(Comment.rating))\
             .filter_by(user_id=self.id)
         return "{0:.2f}".format(avg_rating[0][0])
 
-    def get_review_count(self):
-        review_count = db.session\
-            .query(func.count(UserReview.id))\
+    def get_comment_count(self):
+        count = db.session\
+            .query(func.count(Comment.id))\
             .filter_by(user_id=self.id)
-        review_count_string = str(review_count[0][0])
-        return review_count_string
+        count_string = str(count[0][0])
+        return count_string
 
     def __unicode__(self):
         return self.username
 
 
-# create association table for Tag/CommunityReview relationship
+# create association table for Tag/Thread relationship
 tag_assocs = db.Table(
     'tag_assocs',
     db.Column(
-        'community_review_id',
+        'thread_id',
         db.Integer,
-        db.ForeignKey('community_reviews.id')
+        db.ForeignKey('threads.id')
     ),
     db.Column(
         'tag_id',
@@ -108,9 +108,9 @@ class Tag(db.Model):
         return self.name
 
 
-class CommunityReview(db.Model):
+class Thread(db.Model):
 
-    __tablename__ = "community_reviews"
+    __tablename__ = "threads"
 
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(
@@ -152,40 +152,40 @@ class CommunityReview(db.Model):
     tags = db.relationship(
         'Tag',
         secondary=tag_assocs,
-        backref=db.backref('community_reviews', lazy='dynamic'),
+        backref=db.backref('threads', lazy='dynamic'),
         lazy='dynamic')
 
-    user_reviews = db.relationship(
-        'UserReview',
-        backref='community_review',
+    comments = db.relationship(
+        'Comment',
+        backref='thread',
         lazy='dynamic'
     )
 
     def get_avg_rating(self):
         avg_rating = db.session\
-            .query(func.avg(UserReview.rating))\
-            .filter_by(community_review_id=self.id)
+            .query(func.avg(Comment.rating))\
+            .filter_by(thread_id=self.id)
         return "{0:.2f}".format(avg_rating[0][0])
 
-    def get_review_count(self):
-        review_count = db.session\
-            .query(func.count(UserReview.id))\
-            .filter_by(community_review_id=self.id)
-        review_count_string = str(review_count[0][0])
-        return review_count_string
+    def get_comment_count(self):
+        count = db.session\
+            .query(func.count(Comment.id))\
+            .filter_by(thread_id=self.id)
+        count_string = str(count[0][0])
+        return count_string
 
     def __unicode__(self):
         return self.title + ' - ' + str(self.category_id)
 
 
-class UserReview(db.Model):
+class Comment(db.Model):
 
-    __tablename__ = "user_reviews"
+    __tablename__ = "comments"
 
     id = db.Column(db.Integer, primary_key=True)
-    community_review_id = db.Column(
+    thread_id = db.Column(
         db.Integer,
-        db.ForeignKey('community_reviews.id'),
+        db.ForeignKey('threads.id'),
         nullable=False
     )
     user_id = db.Column(
@@ -196,7 +196,7 @@ class UserReview(db.Model):
     reddit_id = db.Column(db.String, nullable=False, unique=True)
     date_posted = db.Column(db.DateTime, nullable=False)
     rating = db.Column(db.Integer, nullable=False)
-    review = db.Column(db.Text)
+    body = db.Column(db.Text)
     upvotes = db.Column(db.Integer, nullable=False)
     downvotes = db.Column(db.Integer, nullable=False)
     edited_stamp = db.Column(db.Integer, nullable=False)

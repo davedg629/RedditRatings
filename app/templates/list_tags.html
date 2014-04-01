@@ -9,7 +9,7 @@
 
     {% for tag in tags %}
 
-    {% if tag.community_reviews.first() %}
+    {% if tag.threads.first() %}
     <div class="list-item{% if loop.last %} last{% endif %}">
 
         <strong><a href="{{ url_for('tag', tag_slug=tag.slug) }}">{{ tag.name }}</a></strong>

@@ -47,8 +47,8 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-            {% set community_review_endpoints = ['index', 'list_categories', 'list_subreddits', 'list_tags', 'community_review', 'tag', 'subreddit', 'category'] %}
-            <li class="dropdown{% if request.endpoint in community_review_endpoints %} active{% endif %}">
+            {% set thread_endpoints = ['index', 'list_categories', 'list_subreddits', 'list_tags', 'thread', 'tag', 'subreddit', 'category'] %}
+            <li class="dropdown{% if request.endpoint in thread_endpoints %} active{% endif %}">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Community Ratings <b class="caret"></b></a>
                 <ul class="dropdown-menu">
                     <li{% if 'index' == request.endpoint %} class="active"{% endif %}><a href="{{ url_for('index') }}">Latest</a></li>

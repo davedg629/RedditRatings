@@ -28,7 +28,7 @@ class AdminModelView(AuthMixin, ModelView):
 
 
 class CategoryView(AdminModelView):
-    form_excluded_columns = ['community_reviews', ]
+    form_excluded_columns = ['threads', ]
 
 
 class RoleView(AdminModelView):
@@ -36,22 +36,22 @@ class RoleView(AdminModelView):
 
 
 class UserView(AdminModelView):
-    form_excluded_columns = ['community_reviews', 'user_reviews', ]
+    form_excluded_columns = ['threads', 'comments', ]
 
 
 class TagView(AdminModelView):
-    form_excluded_columns = ['community_reviews', ]
+    form_excluded_columns = ['threads', ]
 
 
-class CommunityReviewView(AdminModelView):
+class ThreadView(AdminModelView):
     form_excluded_columns = [
-        'user_reviews',
+        'comments',
         'slug',
         'upvotes',
         'downvotes',
         'last_crawl'
     ]
-    list_template = 'admin/community_review_list.html'
+    list_template = 'admin/thread_list.html'
     column_default_sort = ('date_posted', True)
     column_exclude_list = ('link_text',)
     column_searchable_list = ('title',)
@@ -72,7 +72,7 @@ class CommunityReviewView(AdminModelView):
 
             new_slug = make_slug(form.title.data)
             slug_check = None
-            slug_check = db.session.query(models.CommunityReview)\
+            slug_check = db.session.query(models.Thread)\
                 .filter_by(category_id=form.category.data.id)\
                 .filter_by(slug=new_slug).first()
 
@@ -120,7 +120,7 @@ class CommunityReviewView(AdminModelView):
         slug_check = None
 
         if new_slug != model.slug:
-            slug_check = db.session.query(models.CommunityReview)\
+            slug_check = db.session.query(models.Thread)\
                 .filter_by(category_id=form.category.data.id)\
                 .filter_by(slug=new_slug).first()
 
@@ -145,8 +145,8 @@ class CommunityReviewView(AdminModelView):
                            return_url=return_url)
 
 
-class UserReviewView(AdminModelView):
-    column_filters = ['community_review']
+class CommentView(AdminModelView):
+    column_filters = ['thread']
     column_default_sort = ('date_posted', True)
 
 # Admin construtor
@@ -176,17 +176,17 @@ admin.add_view(UserView(
     endpoint='user_model_view'
 ))
 admin.add_view(TagView(models.Tag, db.session))
-admin.add_view(CommunityReviewView(
-    models.CommunityReview,
+admin.add_view(ThreadView(
+    models.Thread,
     db.session,
-    name='Community Reviews',
-    endpoint='communityreview_model_view'
+    name='Threads',
+    endpoint='thread_model_view'
 ))
-admin.add_view(UserReviewView(
-    models.UserReview,
+admin.add_view(CommentView(
+    models.Comment,
     db.session,
-    name='User Reviews',
-    endpoint='userreview_model_view'
+    name='Comments',
+    endpoint='comment_model_view'
 ))
 
 logout_link = MenuLink(name='Logout', url='/logout')

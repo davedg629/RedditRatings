@@ -1,5 +1,5 @@
 from app import db
-from app.models import User, CommunityReview, UserReview
+from app.models import User, Thread, Comment
 from config import REDDIT_USERNAME, REDDIT_PASSWORD, \
     REDDIT_USER_AGENT, SERVER_NAME
 from app.utils import is_number
@@ -26,8 +26,8 @@ def parse_comment_rating(labelPos, label, comment_body):
     return 0
 
 
-def parse_comment_review(labelPos, label, comment_body):
-    """Parse review from comment, given the review label,
+def parse_comment_body(labelPos, label, comment_body):
+    """Parses comment body, given the label,
     label position, and comment body."""
 
     if comment_body.find('---', labelPos) > 0:
@@ -42,7 +42,7 @@ def parse_comment_review(labelPos, label, comment_body):
     if comment_body[labelPos - 2:
                     labelPos +
                     len(label) + 3] == '**' + label + ':**':
-        review_body = \
+        body = \
             comment_body[
                 labelPos +
                 len(label) +
@@ -58,7 +58,7 @@ def parse_comment_review(labelPos, label, comment_body):
     elif comment_body[labelPos - 1:
                       labelPos +
                       len(label) + 2] == '*' + label + ':*':
-        review_body = \
+        body = \
             comment_body[
                 labelPos +
                 len(label) +
@@ -72,7 +72,7 @@ def parse_comment_review(labelPos, label, comment_body):
             ].strip()
 
     else:
-        review_body = \
+        body = \
             comment_body[
                 labelPos +
                 len(label) +
@@ -85,14 +85,14 @@ def parse_comment_review(labelPos, label, comment_body):
                 + 1:
             ].strip()
 
-    return review_body.replace("\n", "<br />")
+    return body.replace("\n", "<br />")
 
 
 def parse_comment(comment_body):
     """Takes a reddit comment and pulls out rating details"""
     labels = [
         'rating',
-        'review'
+        'comment'
     ]
 
     comment_params = {}
@@ -107,10 +107,10 @@ def parse_comment(comment_body):
                 comment_params[label] = \
                     parse_comment_rating(labelPos, label, comment_body)
 
-            # parse review
+            # parse comment body
             else:
                 comment_params[label] = \
-                    parse_comment_review(labelPos, label, comment_body)
+                    parse_comment_body(labelPos, label, comment_body)
 
         else:
             comment_params[label] = ''
@@ -139,10 +139,9 @@ def add_user(username):
     return user_check.id
 
 
-def update_review(comment_body, comment_edited, reddit_id):
-    """Update a review from reddit comment
-    and update last_edited value in db for the review."""
-    label = 'review'
+def update_comment(comment_body, comment_edited, reddit_id):
+    """Update a comment and last_edited value."""
+    label = 'comment'
     labelPos = comment_body.lower().find(label)
     if labelPos >= 0:
 
@@ -158,7 +157,7 @@ def update_review(comment_body, comment_edited, reddit_id):
         if comment_body[labelPos - 2:
                         labelPos +
                         len(label) + 3] == '**' + label + ':**':
-            editedReview = \
+            editedComment = \
                 comment_body[
                     labelPos +
                     len(label) +
@@ -174,7 +173,7 @@ def update_review(comment_body, comment_edited, reddit_id):
         elif comment_body[labelPos - 1:
                           labelPos +
                           len(label) + 2] == '*' + label + ':*':
-            editedReview = \
+            editedComment = \
                 comment_body[
                     labelPos +
                     len(label) +
@@ -188,7 +187,7 @@ def update_review(comment_body, comment_edited, reddit_id):
                 ].strip()
 
         else:
-            editedReview = \
+            editedComment = \
                 comment_body[
                     labelPos +
                     len(label) +
@@ -201,35 +200,35 @@ def update_review(comment_body, comment_edited, reddit_id):
                     + 1:
                 ].strip()
     else:
-        editedReview = ''
+        editedComment = ''
 
-    db.session.query(UserReview)\
+    db.session.query(Comment)\
         .filter_by(reddit_id=reddit_id)\
         .update({
-            "review": editedReview.replace("\n", "<br />"),
+            "body": editedComment.replace("\n", "<br />"),
             "edited_stamp": comment_edited
         })
     db.session.commit()
 
 
-def send_pm(author, community_review, r):
+def send_pm(author, thread, r):
     r.send_message(
         author,
         'Success!',
-        'Your review of **' + community_review.title +
+        'Your rating of **' + thread.title +
         '** has been successfully added.' +
-        '\n\nView the Community Review here: ' +
+        '\n\nView the Community Rating here: ' +
         'http://' + SERVER_NAME + '/' +
-        community_review.category.slug + '/' +
-        community_review.slug +
+        thread.category.slug + '/' +
+        thread.slug +
         '\n\n(You received this message because you ' +
-        'included a \'verifyreview\' tag in your ' +
-        'review.)'
+        'included a \'verifyrating\' tag in your ' +
+        'rating.)'
     )
 
 
 class Crawl(Command):
-    "Crawl open Community Reviews"
+    "Crawl open Threads"
 
     option_list = (
         Option('--silent', '-s', dest='silent'),
@@ -246,19 +245,19 @@ class Crawl(Command):
         # login with reddit username/password
         r.login(REDDIT_USERNAME, REDDIT_PASSWORD)
 
-        # get all reviews uploaded to site
-        community_reviews = db.session.query(CommunityReview)\
+        # get all threads uploaded to site
+        threads = db.session.query(Thread)\
             .filter_by(open_for_comments=True)\
-            .filter(CommunityReview.reddit_id != '')\
+            .filter(Thread.reddit_id != '')\
             .all()
 
-        # get comments for each review
-        for community_review in community_reviews:
+        # get comments for each thread
+        for thread in threads:
 
             # get submission from reddit, store comments in variable
             try:
                 submission = r.get_submission(
-                    submission_id=community_review.reddit_id
+                    submission_id=thread.reddit_id
                 )
                 submission.replace_more_comments(limit=None, threshold=0)
                 top_lvl_comments = submission.comments
@@ -270,7 +269,7 @@ class Crawl(Command):
                 if comment.author:
 
                     # check if this comment has already been parsed
-                    this_comment = db.session.query(UserReview)\
+                    this_comment = db.session.query(Comment)\
                         .filter_by(reddit_id=comment.id).first()
 
                     # get time since comment was created
@@ -283,15 +282,15 @@ class Crawl(Command):
                     if not this_comment and time_since_created > 180:
 
                         # check if this user has already commented
-                        # on this review
+                        # on this thread
                         this_user_check = None
                         this_user = db.session.query(User)\
                             .filter_by(username=comment.author.name)\
                             .first()
                         if this_user:
-                            this_user_check = db.session.query(UserReview)\
+                            this_user_check = db.session.query(Comment)\
                                 .filter_by(
-                                    community_review_id=community_review.id
+                                    thread_id=thread.id
                                 )\
                                 .filter_by(user_id=this_user.id)\
                                 .first()
@@ -317,28 +316,28 @@ class Crawl(Command):
                                     else:
                                         this_last_edited = comment.edited
 
-                                    # add comment to db as a user review
-                                    new_user_review = UserReview(
-                                        community_review_id=community_review.id,
+                                    # add comment to db
+                                    new_comment = Comment(
+                                        thread_id=thread.id,
                                         user_id=user_id,
                                         reddit_id=comment.id,
                                         date_posted=datetime.datetime
                                         .utcfromtimestamp(comment.created_utc),
                                         rating=comment_params['rating'],
-                                        review=comment_params['review'],
+                                        body=comment_params['comment'],
                                         upvotes=comment.ups,
                                         downvotes=comment.downs,
                                         edited_stamp=this_last_edited
                                     )
-                                    db.session.add(new_user_review)
+                                    db.session.add(new_comment)
                                     db.session.commit()
 
                                     # reply with a success message if user wants it
-                                    if 'verifyreview' in comment.body.lower() \
+                                    if 'verifyrating' in comment.body.lower() \
                                             and silent != 'true':
                                         send_pm(
                                             comment.author.name,
-                                            community_review,
+                                            thread,
                                             r
                                         )
 
@@ -348,7 +347,7 @@ class Crawl(Command):
                         if time_since_created < 3600:
 
                             if comment.edited > this_comment.edited_stamp:
-                                update_review(
+                                update_comment(
                                     comment.body,
                                     comment.edited,
                                     comment.id
@@ -361,10 +360,10 @@ class Crawl(Command):
                             this_comment.downvotes = comment.downs
                             db.session.commit()
 
-            # update last_crawl and up/downvotes for review
-            community_review.last_crawl = datetime.datetime.now()
-            if community_review.upvotes != submission.ups:
-                community_review.upvotes = submission.ups
-            if community_review.downvotes != submission.downs:
-                community_review.downvotes = submission.downs
+            # update last_crawl and up/downvotes for thread
+            thread.last_crawl = datetime.datetime.now()
+            if thread.upvotes != submission.ups:
+                thread.upvotes = submission.ups
+            if thread.downvotes != submission.downs:
+                thread.downvotes = submission.downs
             db.session.commit()

@@ -7,21 +7,21 @@
 <ul class="details">
 
     <li><span class="detail-label">Average Rating:</span> &nbsp; {{ user.get_avg_rating() }} out of 10</li>
-    <li><span class="detail-label"># of Ratings:</span> &nbsp; {{ user.get_review_count() }}</li>
+    <li><span class="detail-label"># of Ratings:</span> &nbsp; {{ user.get_comment_count() }}</li>
     <li><span class="detail-label"><a href="http://reddit.com/user/{{ user.username }}" target="_blank">Reddit Profile</a></span></li>
 
 </ul>
 
-<div class="user-reviews">
+<div class="comments">
 
     <h3>User Ratings by {{ user.username }}</h3>
 
-    {% import "user_review_macros.html" as user_review_macros %}
+    {% import "comment_macros.html" as comment_macros %}
 
-    {% for user_review in user.user_reviews %}
-    <div class="user-review{% if loop.last %} last{% endif %}">
+    {% for comment in user.comments %}
+    <div class="comment{% if loop.last %} last{% endif %}">
 
-        {{ user_review_macros.user_review_list_loop(user_review) }}
+        {{ comment_macros.comment_list_loop(comment) }}
 
     </div>
     {% endfor %}

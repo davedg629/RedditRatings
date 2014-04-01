@@ -2,8 +2,8 @@ from app import app, db
 from flask import flash, redirect, render_template, request, \
     session, url_for, abort
 from app.forms import LoginForm
-from app.models import Category, Tag, CommunityReview, \
-    UserReview, User
+from app.models import Category, Tag, Thread, \
+    Comment, User
 from app.utils import pretty_date
 from app.decorators import login_required
 
@@ -94,14 +94,14 @@ def logout():
 # FRONT END
 @app.route('/')
 def index():
-    community_reviews = db.session.query(CommunityReview)\
-        .order_by(CommunityReview.date_posted.desc())\
+    threads = db.session.query(Thread)\
+        .order_by(Thread.date_posted.desc())\
         .all()
     return render_template(
         'index.html',
-        title='Creating reviews together, on reddit.',
+        title='Creating ratings on reddit, together.',
         page_title='Latest Community Ratings',
-        community_reviews=community_reviews
+        threads=threads
     )
 
 
@@ -125,12 +125,12 @@ def category(category_slug):
         .filter_by(slug=category_slug)\
         .first()
     if category:
-        community_reviews = category.community_reviews\
-            .order_by(CommunityReview.date_posted.desc())\
+        threads = category.threads\
+            .order_by(Thread.date_posted.desc())\
             .all()
         return render_template(
-            'filtered_community_reviews.html',
-            community_reviews=community_reviews,
+            'filtered_threads.html',
+            threads=threads,
             title=category.name,
             page_title="Category: " + category.name
         )
@@ -141,7 +141,7 @@ def category(category_slug):
 # list subreddits
 @app.route('/subreddits/')
 def list_subreddits():
-    subreddits = db.session.query(CommunityReview.subreddit).distinct()
+    subreddits = db.session.query(Thread.subreddit).distinct()
     return render_template(
         'list_subreddits.html',
         subreddits=subreddits,
@@ -153,14 +153,14 @@ def list_subreddits():
 # subreddit page
 @app.route('/subreddit/<subreddit>')
 def subreddit(subreddit):
-    community_reviews = db.session.query(CommunityReview)\
+    threads = db.session.query(Thread)\
         .filter_by(subreddit=subreddit)\
-        .order_by(CommunityReview.date_posted.desc())\
+        .order_by(Thread.date_posted.desc())\
         .all()
-    if community_reviews:
+    if threads:
         return render_template(
-            'filtered_community_reviews.html',
-            community_reviews=community_reviews,
+            'filtered_threads.html',
+            threads=threads,
             title=subreddit,
             page_title="Subreddit: r/" + subreddit
         )
@@ -187,12 +187,12 @@ def tag(tag_slug):
         .filter_by(slug=tag_slug)\
         .first()
     if tag:
-        community_reviews = tag.community_reviews\
-            .order_by(CommunityReview.date_posted.desc())\
+        threads = tag.threads\
+            .order_by(Thread.date_posted.desc())\
             .all()
         return render_template(
-            'filtered_community_reviews.html',
-            community_reviews=community_reviews,
+            'filtered_threads.html',
+            threads=threads,
             title=tag.name,
             page_title="Tag: " + tag.name
         )
@@ -200,32 +200,32 @@ def tag(tag_slug):
         abort(404)
 
 
-# community review single
-@app.route('/<category_slug>/<community_review_slug>')
-def community_review(category_slug, community_review_slug):
+# thread single
+@app.route('/<category_slug>/<thread_slug>')
+def thread(category_slug, thread_slug):
     category = db.session.query(Category)\
         .filter_by(slug=category_slug)\
         .first()
     if category:
-        community_review = db.session.query(CommunityReview)\
+        thread = db.session.query(Thread)\
             .filter_by(category_id=category.id)\
-            .filter_by(slug=community_review_slug)\
+            .filter_by(slug=thread_slug)\
             .first()
-        if community_review:
+        if thread:
             last_crawl = None
-            user_reviews = None
-            if community_review.user_reviews:
-                last_crawl = pretty_date(community_review.last_crawl)
-                user_reviews = community_review.user_reviews\
+            comments = None
+            if thread.comments:
+                last_crawl = pretty_date(thread.last_crawl)
+                comments = thread.comments\
                     .order_by(
-                        (UserReview.upvotes - UserReview.downvotes).desc()
+                        (Comment.upvotes - Comment.downvotes).desc()
                     ).all()
             return render_template(
-                'community_review.html',
-                community_review=community_review,
+                'thread.html',
+                thread=thread,
                 last_crawl=last_crawl,
-                user_reviews=user_reviews,
-                title=community_review.title
+                comments=comments,
+                title=thread.title
             )
         else:
             abort(404)
@@ -233,16 +233,16 @@ def community_review(category_slug, community_review_slug):
         abort(404)
 
 
-# user review single
-@app.route('/user-review/<int:user_review_id>')
-def user_review(user_review_id):
-    user_review = db.session.query(UserReview)\
-        .filter_by(id=user_review_id).first()
-    if user_review:
+# comment single
+@app.route('/comment/<int:comment_id>')
+def comment(comment_id):
+    comment = db.session.query(Comment)\
+        .filter_by(id=comment_id).first()
+    if comment:
         return render_template(
-            'user_review.html',
-            user_review=user_review,
-            title="User Rating of " + user_review.community_review.title
+            'comment.html',
+            comment=comment,
+            title="User Rating of " + comment.thread.title
         )
     else:
         abort(404)

@@ -1,0 +1,27 @@
+{% macro comment_loop(comment) %}
+
+    <h4><a class="redditor" href="{{ url_for('user_profile', username=comment.user.username) }}">{{ comment.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ comment.rating }} out of 10 &nbsp; | &nbsp; <strong>Votes:</strong> {{ comment.upvotes }} up, {{ comment.downvotes }} down</span></h4>
+
+    {% if comment.review != '' %}
+    <div class="review">
+        <p>{{ comment.review|safe }}</p>
+    </div>
+    {% endif %}
+
+    <p><a href="{{ comment.thread.reddit_permalink }}{{ comment.reddit_id }}" target="_blank">View on reddit</a></p>
+
+{% endmacro %}
+
+{% macro comment_list_loop(comment) %}
+
+<h4><a href="{{ url_for('thread', category_slug=comment.thread.category.slug, thread_slug=comment.thread.slug) }}">{{ comment.thread.title }}</a></h4>
+
+<ul class="details">
+
+    <li><span class="detail-label">Rating:</span> &nbsp; {{ comment.rating }} out of 10</li>
+    <li><span class="detail-label">Votes:</span> &nbsp; {{ comment.upvotes }} up, {{ comment.downvotes }} down</span></li>
+    <li><a href="{{ url_for('comment', comment_id=comment.id) }}">See Full Rating</a></li>
+
+</ul>
+
+{% endmacro %}
