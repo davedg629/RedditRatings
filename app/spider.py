@@ -88,11 +88,11 @@ def parse_comment_body(labelPos, label, comment_body):
     return body.replace("\n", "<br />")
 
 
-def parse_comment(comment_body):
+def parse_comment(comment_body, body_label):
     """Takes a reddit comment and pulls out rating details"""
     labels = [
         'rating',
-        'comment'
+        body_label
     ]
 
     comment_params = {}
@@ -139,9 +139,9 @@ def add_user(username):
     return user_check.id
 
 
-def update_comment(comment_body, comment_edited, reddit_id):
+def update_comment(comment_body, comment_edited, reddit_id, body_label):
     """Update a comment and last_edited value."""
-    label = 'comment'
+    label = body_label
     labelPos = comment_body.lower().find(label)
     if labelPos >= 0:
 
@@ -232,9 +232,10 @@ class Crawl(Command):
 
     option_list = (
         Option('--silent', '-s', dest='silent'),
+        Option('--label', '-l', dest='body_label'),
     )
 
-    def run(self, silent):
+    def run(self, silent, body_label):
 
         # get reddit user agent
         user_agent = (REDDIT_USER_AGENT)
@@ -300,7 +301,7 @@ class Crawl(Command):
                             if 'rating:' in comment.body.lower():
 
                                 # parse comment
-                                comment_params = parse_comment(comment.body)
+                                comment_params = parse_comment(comment.body, body_label)
 
                                 if 1 <= comment_params['rating'] <= 10:
 
@@ -324,7 +325,7 @@ class Crawl(Command):
                                         date_posted=datetime.datetime
                                         .utcfromtimestamp(comment.created_utc),
                                         rating=comment_params['rating'],
-                                        body=comment_params['comment'],
+                                        body=comment_params[body_label],
                                         upvotes=comment.ups,
                                         downvotes=comment.downs,
                                         edited_stamp=this_last_edited
@@ -350,7 +351,8 @@ class Crawl(Command):
                                 update_comment(
                                     comment.body,
                                     comment.edited,
-                                    comment.id
+                                    comment.id,
+                                    body_label
                                 )
 
                         if comment.ups != this_comment.upvotes:

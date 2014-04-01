@@ -40,7 +40,7 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-weight: bold;}
 
 .listing .list-item a.more {font-size: 17px; font-weight: bold;}
 
-/** community review details **/
+/** thread details **/
 .rating-avg {background-color: #2c3e50; color: #ecf0f1; font-weight: bold; font-size: 28px; line-height: 34px; margin: 2px 15px 3px 0; padding: 7px 12px 4px; text-align: center;}
 .rating-avg span {color: #6C767F; font-size: 14px;}
 
@@ -48,15 +48,15 @@ ul.details {display: block; margin: 0 0 10px; padding: 0;}
 ul.details li {font-size: 16px; list-style-type: none; margin: 0; padding: 0 0 4px;}
 ul.details li span.detail-label {font-weight: bold;}
 
-/** community review **/
-.community-review h2 {margin-bottom: 3px;}
+/** thread **/
+.thread h2 {margin-bottom: 3px;}
 
-#user-ratings {margin-bottom: 22px;}
+#comments-title {margin-bottom: 22px;}
 
-.user-reviews {border-top: 1px solid #ecf0f1; margin-top: 20px;} 
-.user-review {border-bottom: 1px solid #ecf0f1; margin-bottom: 15px; padding-bottom: 15px;}
-.user-review.last {border-bottom: 0 none; margin-bottom: 0; padding-bottom: 0;}
-.user-review h4 span.review-details {font-size: 14px;}
+.comments {border-top: 1px solid #ecf0f1; margin-top: 20px;} 
+.comment {border-bottom: 1px solid #ecf0f1; margin-bottom: 15px; padding-bottom: 15px;}
+.comment.last {border-bottom: 0 none; margin-bottom: 0; padding-bottom: 0;}
+.comment h4 span.review-details {font-size: 14px;}
 
 .helpful-links {border: 2px solid #2c3e50; font-weight: bold; line-height: 22px;}
 .submit-review ul {margin: 0 0 0 10px; padding: 0 0 0 20px;}

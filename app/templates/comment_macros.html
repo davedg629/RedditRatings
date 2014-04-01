@@ -2,9 +2,9 @@
 
     <h4><a class="redditor" href="{{ url_for('user_profile', username=comment.user.username) }}">{{ comment.user.username }}</a> &nbsp; <span class="review-details"><strong>Rating:</strong> {{ comment.rating }} out of 10 &nbsp; | &nbsp; <strong>Votes:</strong> {{ comment.upvotes }} up, {{ comment.downvotes }} down</span></h4>
 
-    {% if comment.review != '' %}
+    {% if comment.body != '' %}
     <div class="review">
-        <p>{{ comment.review|safe }}</p>
+        <p>{{ comment.body|safe }}</p>
     </div>
     {% endif %}
 
