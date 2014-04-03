@@ -1,12 +1,12 @@
 from app import app, db
 from flask import flash, redirect, render_template, request, \
     session, url_for, abort
-from app.forms import LoginForm
+from app.forms import LoginForm, ThreadForm
 from app.models import Category, Tag, Thread, \
     Comment, User
 from app.utils import pretty_date
 from app.decorators import login_required
-
+from datetime import datetime
 
 # redirect to www
 if app.config['ENVIRONMENT'] == 'heroku':
@@ -61,7 +61,7 @@ def about():
     )
 
 
-# LOGIN AND LOGOUT
+# LOGIN
 @app.route('/login/', methods=['GET', 'POST'])
 def login():
     if 'logged_in' in session:
@@ -83,6 +83,7 @@ def login():
         form=form)
 
 
+# LOGOUT
 @app.route('/logout/')
 @login_required
 def logout():
@@ -262,3 +263,35 @@ def user_profile(username):
         )
     else:
         abort(404)
+
+
+# create thread form
+@app.route('/create-thread/', methods=['GET', 'POST'])
+@login_required
+def create_thread():
+    form = ThreadForm()
+    categories = db.session.query(Category).order_by(Category.name.asc()).all()
+    form.category.choices = [
+        (cat.id, cat.name) for cat in categories
+    ]
+    if form.validate_on_submit():
+        new_thread = Thread(
+            user_id=1,
+            title=form.title.data,
+            category_id=form.category.data,
+            subreddit=form.subreddit.data,
+            date_posted=datetime.now(),
+            open_for_comments=True,
+            last_crawl=datetime.now()
+        )
+        db.session.add(new_thread)
+        db.session.commit()
+        flash('Your rating thread has been '
+              'posted to reddit!')
+        return redirect(url_for('index'))
+    return render_template(
+        'create_thread.html',
+        title="Create a Rating Thread",
+        page_title="Create a Rating Thread",
+        form=form
+    )
