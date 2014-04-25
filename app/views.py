@@ -7,6 +7,7 @@ from app.models import Category, Tag, Thread, \
 from app.utils import pretty_date
 from app.decorators import login_required
 from datetime import datetime
+import praw
 
 # redirect to www
 if app.config['ENVIRONMENT'] == 'heroku':
@@ -275,23 +276,40 @@ def create_thread():
         (cat.id, cat.name) for cat in categories
     ]
     if form.validate_on_submit():
-        new_thread = Thread(
-            user_id=1,
-            title=form.title.data,
-            category_id=form.category.data,
-            subreddit=form.subreddit.data,
-            date_posted=datetime.now(),
-            open_for_comments=True,
-            last_crawl=datetime.now()
+
+        # post to reddit
+        r = praw.Reddit(user_agent=app.config['REDDIT_USER_AGENT'])
+        r.login(app.config['REDDIT_USERNAME'], app.config['REDDIT_PASSWORD'])
+        reddit_post = r.submit(
+            form.subreddit.data,
+            '[Rate It] ' + form.title.data,
+            form.description.data
         )
-        db.session.add(new_thread)
-        db.session.commit()
-        flash('Your rating thread has been '
-              'posted to reddit!')
+
+        if reddit_post:
+
+            new_thread = Thread(
+                user_id=1,
+                title=form.title.data,
+                category_id=form.category.data,
+                subreddit=form.subreddit.data,
+                date_posted=datetime.now(),
+                open_for_comments=True,
+                last_crawl=datetime.now()
+            )
+            db.session.add(new_thread)
+            db.session.commit()
+            flash('Your rating thread has been '
+                  'posted to reddit!')
+
+        else:
+            flash('Sorry, we could not create'
+                  'your post on reddit. Try again later.')
+
         return redirect(url_for('index'))
     return render_template(
         'create_thread.html',
-        title="Create a Rating Thread",
-        page_title="Create a Rating Thread",
+        title="Create a Rating Thread on reddit",
+        page_title="Create a Rating Thread on reddit",
         form=form
     )
