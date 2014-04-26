@@ -1,6 +1,6 @@
 from app import app, db
 from flask import flash, redirect, render_template, request, \
-    session, url_for, abort
+    session, url_for, abort, Markup
 from app.forms import LoginForm, ThreadForm
 from app.models import Category, Tag, Thread, \
     Comment, User
@@ -279,34 +279,72 @@ def create_thread():
 
         # post to reddit
         r = praw.Reddit(user_agent=app.config['REDDIT_USER_AGENT'])
-        r.login(app.config['REDDIT_USERNAME'], app.config['REDDIT_PASSWORD'])
-        reddit_post = r.submit(
-            form.subreddit.data,
-            '[Rate It] ' + form.title.data,
-            form.description.data
-        )
+        reddit_post = None
 
-        if reddit_post:
-
-            new_thread = Thread(
-                user_id=1,
-                title=form.title.data,
-                category_id=form.category.data,
-                subreddit=form.subreddit.data,
-                date_posted=datetime.now(),
-                open_for_comments=True,
-                last_crawl=datetime.now()
+        try:
+            r.login(
+                app.config['REDDIT_USERNAME'],
+                app.config['REDDIT_PASSWORD']
             )
-            db.session.add(new_thread)
-            db.session.commit()
-            flash('Your rating thread has been '
-                  'posted to reddit!')
+            reddit_post = r.submit(
+                form.subreddit.data,
+                '[Rate It] ' + form.title.data,
+                form.description.data
+            )
 
-        else:
-            flash('Sorry, we could not create'
-                  'your post on reddit. Try again later.')
+            if reddit_post:
+                new_thread = Thread(
+                    user_id=1,
+                    title=form.title.data,
+                    category_id=form.category.data,
+                    reddit_id=reddit_post.id,
+                    reddit_permalink=reddit_post.permalink,
+                    subreddit=form.subreddit.data,
+                    date_posted=datetime.now(),
+                    open_for_comments=True,
+                    last_crawl=datetime.now()
+                )
+                db.session.add(new_thread)
+                db.session.commit()
+                success_message = Markup(
+                    'Your rating thread has been '
+                    'posted to reddit <a href="http://redd.it/' +
+                    reddit_post.id +
+                    '" target="_blank">here</a>.'
+                )
+                flash(success_message)
 
-        return redirect(url_for('index'))
+                this_thread = db.session.query(Thread)\
+                    .filter_by(reddit_id=reddit_post.id)\
+                    .first()
+
+                return redirect(url_for(
+                    'thread',
+                    category_slug=this_thread.category.slug,
+                    thread_slug=this_thread.slug
+                ))
+
+            else:
+                flash('Sorry, we could not create'
+                      'your post on reddit. Try again later.')
+
+        except praw.errors.APIException as e:
+            flash('There was an error with your submission: ' +
+                  e.message)
+
+        except praw.errors.ClientException as e:
+            flash('There was an error with your submission: ' +
+                  e.message)
+
+        except:
+            error_message = Markup(
+                'Something went wrong. '
+                'Please try again or submit '
+                'an [Issue] to '
+                '<a href="http://reddit.com/r/redditratings" '
+                'target="_blank">/r/RedditRatings</a>.')
+            flash(error_message)
+
     return render_template(
         'create_thread.html',
         title="Create a Rating Thread on reddit",
