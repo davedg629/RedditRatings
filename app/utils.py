@@ -2,6 +2,7 @@ from __future__ import division
 from flask import flash
 import re
 from unicodedata import normalize
+from config import SERVER_NAME
 
 
 # flash errors
@@ -23,7 +24,7 @@ def is_number(s):
         return False
 
 
-# create slug for review
+# turn text into slug
 def make_slug(text, delim=u'-'):
     """Generates a slightly worse ASCII-only slug."""
     _punct_re = re.compile(r'[\t !"#$%&\'()*\-/<=>?@\[\\\]^_`{|},.]+')
@@ -78,3 +79,53 @@ def pretty_date(time=False):
     if day_diff < 365:
         return str(day_diff // 30) + " months ago"
     return str(day_diff // 365) + " years ago"
+
+
+# construct reddit post body
+def reddit_body(desc, title, cat_slug, slug):
+    body = (
+        desc +
+        '\n\n-'
+        '\n---'
+        '\n-'
+        '\n\n**What are we rating?**\n\n' +
+        title +
+        '\n\n-'
+        '\n---'
+        '\n-'
+        '\n\n**How to submit a rating**'
+        '\n\nYou can submit a rating by leaving a comment with'
+        ' the following format:'
+        '\n\n    Rating: Provide a rating from 1 to 10 here, whole numbers'
+        ' only, required'
+        '\n\n    Comment: Include any comments related to your rating here,'
+        ' encouraged but optional'
+        '\n\n    ---'
+        '\n\n    If you want to say something not directly related to your'
+        ' rating, put it\n    below a horizontal rule ("---").'
+        '\n\n    verifyrating'
+        '\n\n    If the text "verifyrating" is included, then a PM will be'
+        ' sent to you\n    when your rating is parsed.'
+        '\n\n-'
+        '\n---'
+        '\n-'
+        '\n\n**Then what happens?**'
+        '\n\nEvery few minutes, a bot will scan the comments and calculate'
+        ' an average rating based on your input.'
+        '\n\n-'
+        '\n---'
+        '\n-'
+        '\n\n**Live results**'
+        '\n\n[?? out of 10, based on 0 ratings]('
+        'http://' + SERVER_NAME +
+        '/' + cat_slug + '/' + slug + ')'
+        '\n\n*^Updates ^every ^10 ^minutes*'
+        '\n\n-'
+        '\n---'
+        '\n-'
+        '\n\n**Helpful tips**'
+        '\n\n* Only your first rating/comment will be counted.'
+        '\n* You have 3 minutes to edit your Rating.'
+        '\n* Upvote other ratings/comments that are informative.'
+        '\n* Post feedback and suggestions to /r/RedditRatings.')
+    return body

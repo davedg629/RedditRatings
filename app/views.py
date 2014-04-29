@@ -4,10 +4,12 @@ from flask import flash, redirect, render_template, request, \
 from app.forms import LoginForm, ThreadForm
 from app.models import Category, Tag, Thread, \
     Comment, User
-from app.utils import pretty_date
+from app.utils import pretty_date, reddit_body
 from app.decorators import login_required
 from datetime import datetime
 import praw
+from app.utils import make_slug
+from sqlalchemy.sql import func
 
 # redirect to www
 if app.config['ENVIRONMENT'] == 'heroku':
@@ -281,6 +283,27 @@ def create_thread():
         r = praw.Reddit(user_agent=app.config['REDDIT_USER_AGENT'])
         reddit_post = None
 
+        # create a unique slug from the thread title
+        new_slug = make_slug(form.title.data)
+        slug_check = None
+        slug_check = db.session.query(Thread)\
+            .filter_by(category_id=form.category.data)\
+            .filter_by(title=form.title.data).first()
+
+        if slug_check:
+            same_slug_count = db.session\
+                .query(func.count(Thread.id))\
+                .filter_by(
+                    category_id=form.category.data
+                )\
+                .filter_by(title=form.title.data)
+            new_slug = new_slug + '-' + str(same_slug_count[0][0] + 1)
+
+        # get the category slug
+        category = db.session.query(Category)\
+            .filter_by(id=form.category.data)\
+            .first()
+
         try:
             r.login(
                 app.config['REDDIT_USERNAME'],
@@ -288,14 +311,20 @@ def create_thread():
             )
             reddit_post = r.submit(
                 form.subreddit.data,
-                '[Rate It] ' + form.title.data,
-                form.description.data
+                '[Community Rating] ' + form.title.data,
+                reddit_body(
+                    form.description.data,
+                    form.title.data,
+                    category.slug,
+                    new_slug
+                )
             )
 
             if reddit_post:
                 new_thread = Thread(
                     user_id=1,
                     title=form.title.data,
+                    slug=new_slug,
                     category_id=form.category.data,
                     reddit_id=reddit_post.id,
                     reddit_permalink=reddit_post.permalink,

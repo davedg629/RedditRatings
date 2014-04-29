@@ -12,7 +12,7 @@ class LoginForm(Form):
 
 # frontend thread creation form
 class ThreadForm(Form):
-    title = TextField('What are you rating?', validators=[InputRequired()])
+    title = TextField('What do you want to rate on reddit?', validators=[InputRequired()])
     subreddit = TextField('Subreddit:', validators=[InputRequired()])
     description = TextAreaField('Description (optional):')
     category = SelectField('Category:', coerce=int)
