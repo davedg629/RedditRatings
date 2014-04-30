@@ -13,11 +13,11 @@ class LoginForm(Form):
 # frontend thread creation form
 class ThreadForm(Form):
     title = TextField(
-        'What do you want to rate on reddit?',
+        'What do you want to rate?',
         validators=[InputRequired()]
     )
     subreddit = TextField('Subreddit:', validators=[InputRequired()])
-    description = TextAreaField('Description (optional):')
+    description = TextAreaField('Optional Description:')
     category = SelectField('Category:', coerce=int)
     test_mode = BooleanField('Post to reddit?')
     submit = SubmitField()

@@ -4,6 +4,53 @@
 {% block page_content %}
 {{super()}}
 
-    {{ wtf.quick_form(form) }}
+<form method="post" class="form" role="form">
     
+    {{ form.csrf_token }}
+
+    <div class="form-group">
+        {{ form.title.label }}
+        {{ form.title(class="form-control") }}
+        <span class="help-block">This will serve as the title of your reddit post. A [Community Rating] tag will be automatically prepended to the title.</span>
+    </div>
+
+    <div class="form-group">
+        {{ form.subreddit.label }}
+        <div class="input-group">
+            <span class="input-group-addon">/r/</span>
+            {{ form.subreddit(class="form-control") }}
+        </div>
+        <span class="help-block">Choose an appropriate subreddit and do not prepend it with "/r/".</span>
+    </div>
+
+    <div class="form-group">
+        {{ form.description.label }}
+        {{ form.description(class="form-control") }}
+        <span class="help-block">Tell us why you want to rate this thing. This text will appear at the top of your reddit post.</span>
+    </div>
+    
+    <div class="form-group">
+        {{ form.category.label }}
+        {{ form.category(class="form-control") }} 
+        <span class="help-block">This will category your rating thread here at RedditRatings.com.</span>
+    </div>
+
+    <div class="well">
+
+        <p><strong>Before you hit submit!</strong></p>
+
+        <p>This will create a reddit thread under your username. It will include text that instructs users on how to submit a rating in the comments section of your thread.</p>
+    
+    </div>
+
+    <div class="checkbox">
+        <label>
+            {{ form.test_mode }} Post to reddit?
+        </label>
+    </div>
+
+    <input class="btn btn-default" id="submit" name="submit" type="submit" value="Submit">
+
+</form>
+
 {% endblock %}

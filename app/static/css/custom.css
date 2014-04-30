@@ -10,6 +10,8 @@ body {
   margin-bottom: 20px;
 }
 
+.clear {clear: both;}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-weight: bold;}
 
 .well h3, .well h4 {margin-top: 0;}
