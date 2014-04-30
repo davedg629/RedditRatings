@@ -1,6 +1,6 @@
 from flask_wtf import Form
 from wtforms import TextField, PasswordField, SubmitField,\
-    TextAreaField, SelectField
+    TextAreaField, SelectField, BooleanField
 from wtforms.validators import InputRequired
 
 
@@ -12,8 +12,12 @@ class LoginForm(Form):
 
 # frontend thread creation form
 class ThreadForm(Form):
-    title = TextField('What do you want to rate on reddit?', validators=[InputRequired()])
+    title = TextField(
+        'What do you want to rate on reddit?',
+        validators=[InputRequired()]
+    )
     subreddit = TextField('Subreddit:', validators=[InputRequired()])
     description = TextAreaField('Description (optional):')
     category = SelectField('Category:', coerce=int)
+    test_mode = BooleanField('Post to reddit?')
     submit = SubmitField()

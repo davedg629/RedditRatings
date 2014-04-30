@@ -279,100 +279,125 @@ def create_thread():
     ]
     if form.validate_on_submit():
 
-        # post to reddit
-        r = praw.Reddit(user_agent=app.config['REDDIT_USER_AGENT'])
-        reddit_post = None
+        if form.test_mode.data:
 
-        # create a unique slug from the thread title
-        new_slug = make_slug(form.title.data)
-        slug_check = None
-        slug_check = db.session.query(Thread)\
-            .filter_by(category_id=form.category.data)\
-            .filter_by(title=form.title.data).first()
+            # post to reddit
+            r = praw.Reddit(user_agent=app.config['REDDIT_USER_AGENT'])
+            reddit_post = None
 
-        if slug_check:
-            same_slug_count = db.session\
-                .query(func.count(Thread.id))\
-                .filter_by(
-                    category_id=form.category.data
-                )\
-                .filter_by(title=form.title.data)
-            new_slug = new_slug + '-' + str(same_slug_count[0][0] + 1)
+            # create a unique slug from the thread title
+            new_slug = make_slug(form.title.data)
+            slug_check = None
+            slug_check = db.session.query(Thread)\
+                .filter_by(category_id=form.category.data)\
+                .filter_by(title=form.title.data).first()
 
-        # get the category slug
-        category = db.session.query(Category)\
-            .filter_by(id=form.category.data)\
-            .first()
+            if slug_check:
+                same_slug_count = db.session\
+                    .query(func.count(Thread.id))\
+                    .filter_by(
+                        category_id=form.category.data
+                    )\
+                    .filter_by(title=form.title.data)
+                new_slug = new_slug + '-' + str(same_slug_count[0][0] + 1)
 
-        try:
-            r.login(
-                app.config['REDDIT_USERNAME'],
-                app.config['REDDIT_PASSWORD']
+            # get the category slug
+            category = db.session.query(Category)\
+                .filter_by(id=form.category.data)\
+                .first()
+
+            try:
+                r.login(
+                    app.config['REDDIT_USERNAME'],
+                    app.config['REDDIT_PASSWORD']
+                )
+                reddit_post = r.submit(
+                    form.subreddit.data,
+                    '[Community Rating] ' + form.title.data,
+                    reddit_body(
+                        form.description.data,
+                        form.title.data,
+                        category.slug,
+                        new_slug
+                    )
+                )
+
+                if reddit_post:
+                    new_thread = Thread(
+                        user_id=1,
+                        title=form.title.data,
+                        slug=new_slug,
+                        category_id=form.category.data,
+                        reddit_id=reddit_post.id,
+                        reddit_permalink=reddit_post.permalink,
+                        subreddit=form.subreddit.data,
+                        date_posted=datetime.now(),
+                        open_for_comments=True,
+                        last_crawl=datetime.now()
+                    )
+                    db.session.add(new_thread)
+                    db.session.commit()
+                    success_message = Markup(
+                        'Your rating thread has been '
+                        'posted to reddit <a href="http://redd.it/' +
+                        reddit_post.id +
+                        '" target="_blank">here</a>.'
+                    )
+                    flash(success_message)
+
+                    this_thread = db.session.query(Thread)\
+                        .filter_by(reddit_id=reddit_post.id)\
+                        .first()
+
+                    return redirect(url_for(
+                        'thread',
+                        category_slug=this_thread.category.slug,
+                        thread_slug=this_thread.slug
+                    ))
+
+                else:
+                    flash('Sorry, we could not create'
+                          'your post on reddit. Try again later.')
+
+            except praw.errors.APIException as e:
+                flash('There was an error with your submission: ' +
+                      e.message)
+
+            except praw.errors.ClientException as e:
+                flash('There was an error with your submission: ' +
+                      e.message)
+
+            except:
+                error_message = Markup(
+                    'Something went wrong. '
+                    'Please try again or submit '
+                    'an [Issue] to '
+                    '<a href="http://reddit.com/r/redditratings" '
+                    'target="_blank">/r/RedditRatings</a>.')
+                flash(error_message)
+        else:
+            new_thread = Thread(
+                user_id=1,
+                title=form.title.data,
+                category_id=form.category.data,
+                subreddit=form.subreddit.data,
+                date_posted=datetime.now(),
+                open_for_comments=True
             )
-            reddit_post = r.submit(
-                form.subreddit.data,
-                '[Community Rating] ' + form.title.data,
-                reddit_body(
-                    form.description.data,
-                    form.title.data,
-                    category.slug,
-                    new_slug
-                )
-            )
+            db.session.add(new_thread)
+            db.session.commit()
+            flash('Your rating thread has been created.')
 
-            if reddit_post:
-                new_thread = Thread(
-                    user_id=1,
-                    title=form.title.data,
-                    slug=new_slug,
-                    category_id=form.category.data,
-                    reddit_id=reddit_post.id,
-                    reddit_permalink=reddit_post.permalink,
-                    subreddit=form.subreddit.data,
-                    date_posted=datetime.now(),
-                    open_for_comments=True,
-                    last_crawl=datetime.now()
-                )
-                db.session.add(new_thread)
-                db.session.commit()
-                success_message = Markup(
-                    'Your rating thread has been '
-                    'posted to reddit <a href="http://redd.it/' +
-                    reddit_post.id +
-                    '" target="_blank">here</a>.'
-                )
-                flash(success_message)
+            this_thread = db.session.query(Thread)\
+                .filter_by(category_id=form.category.data)\
+                .filter_by(title=form.title.data)\
+                .first()
 
-                this_thread = db.session.query(Thread)\
-                    .filter_by(reddit_id=reddit_post.id)\
-                    .first()
-
-                return redirect(url_for(
-                    'thread',
-                    category_slug=this_thread.category.slug,
-                    thread_slug=this_thread.slug
-                ))
-
-            else:
-                flash('Sorry, we could not create'
-                      'your post on reddit. Try again later.')
-
-        except praw.errors.APIException as e:
-            flash('There was an error with your submission: ' +
-                  e.message)
-
-        except praw.errors.ClientException as e:
-            flash('There was an error with your submission: ' +
-                  e.message)
-
-        except:
-            error_message = Markup(
-                'Something went wrong. '
-                'Please try again or submit '
-                'an [Issue] to '
-                '<a href="http://reddit.com/r/redditratings" '
-                'target="_blank">/r/RedditRatings</a>.')
-            flash(error_message)
+            return redirect(url_for(
+                'thread',
+                category_slug=this_thread.category.slug,
+                thread_slug=this_thread.slug
+            ))
 
     return render_template(
         'create_thread.html',
