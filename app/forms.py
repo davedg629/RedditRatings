@@ -1,7 +1,7 @@
 from flask_wtf import Form
 from wtforms import TextField, PasswordField, SubmitField,\
     TextAreaField, SelectField, BooleanField
-from wtforms.validators import InputRequired
+from wtforms.validators import InputRequired, Length
 
 
 class LoginForm(Form):
@@ -16,8 +16,14 @@ class ThreadForm(Form):
         'What do you want to rate?',
         validators=[InputRequired()]
     )
-    subreddit = TextField('Subreddit:', validators=[InputRequired()])
-    description = TextAreaField('Optional Description:')
+    subreddit = TextField('Choose a Subreddit:', validators=[InputRequired()])
+    description = TextAreaField(
+        'Why do you want to rate this? (optional)',
+        validators=[Length(
+            max=600,
+            message="Description cannot be longer than 600 characters"
+        )]
+    )
     category = SelectField('Category:', coerce=int)
     test_mode = BooleanField('Post to reddit?')
     submit = SubmitField()

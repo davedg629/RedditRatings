@@ -273,7 +273,7 @@ def user_profile(username):
 @login_required
 def create_thread():
     form = ThreadForm()
-    categories = db.session.query(Category).order_by(Category.name.asc()).all()
+    categories = db.session.query(Category).order_by(Category.id.asc()).all()
     form.category.choices = [
         (cat.id, cat.name) for cat in categories
     ]
@@ -401,7 +401,7 @@ def create_thread():
 
     return render_template(
         'create_thread.html',
-        title="Create a Rating Thread on reddit",
-        page_title="Create a Rating Thread on reddit",
+        title="Create a Community Rating thread on reddit",
+        page_title="Create a Community Rating thread on reddit",
         form=form
     )

@@ -12,6 +12,8 @@ body {
 
 .clear {clear: both;}
 
+.divider {border-bottom: 1px solid #dce4ec; clear: both; height: 14px; margin-bottom: 20px; width: 100%;}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-weight: bold;}
 
 .well h3, .well h4 {margin-top: 0;}
@@ -62,6 +64,10 @@ ul.details li span.detail-label {font-weight: bold;}
 
 .helpful-links {border: 2px solid #2c3e50; font-weight: bold; line-height: 22px;}
 .submit-review ul {margin: 0 0 0 10px; padding: 0 0 0 20px;}
+
+/** create thread **/
+ul.errors {display: block; list-style-type: none; margin: 0; padding: 6px 0 0;}
+ul.errors li {font-style: italic;}
 
 @media screen and (max-width: 768px) {
 
