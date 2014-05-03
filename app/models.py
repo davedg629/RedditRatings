@@ -76,6 +76,13 @@ class User(db.Model):
         count_string = str(count[0][0])
         return count_string
 
+    def get_thread_count(self):
+        count = db.session\
+            .query(func.count(Thread.id))\
+            .filter_by(user_id=self.id)
+        count_string = str(count[0][0])
+        return count_string
+
     def __unicode__(self):
         return self.username
 

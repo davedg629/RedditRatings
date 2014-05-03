@@ -258,9 +258,14 @@ def user_profile(username):
     user = db.session.query(User)\
         .filter_by(username=username).first()
     if user:
+        active_threads = db.session.query(Thread)\
+            .filter_by(user_id=user.id)\
+            .filter_by(open_for_comments=True)\
+            .all()
         return render_template(
             'user_profile.html',
             user=user,
+            active_threads=active_threads,
             title="User Profile: " + user.username,
             page_title="User Profile: " + user.username
         )
