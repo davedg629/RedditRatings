@@ -1,7 +1,7 @@
 from app import app, db
 from flask import flash, redirect, render_template, request, \
     session, url_for, abort, Markup
-from app.forms import LoginForm, ThreadForm
+from app.forms import LoginForm, ThreadForm, EditThreadForm
 from app.models import Category, Tag, Thread, \
     Comment, User
 from app.utils import pretty_date, reddit_body
@@ -258,14 +258,13 @@ def user_profile(username):
     user = db.session.query(User)\
         .filter_by(username=username).first()
     if user:
-        active_threads = db.session.query(Thread)\
-            .filter_by(user_id=user.id)\
-            .filter_by(open_for_comments=True)\
+        threads = user.threads\
+            .order_by(Thread.date_posted.desc())\
             .all()
         return render_template(
             'user_profile.html',
             user=user,
-            active_threads=active_threads,
+            threads=threads,
             title="User Profile: " + user.username,
             page_title="User Profile: " + user.username
         )
@@ -410,3 +409,38 @@ def create_thread():
         page_title="Create a Community Rating thread on reddit",
         form=form
     )
+
+
+# edit thread form
+@app.route('/edit-thread/<int:thread_id>', methods=['GET', 'POST'])
+@login_required
+def edit_thread(thread_id):
+    thread = db.session.query(Thread)\
+        .filter_by(id=thread_id)\
+        .first()
+    if thread:
+        form = EditThreadForm(obj=thread)
+        categories = db.session.query(Category)\
+            .order_by(Category.id.asc()).all()
+        form.category.choices = [
+            (cat.id, cat.name) for cat in categories
+        ]
+
+        if form.validate_on_submit():
+            thread.category_id = form.category.data
+            db.session.commit()
+
+            return redirect(url_for(
+                'thread',
+                category_slug=thread.category.slug,
+                thread_slug=thread.slug
+            ))
+
+        return render_template(
+            'edit_thread.html',
+            title="Edit \"" + thread.title + "\"",
+            page_title="Edit \"" + thread.title + "\"",
+            form=form
+        )
+    else:
+        abort(404)

@@ -27,3 +27,9 @@ class ThreadForm(Form):
     category = SelectField('Category:', coerce=int)
     test_mode = BooleanField('Post to reddit?')
     submit = SubmitField()
+
+
+# frontend thread edit form
+class EditThreadForm(Form):
+    category = SelectField('Category:', coerce=int)
+    submit = SubmitField()

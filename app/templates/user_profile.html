@@ -2,41 +2,43 @@
 
 {% block page_content %}
 
-{{ super() }}
+<div id="profile-content">
 
-{% if active_threads %}
-<div class="listing" id="active-threads">
+    {% if threads %}
+    <div class="listing" id="active-threads">
 
-    <h3>Rating Threads created by {{ user.username }}</h3>
+        <h3>Rating Threads created by <em>{{ user.username }}</em></h3>
 
-    {% import "thread_macros.html" as thread_macros %}
+        {% import "thread_macros.html" as thread_macros %}
 
-    {% for thread in active_threads %}
+        {% for thread in threads %}
 
-    <div class="list-item{% if loop.last %} last{% endif %}">
+        <div class="list-item{% if loop.last %} last{% endif %}">
 
-        {{ thread_macros.loop(thread, False) }}
+            {{ thread_macros.loop(thread, False) }}
 
-    </div>
-    
-    {% endfor %}
-
-</div>
-{% endif %}
-
-<div class="listing comments">
-
-    <h3>Ratings submitted by {{ user.username }}</h3>
-
-    {% import "comment_macros.html" as comment_macros %}
-
-    {% for comment in user.comments %}
-    <div class="comment{% if loop.last %} last{% endif %}">
-
-        {{ comment_macros.comment_list_loop(comment) }}
+        </div>
+        
+        {% endfor %}
 
     </div>
-    {% endfor %}
+    {% endif %}
+
+    <div class="listing comments" id="user-comments">
+
+        <h3>Ratings submitted by <em>{{ user.username }}</em></h3>
+
+        {% import "comment_macros.html" as comment_macros %}
+
+        {% for comment in user.comments %}
+        <div class="comment{% if loop.last %} last{% endif %}">
+
+            {{ comment_macros.comment_list_loop(comment) }}
+
+        </div>
+        {% endfor %}
+
+    </div>
 
 </div>
 
@@ -46,7 +48,7 @@
 
 <div class="sidebar-module well">
 
-    <h4>User Stats</h4>
+    <h4>User Stats: <a href="http://reddit.com/user/{{ user.username }}" target="_blank">{{ user.username }}</a></h4>
 
     <ul class="details">
 
@@ -55,8 +57,6 @@
         <li><span class="detail-label">Average Rating:</span> &nbsp; {{ user.get_avg_rating() }} out of 10</li>
 
     </ul>
-
-    <strong><a href="http://reddit.com/user/{{ user.username }}" target="_blank">Reddit Profile</a></strong>
 
 </div>
 

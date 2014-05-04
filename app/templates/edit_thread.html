@@ -1,0 +1,35 @@
+{% extends "my_base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block page_content %}
+{{super()}}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{{ wtf.quick_form(form) }}
+
+<div id="closedelete" class="well">
+
+    <h4><a href="#">CLOSE THIS THREAD</a></h4>
+
+    <p>Closing this thread results in the following actions:</p>
+
+    <ul>
+        <li>The thread is marked as closed.</li>
+        <li>An edit is made to the reddit thread signifying closure.</li>
+        <li>The reddit thread will no longer be scanned for new ratings.</li>
+        <li>The thread cannot be reopened.</li>
+    </ul>
+
+    <div class="divider"></div>
+
+    <h4><a href="#">DELETE THIS THREAD</a></h4>
+
+    <p>Deleting this thread results in the following actions:</p>
+
+    <ul>
+        <li>The thread and all of its ratings are deleted from this website.</li>
+        <li>An edit is made to the reddit thread signifying closure and deletion.</li>
+    </ul>
+
+</div>
+{% endblock %}

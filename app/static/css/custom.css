@@ -69,6 +69,14 @@ ul.details li span.detail-label {font-weight: bold;}
 ul.errors {display: block; list-style-type: none; margin: 0; padding: 6px 0 0;}
 ul.errors li {font-style: italic;}
 
+/** edit thread **/
+#closedelete {margin-top: 15px;}
+
+/** user profile **/
+#profile-content .listing {border-bottom: 1px solid #ecf0f1; padding-bottom: 15px;}
+#user-comments {border-top: 0 none; margin-top: 0;}
+#user-comments .comment ul.details {margin-bottom: 0;}
+
 @media screen and (max-width: 768px) {
 
     body {
