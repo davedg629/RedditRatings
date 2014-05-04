@@ -77,6 +77,8 @@ ul.errors li {font-style: italic;}
 #user-comments {border-top: 0 none; margin-top: 0;}
 #user-comments .comment ul.details {margin-bottom: 0;}
 
+#user-stats {padding-bottom: 5px;}
+
 @media screen and (max-width: 768px) {
 
     body {
