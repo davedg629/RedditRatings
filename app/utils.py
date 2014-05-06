@@ -124,8 +124,8 @@ def reddit_body(desc, title, cat_slug, slug):
         '\n---'
         '\n-'
         '\n\n**Helpful tips**'
-        '\n\n* Only your first rating/comment will be counted.'
+        '\n\n* Only your first Rating will be counted.'
         '\n* You have 3 minutes to edit your Rating.'
-        '\n* Upvote other ratings/comments that are informative.'
+        '\n* Upvote other Ratings that are informative.'
         '\n* Post feedback and suggestions to /r/RedditRatings.')
     return body

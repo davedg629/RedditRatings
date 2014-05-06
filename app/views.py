@@ -477,7 +477,7 @@ def close_thread(thread_id):
                     )
                     if submission.selftext:
                         new_selftext = '**Edit:** This thread has been ' + \
-                            ' closed. Thanks for participating!\n\n' + \
+                            ' closed. Thanks for participating!\n\n---\n\n' + \
                             submission.selftext
                         submission.edit(new_selftext)
                 except HTTPError:
