@@ -33,3 +33,8 @@ class ThreadForm(Form):
 class EditThreadForm(Form):
     category = SelectField('Category:', coerce=int)
     submit = SubmitField()
+
+
+# close thread form
+class CloseThreadForm(Form):
+    submit = SubmitField('Yes')

@@ -1,7 +1,8 @@
 from app import app, db
 from flask import flash, redirect, render_template, request, \
     session, url_for, abort, Markup
-from app.forms import LoginForm, ThreadForm, EditThreadForm
+from app.forms import LoginForm, ThreadForm, EditThreadForm, \
+    CloseThreadForm
 from app.models import Category, Tag, Thread, \
     Comment, User
 from app.utils import pretty_date, reddit_body
@@ -440,7 +441,45 @@ def edit_thread(thread_id):
             'edit_thread.html',
             title="Edit \"" + thread.title + "\"",
             page_title="Edit \"" + thread.title + "\"",
-            form=form
+            form=form,
+            thread=thread
         )
+    else:
+        abort(404)
+
+
+# close thread
+@app.route('/close-thread/<int:thread_id>', methods=['GET', 'POST'])
+@login_required
+def close_thread(thread_id):
+    thread = db.session.query(Thread)\
+        .filter_by(id=thread_id)\
+        .first()
+    if thread:
+        if thread.open_for_comments:
+            form = CloseThreadForm()
+            if form.validate_on_submit():
+                thread.open_for_comments = False
+                db.session.commit()
+                return redirect(url_for(
+                    'user_profile',
+                    username=thread.user.username
+                ))
+
+            return render_template(
+                'close_thread.html',
+                title='Close Thread',
+                page_title='Are you sure you want to close "'
+                + thread.title + '"?',
+                form=form,
+                thread=thread
+            )
+        else:
+            flash('This ratings thread has already been closed')
+            return redirect(url_for(
+                'thread',
+                category_slug=thread.category.slug,
+                thread_slug=thread.slug
+            ))
     else:
         abort(404)
