@@ -11,6 +11,7 @@ from datetime import datetime
 import praw
 from app.utils import make_slug
 from sqlalchemy.sql import func
+from requests import HTTPError
 
 # redirect to www
 if app.config['ENVIRONMENT'] == 'heroku':
@@ -430,7 +431,7 @@ def edit_thread(thread_id):
         if form.validate_on_submit():
             thread.category_id = form.category.data
             db.session.commit()
-
+            flash('This thread has been updated.')
             return redirect(url_for(
                 'thread',
                 category_slug=thread.category.slug,
@@ -459,11 +460,42 @@ def close_thread(thread_id):
         if thread.open_for_comments:
             form = CloseThreadForm()
             if form.validate_on_submit():
+
                 thread.open_for_comments = False
                 db.session.commit()
+
+                # edit reddit thread
+                r = praw.Reddit(user_agent=app.config['REDDIT_USER_AGENT'])
+                r.login(
+                    app.config['REDDIT_USERNAME'],
+                    app.config['REDDIT_PASSWORD']
+                )
+
+                try:
+                    submission = r.get_submission(
+                        submission_id=thread.reddit_id
+                    )
+                    if submission.selftext:
+                        new_selftext = '**Edit:** This thread has been ' + \
+                            ' closed. Thanks for participating!\n\n' + \
+                            submission.selftext
+                        submission.edit(new_selftext)
+                except HTTPError:
+                    flash('We could not edit your reddit thread. '
+                          'Please edit it so other users know it is closed.')
+
+                success_message = Markup(
+                    'This thread has been closed and '
+                    '<a href="http://redd.it/' +
+                    thread.reddit_id +
+                    '" target="_blank">updated on reddit</a>.'
+                )
+
+                flash(success_message)
                 return redirect(url_for(
-                    'user_profile',
-                    username=thread.user.username
+                    'thread',
+                    category_slug=thread.category.slug,
+                    thread_slug=thread.slug
                 ))
 
             return render_template(
