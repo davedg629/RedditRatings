@@ -371,7 +371,7 @@ class Crawl(Command):
             db.session.commit()
 
             # update results on reddit
-            if submission.selftext:
+            if submission.selftext and thread.get_comment_count() != 0:
                 results_label_pos = submission.selftext.lower().find(
                     '**live results**'
                 )
@@ -384,12 +384,12 @@ class Crawl(Command):
                         submission.selftext[
                             results_start_pos + 1:results_end_pos
                         ]
-                    new_avg_rating = thread.get_avg_rating()
                     new_comment_cnt = thread.get_comment_count()
                     if new_comment_cnt == '1':
                         comment_cnt_suffix = 'rating'
                     else:
                         comment_cnt_suffix = 'ratings'
+                    new_avg_rating = thread.get_avg_rating()
                     new_reddit_body = submission.selftext.replace(
                         results_string,
                         new_avg_rating +

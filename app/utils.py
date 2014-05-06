@@ -93,7 +93,7 @@ def reddit_body(desc, title, cat_slug, slug):
         '\n\n-'
         '\n---'
         '\n-'
-        '\n\n**How to submit a rating**'
+        '\n\n**How do I submit a rating?**'
         '\n\nYou can submit a rating by leaving a comment with'
         ' the following format:'
         '\n\n    Rating: Provide a rating from 1 to 10 here, whole numbers'
