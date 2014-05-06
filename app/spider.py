@@ -345,7 +345,7 @@ class Crawl(Command):
                     # is the comment already in the db
                     elif this_comment:
 
-                        if time_since_created < 3600:
+                        if time_since_created < 36000:
 
                             if comment.edited > this_comment.edited_stamp:
                                 update_comment(
