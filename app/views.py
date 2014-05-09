@@ -417,6 +417,7 @@ def create_thread():
 @app.route('/edit-thread/<int:thread_id>', methods=['GET', 'POST'])
 @login_required
 def edit_thread(thread_id):
+    test = 1 / 0
     thread = db.session.query(Thread)\
         .filter_by(id=thread_id)\
         .first()
