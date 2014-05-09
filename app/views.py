@@ -283,6 +283,7 @@ def create_thread():
     form.category.choices = [
         (cat.id, cat.name) for cat in categories
     ]
+    form.category.choices.insert(0, (0, 'Choose one...'))
     if form.validate_on_submit():
 
         if form.test_mode.data:
@@ -319,7 +320,7 @@ def create_thread():
                 )
                 reddit_post = r.submit(
                     form.subreddit.data,
-                    '[Community Rating] ' + form.title.data,
+                    '[Community Rating] ' + form.reddit_title.data,
                     reddit_body(
                         form.description.data,
                         form.title.data,

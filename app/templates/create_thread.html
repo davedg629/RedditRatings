@@ -10,10 +10,32 @@
 
     <div class="form-group{% if form.title.errors %} has-error{% endif %}">
         {{ form.title.label(class="control-label") }}
-        <p><span class="help-block">This will serve as the title of your thread. A [Community Rating] tag will be automatically prepended to the title.</span></p>
-        {{ form.title(class="form-control", placeholder="Let's rate that new video game") }}
+        <p><span class="help-block">Describe what we are rating as accurately as possible.</span></p>
+        {{ form.title(class="form-control", placeholder="Super Mario Bros. 3 for NES") }}
         {% if form.title.errors %}
             <ul class="errors">{% for error in form.title.errors %}<li class="text-danger">{{ error }}</li>{% endfor %}</ul>
+        {% endif %}
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="form-group{% if form.reddit_title.errors %} has-error{% endif %}">
+        {{ form.reddit_title.label(class="control-label") }}
+        <p><span class="help-block">This will be the title of your reddit thread. Choose a title that entices users to submit a rating. The [Community Rating] tag will be prepended to your title.</span></p>
+        {{ form.reddit_title(class="form-control", placeholder="Let's rate Super Mario Bros. 3. Submit your 1 to 10 rating in the comments.") }}
+        {% if form.reddit_title.errors %}
+            <ul class="errors">{% for error in form.reddit_title.errors %}<li class="text-danger">{{ error }}</li>{% endfor %}</ul>
+        {% endif %}
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="form-group{% if form.description.errors %} has-error{% endif %}">
+        {{ form.description.label(class="control-label") }}
+        <span class="help-block">Explain why you are creating this thread. This text will appear at the top of your reddit thread. Feel free to use reddit markdown.</span>
+        {{ form.description(class="form-control", placeholder="This was my favorite game growing up and I'm wondering what rating you would give it from 1 to 10.", maxlength="600") }}
+        {% if form.description.errors %}
+            <ul class="errors">{% for error in form.description.errors %}<li class="text-danger">{{ error }}</li>{% endfor %}</ul>
         {% endif %}
     </div>
 
@@ -33,20 +55,10 @@
 
     <div class="divider"></div>
 
-    <div class="form-group{% if form.description.errors %} has-error{% endif %}">
-        {{ form.description.label(class="control-label") }}
-        <span class="help-block">Provide an optional description that will appear at the top of your thread. Feel free to use reddit markdown.</span>
-        {{ form.description(class="form-control", placeholder="That new video game came out a few days ago and I'm wondering what everyone thinks about it.", maxlength="600") }}
-        {% if form.description.errors %}
-            <ul class="errors">{% for error in form.description.errors %}<li class="text-danger">{{ error }}</li>{% endfor %}</ul>
-        {% endif %}
-    </div>
-
-    <div class="divider"></div>
 
     <div class="form-group{% if form.category.errors %} has-error{% endif %}">
         {{ form.category.label(class="control-label") }}
-        <span class="help-block">This will categorize your rating thread here at RedditRatings.com.</span>
+        <span class="help-block">This will categorize your thread here at RedditRatings.com.</span>
         {{ form.category(class="form-control") }}
         {% if form.category.errors %}
             <ul class="errors">{% for error in form.category.errors %}<li class="text-danger">{{ error }}</li>{% endfor %}</ul>
