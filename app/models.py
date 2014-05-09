@@ -67,7 +67,11 @@ class User(db.Model):
         avg_rating = db.session\
             .query(func.avg(Comment.rating))\
             .filter_by(user_id=self.id)
-        return "{0:.2f}".format(avg_rating[0][0])
+        if avg_rating[0][0] is None:
+            avg = 0
+        else:
+            avg = avg_rating[0][0]
+        return "{0:.2f}".format(avg)
 
     def get_comment_count(self):
         count = db.session\
@@ -188,7 +192,11 @@ class Thread(db.Model):
         avg_rating = db.session\
             .query(func.avg(Comment.rating))\
             .filter_by(thread_id=self.id)
-        return "{0:.2f}".format(avg_rating[0][0])
+        if avg_rating[0][0] is None:
+            avg = 0
+        else:
+            avg = avg_rating[0][0]
+        return "{0:.2f}".format(avg)
 
     def get_comment_count(self):
         count = db.session\

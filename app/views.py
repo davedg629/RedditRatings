@@ -438,6 +438,8 @@ def edit_thread(thread_id):
                 thread_slug=thread.slug
             ))
 
+        form.category.data = thread.category_id
+
         return render_template(
             'edit_thread.html',
             title="Edit \"" + thread.title + "\"",
