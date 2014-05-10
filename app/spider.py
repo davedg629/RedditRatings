@@ -233,9 +233,10 @@ class Crawl(Command):
     option_list = (
         Option('--silent', '-s', dest='silent'),
         Option('--label', '-l', dest='body_label'),
+        Option('--expire', '-e', dest='expire'),
     )
 
-    def run(self, silent, body_label):
+    def run(self, silent, body_label, expire):
 
         # get reddit user agent
         user_agent = (REDDIT_USER_AGENT)
@@ -403,5 +404,16 @@ class Crawl(Command):
                     db.session.commit()
 
             else:
+                thread.open_for_comments = False
+                db.session.commit()
+
+            # close thread if expired
+            if thread.date_posted < \
+                    (datetime.datetime.utcnow() -
+                     datetime.timedelta(seconds=int(expire))):
+                new_selftext = '**Edit:** This thread has been ' + \
+                    ' closed. Thanks for participating!\n\n' + \
+                    submission.selftext
+                submission.edit(new_selftext)
                 thread.open_for_comments = False
                 db.session.commit()
