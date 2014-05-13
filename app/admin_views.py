@@ -18,7 +18,7 @@ class AuthMixin(object):
 
     def _handle_view(self, name, **kwargs):
         if not self.is_accessible():
-            return redirect(url_for('login'))
+            return redirect(url_for('admin_login'))
 
 
 class MyAdminIndexView(AuthMixin, AdminIndexView):
@@ -182,5 +182,5 @@ admin.add_view(CommentView(
     endpoint='comment_model_view'
 ))
 
-logout_link = MenuLink(name='Logout', url='/logout')
+logout_link = MenuLink(name='Logout', url='/admin-logout')
 admin.add_link(logout_link)

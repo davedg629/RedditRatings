@@ -46,7 +46,7 @@ if os.environ.get('ADMIN_PASSWORD') is None:
 else:
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD')
 
-# reddit username, password, and user agent
+# reddit username, password, user agent, app id, and app secret
 if os.environ.get('REDDIT_USERNAME') is None:
     REDDIT_USERNAME = 'reddit_username'
 else:
@@ -62,6 +62,16 @@ if os.environ.get('REDDIT_USER_AGENT') is None:
         "https://github.com/davedg629/redditreviewbot"
 else:
     REDDIT_USER_AGENT = os.environ.get('REDDIT_USER_AGENT')
+
+if os.environ.get('REDDIT_APP_ID') is None:
+    REDDIT_APP_ID = 'reddit_app_id'
+else:
+    REDDIT_APP_ID = os.environ.get('REDDIT_APP_ID')
+
+if os.environ.get('REDDIT_APP_SECRET') is None:
+    REDDIT_APP_SECRET = 'reddit_app_secret'
+else:
+    REDDIT_APP_SECRET = os.environ.get('REDDIT_APP_SECRET')
 
 # SQLALchemy database URI
 if os.environ.get('DATABASE_URL') is None:

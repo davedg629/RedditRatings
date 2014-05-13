@@ -6,7 +6,7 @@ from app.forms import LoginForm, ThreadForm, EditThreadForm, \
 from app.models import Category, Tag, Thread, \
     Comment, User
 from app.utils import pretty_date, reddit_body
-from app.decorators import login_required
+from app.decorators import admin_login_required
 from datetime import datetime
 import praw
 from app.utils import make_slug
@@ -66,9 +66,9 @@ def about():
     )
 
 
-# LOGIN
-@app.route('/login/', methods=['GET', 'POST'])
-def login():
+# ADMIN LOGIN
+@app.route('/admin-login/', methods=['GET', 'POST'])
+def admin_login():
     if 'logged_in' in session:
         return redirect(url_for('admin.index'))
     form = LoginForm()
@@ -80,21 +80,32 @@ def login():
             return redirect(url_for('admin.index'))
         else:
             flash('Invalid username or password.')
-            return redirect(url_for('login'))
+            return redirect(url_for('admin_login'))
     return render_template(
-        'login.html',
+        'admin_login.html',
         title="Admin Login",
-        page_title="Login",
+        page_title="Admin Login",
         form=form)
 
 
-# LOGOUT
-@app.route('/logout/')
-@login_required
-def logout():
+# ADMIN LOGOUT
+@app.route('/admin-logout/')
+@admin_login_required
+def admin_logout():
     session.pop('logged_in', None)
     flash('You have been logged out.')
     return redirect(url_for('index'))
+
+
+# REDDIT LOGIN
+@app.route('/login/', methods=['GET', 'POST'])
+@admin_login_required
+def login():
+    return render_template(
+        'login.html',
+        title="Reddit Login",
+        page_title="Reddit Login"
+    )
 
 
 # FRONT END
@@ -276,7 +287,7 @@ def user_profile(username):
 
 # create thread form
 @app.route('/create-thread/', methods=['GET', 'POST'])
-@login_required
+@admin_login_required
 def create_thread():
     form = ThreadForm()
     categories = db.session.query(Category).order_by(Category.id.asc()).all()
@@ -416,7 +427,7 @@ def create_thread():
 
 # edit thread form
 @app.route('/edit-thread/<int:thread_id>', methods=['GET', 'POST'])
-@login_required
+@admin_login_required
 def edit_thread(thread_id):
     thread = db.session.query(Thread)\
         .filter_by(id=thread_id)\
@@ -454,7 +465,7 @@ def edit_thread(thread_id):
 
 # close thread
 @app.route('/close-thread/<int:thread_id>', methods=['GET', 'POST'])
-@login_required
+@admin_login_required
 def close_thread(thread_id):
     thread = db.session.query(Thread)\
         .filter_by(id=thread_id)\
