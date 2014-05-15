@@ -1,4 +1,4 @@
-from app import app, db
+from app import app, db, r
 from flask import flash, redirect, render_template, request, \
     session, url_for, abort, Markup
 from app.forms import LoginForm, ThreadForm, EditThreadForm, \
@@ -101,10 +101,41 @@ def admin_logout():
 @app.route('/login/', methods=['GET', 'POST'])
 @admin_login_required
 def login():
+    oauth_link = r.get_authorize_url(
+        app.config['OAUTH_UNIQUE_KEY'],
+        ['identity', 'submit', 'edit'],
+        True
+    )
     return render_template(
         'login.html',
         title="Reddit Login",
-        page_title="Reddit Login"
+        page_title="Reddit Login",
+        oauth_link=oauth_link
+    )
+
+
+@app.route('/dashboard')
+@admin_login_required
+def dashboard():
+    code = request.args.get('code', '')
+    access_info = r.get_access_information(code)
+    user = r.get_me()
+    is_user = db.session.query(User)\
+        .filter_by(username=user.name)\
+        .first()
+    if is_user is None:
+        new_user = User(
+            username=user.name,
+            role_id=2
+        )
+        db.session.add(new_user)
+        db.session.commit()
+    flash('Hi ' + user.name + '! You have successfully' +
+          ' logged in with your reddit account.')
+    return render_template(
+        'dashboard.html',
+        title="Dashboard",
+        page_title="Dashboard"
     )
 
 
@@ -300,7 +331,6 @@ def create_thread():
         if form.test_mode.data:
 
             # post to reddit
-            r = praw.Reddit(user_agent=app.config['REDDIT_USER_AGENT'])
             reddit_post = None
 
             # create a unique slug from the thread title
@@ -479,7 +509,6 @@ def close_thread(thread_id):
                 db.session.commit()
 
                 # edit reddit thread
-                r = praw.Reddit(user_agent=app.config['REDDIT_USER_AGENT'])
                 r.login(
                     app.config['REDDIT_USERNAME'],
                     app.config['REDDIT_PASSWORD']

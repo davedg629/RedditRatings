@@ -4,7 +4,10 @@
 {% block page_content %}
 {{super()}}
 
-<p>Click the button below to login with your reddit account. You will be logging into reddit and you may need to enter your reddit password. <strong>RedditRatings.com will not have access to your reddit password and will not store it on our servers.</strong></p>
+<p>Click the button below to login with your reddit account. This will give RedditRatings access to your reddit account so you can create your own rating thread using our app.</p>
 
+<p><strong>RedditRatings.com will not have access to your reddit password during this login process.</strong></p>
+
+<a id="login-reddit" href="{{ oauth_link }}"></a>
 
 {% endblock %}

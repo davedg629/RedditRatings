@@ -79,6 +79,10 @@ ul.errors li {font-style: italic;}
 
 #user-stats {padding-bottom: 5px;}
 
+/** reddit login **/
+a#login-reddit {background: transparent url(http://groupsrc.com/redditratings/login_reddit.png) no-repeat center top; display: block; height: 75px; margin-top: 20px; width: 270px;}
+a#login-reddit:hover {background-position: center bottom;}
+
 @media screen and (max-width: 768px) {
 
     body {
