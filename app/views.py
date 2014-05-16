@@ -1,6 +1,8 @@
 from app import app, db, r
 from flask import flash, redirect, render_template, request, \
     session, url_for, abort, Markup
+from flask.ext.login import login_user, logout_user, \
+    login_required, current_user
 from app.forms import LoginForm, ThreadForm, EditThreadForm, \
     CloseThreadForm
 from app.models import Category, Tag, Thread, \
@@ -98,7 +100,7 @@ def admin_logout():
 
 
 # REDDIT LOGIN
-@app.route('/login/', methods=['GET', 'POST'])
+@app.route('/login/')
 @admin_login_required
 def login():
     oauth_link = r.get_authorize_url(
@@ -114,29 +116,53 @@ def login():
     )
 
 
-@app.route('/dashboard')
+# finish OAuth login
+@app.route('/authorize/')
 @admin_login_required
+def authorize():
+    if current_user.is_anonymous():
+        try:
+            code = request.args.get('code', '')
+            access_info = r.get_access_information(code)
+            user_reddit = r.get_me()
+            user = db.session.query(User)\
+                .filter_by(username=user_reddit.name)\
+                .first()
+            if user is None:
+                user = User(
+                    username=user_reddit.name,
+                    role_id=2
+                )
+                db.session.add(user)
+                db.session.commit()
+            login_user(user)
+            flash('Hi ' + user.username + '! You have successfully' +
+                  ' logged in with your reddit account.')
+            return redirect(url_for('dashboard'))
+        except praw.errors.OAuthException:
+            return redirect(url_for('login'))
+    else:
+        return redirect(url_for('dashboard'))
+
+
+@app.route('/dashboard/')
+@admin_login_required
+@login_required
 def dashboard():
-    code = request.args.get('code', '')
-    access_info = r.get_access_information(code)
-    user = r.get_me()
-    is_user = db.session.query(User)\
-        .filter_by(username=user.name)\
-        .first()
-    if is_user is None:
-        new_user = User(
-            username=user.name,
-            role_id=2
-        )
-        db.session.add(new_user)
-        db.session.commit()
-    flash('Hi ' + user.name + '! You have successfully' +
-          ' logged in with your reddit account.')
     return render_template(
         'dashboard.html',
         title="Dashboard",
         page_title="Dashboard"
     )
+
+
+# logout
+@app.route('/logout/')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('index'))
 
 
 # FRONT END

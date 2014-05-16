@@ -1,7 +1,8 @@
-from app import db
+from app import db, login_manager
 from datetime import datetime
 from app.utils import make_slug
 from sqlalchemy.sql import func
+from flask.ext.login import UserMixin
 
 
 class Category(db.Model):
@@ -39,7 +40,7 @@ class Role(db.Model):
         return self.name
 
 
-class User(db.Model):
+class User(UserMixin, db.Model):
 
     __tablename__ = "users"
 
@@ -89,6 +90,11 @@ class User(db.Model):
 
     def __unicode__(self):
         return self.username
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 # create association table for Tag/Thread relationship
