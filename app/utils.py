@@ -2,6 +2,8 @@ from __future__ import division
 from flask import flash
 import re
 from unicodedata import normalize
+from os import urandom
+from base64 import urlsafe_b64encode
 from config import SERVER_NAME
 
 
@@ -13,6 +15,11 @@ def flash_errors(form):
                 getattr(form, field).label.text,
                 error
             ), 'error')
+
+
+# generate a random token
+def generate_token():
+    return urlsafe_b64encode(urandom(20)).rstrip("=")
 
 
 #check if a string is an integer

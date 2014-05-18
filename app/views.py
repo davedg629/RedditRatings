@@ -7,7 +7,7 @@ from app.forms import LoginForm, ThreadForm, EditThreadForm, \
     CloseThreadForm
 from app.models import Category, Tag, Thread, \
     Comment, User
-from app.utils import pretty_date, reddit_body
+from app.utils import pretty_date, reddit_body, generate_token
 from app.decorators import admin_login_required
 from datetime import datetime
 import praw
@@ -103,8 +103,9 @@ def admin_logout():
 @app.route('/login/')
 @admin_login_required
 def login():
+    token = generate_token()
     oauth_link = r.get_authorize_url(
-        app.config['OAUTH_UNIQUE_KEY'],
+        token,
         ['identity', 'submit', 'edit'],
         True
     )

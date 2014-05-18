@@ -78,11 +78,6 @@ if os.environ.get('OAUTH_REDIRECT_URI') is None:
 else:
     OAUTH_REDIRECT_URI = os.environ.get('OAUTH_REDIRECT_URI')
 
-if os.environ.get('OAUTH_UNIQUE_KEY') is None:
-    OAUTH_UNIQUE_KEY = 'unique_key'
-else:
-    OAUTH_UNIQUE_KEY = os.environ.get('OAUTH_UNIQUE_KEY')
-
 
 # SQLALchemy database URI
 if os.environ.get('DATABASE_URL') is None:
