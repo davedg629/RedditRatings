@@ -103,9 +103,9 @@ def admin_logout():
 @app.route('/login/')
 @admin_login_required
 def login():
-    token = generate_token()
+    session['oauth_token'] = generate_token()
     oauth_link = r.get_authorize_url(
-        token,
+        session['oauth_token'],
         ['identity', 'submit', 'edit'],
         True
     )
@@ -121,7 +121,8 @@ def login():
 @app.route('/authorize/')
 @admin_login_required
 def authorize():
-    if current_user.is_anonymous():
+    state = request.args.get('state', '')
+    if current_user.is_anonymous() and (state == session['oauth_token']):
         try:
             code = request.args.get('code', '')
             access_info = r.get_access_information(code)
