@@ -103,18 +103,21 @@ def admin_logout():
 @app.route('/login/')
 @admin_login_required
 def login():
-    session['oauth_token'] = generate_token()
-    oauth_link = r.get_authorize_url(
-        session['oauth_token'],
-        ['identity', 'submit', 'edit'],
-        True
-    )
-    return render_template(
-        'login.html',
-        title="Reddit Login",
-        page_title="Reddit Login",
-        oauth_link=oauth_link
-    )
+    if current_user.is_anonymous():
+        session['oauth_token'] = generate_token()
+        oauth_link = r.get_authorize_url(
+            session['oauth_token'],
+            ['identity', 'submit', 'edit'],
+            True
+        )
+        return render_template(
+            'login.html',
+            title="Reddit Login",
+            page_title="Reddit Login",
+            oauth_link=oauth_link
+        )
+    else:
+        return redirect(url_for('dashboard'))
 
 
 # finish OAuth login
