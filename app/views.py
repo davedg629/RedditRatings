@@ -36,6 +36,7 @@ def before_request():
     else:
         g.user = None
 
+
 # ERROR HANDLERS
 @app.errorhandler(404)
 def page_not_found_error(error):
@@ -358,6 +359,7 @@ def user_profile(username):
 # create thread form
 @app.route('/create-thread/', methods=['GET', 'POST'])
 @admin_login_required
+@login_required
 def create_thread():
     form = ThreadForm()
     categories = db.session.query(Category).order_by(Category.id.asc()).all()
@@ -497,37 +499,41 @@ def create_thread():
 # edit thread form
 @app.route('/edit-thread/<int:thread_id>', methods=['GET', 'POST'])
 @admin_login_required
+@login_required
 def edit_thread(thread_id):
     thread = db.session.query(Thread)\
         .filter_by(id=thread_id)\
         .first()
     if thread:
-        form = EditThreadForm(obj=thread)
-        categories = db.session.query(Category)\
-            .order_by(Category.id.asc()).all()
-        form.category.choices = [
-            (cat.id, cat.name) for cat in categories
-        ]
+        if thread.user.username == g.user.username:
+            form = EditThreadForm(obj=thread)
+            categories = db.session.query(Category)\
+                .order_by(Category.id.asc()).all()
+            form.category.choices = [
+                (cat.id, cat.name) for cat in categories
+            ]
 
-        if form.validate_on_submit():
-            thread.category_id = form.category.data
-            db.session.commit()
-            flash('This thread has been updated.')
-            return redirect(url_for(
-                'thread',
-                category_slug=thread.category.slug,
-                thread_slug=thread.slug
-            ))
+            if form.validate_on_submit():
+                thread.category_id = form.category.data
+                db.session.commit()
+                flash('This thread has been updated.')
+                return redirect(url_for(
+                    'thread',
+                    category_slug=thread.category.slug,
+                    thread_slug=thread.slug
+                ))
 
-        form.category.data = thread.category_id
+            form.category.data = thread.category_id
 
-        return render_template(
-            'edit_thread.html',
-            title="Edit \"" + thread.title + "\"",
-            page_title="Edit \"" + thread.title + "\"",
-            form=form,
-            thread=thread
-        )
+            return render_template(
+                'edit_thread.html',
+                title="Edit \"" + thread.title + "\"",
+                page_title="Edit \"" + thread.title + "\"",
+                form=form,
+                thread=thread
+            )
+        else:
+            return redirect(url_for('index'))
     else:
         abort(404)
 
@@ -535,50 +541,55 @@ def edit_thread(thread_id):
 # close thread
 @app.route('/close-thread/<int:thread_id>', methods=['GET', 'POST'])
 @admin_login_required
+@login_required
 def close_thread(thread_id):
     thread = db.session.query(Thread)\
         .filter_by(id=thread_id)\
         .first()
     if thread:
         if thread.open_for_comments:
-            form = CloseThreadForm()
-            if form.validate_on_submit():
+            if thread.user.username == g.user.username:
+                form = CloseThreadForm()
+                if form.validate_on_submit():
 
-                thread.open_for_comments = False
-                db.session.commit()
+                    thread.open_for_comments = False
+                    db.session.commit()
 
-                # edit reddit thread
-                r.login(
-                    app.config['REDDIT_USERNAME'],
-                    app.config['REDDIT_PASSWORD']
-                )
-
-                try:
-                    submission = r.get_submission(
-                        submission_id=thread.reddit_id
+                    # edit reddit thread
+                    r.login(
+                        app.config['REDDIT_USERNAME'],
+                        app.config['REDDIT_PASSWORD']
                     )
-                    if submission.selftext:
-                        new_selftext = '**Edit:** This thread has been ' + \
-                            ' closed. Thanks for participating!\n\n' + \
-                            submission.selftext
-                        submission.edit(new_selftext)
-                except HTTPError:
-                    flash('We could not edit your reddit thread. '
-                          'Please edit it so other users know it is closed.')
 
-                success_message = Markup(
-                    'This thread has been closed and '
-                    '<a href="http://redd.it/' +
-                    thread.reddit_id +
-                    '" target="_blank">updated on reddit</a>.'
-                )
+                    try:
+                        submission = r.get_submission(
+                            submission_id=thread.reddit_id
+                        )
+                        if submission.selftext:
+                            new_selftext = '**Edit:** This thread has been ' + \
+                                ' closed. Thanks for participating!\n\n' + \
+                                submission.selftext
+                            submission.edit(new_selftext)
+                    except HTTPError:
+                        flash('We could not edit your reddit thread. '
+                              'Please edit it so other users know it is closed.')
 
-                flash(success_message)
-                return redirect(url_for(
-                    'thread',
-                    category_slug=thread.category.slug,
-                    thread_slug=thread.slug
-                ))
+                    success_message = Markup(
+                        'This thread has been closed and '
+                        '<a href="http://redd.it/' +
+                        thread.reddit_id +
+                        '" target="_blank">updated on reddit</a>.'
+                    )
+
+                    flash(success_message)
+                    return redirect(url_for(
+                        'thread',
+                        category_slug=thread.category.slug,
+                        thread_slug=thread.slug
+                    ))
+
+            else:
+                return redirect(url_for('index'))
 
             return render_template(
                 'close_thread.html',
@@ -589,7 +600,7 @@ def close_thread(thread_id):
                 thread=thread
             )
         else:
-            flash('This ratings thread has already been closed')
+            flash('This ratings thread has already been closed.')
             return redirect(url_for(
                 'thread',
                 category_slug=thread.category.slug,
