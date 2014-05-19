@@ -61,7 +61,8 @@
 {% endif %}
 
 {% if session.logged_in %}
-{% if not self %}| {% endif %}<a class="more" href="{{ url_for('edit_thread', thread_id=thread.id) }}">Edit</a> | <a class="more" href="{{ url_for('thread_model_view.edit_view', id=thread.id) }}">Admin Edit</a>
+    {% if not self %}| {% endif %}
+    {% if g.user.username == thread.user.username %}<a class="more" href="{{ url_for('edit_thread', thread_id=thread.id) }}">Edit</a> | {% endif %}<a class="more" href="{{ url_for('thread_model_view.edit_view', id=thread.id) }}">Admin Edit</a>
 {% endif %}
 
 {% endmacro %}

@@ -1,6 +1,6 @@
 from app import app, db, r
 from flask import flash, redirect, render_template, request, \
-    session, url_for, abort, Markup
+    session, url_for, abort, Markup, g
 from flask.ext.login import login_user, logout_user, \
     login_required, current_user
 from app.forms import LoginForm, ThreadForm, EditThreadForm, \
@@ -28,6 +28,13 @@ if app.config['ENVIRONMENT'] == 'heroku':
             urlparts_list[1] = app.config['SERVER_NAME']
             return redirect(urlunparse(urlparts_list), code=301)
 
+
+@app.before_request
+def before_request():
+    if current_user.is_authenticated():
+        g.user = current_user
+    else:
+        g.user = None
 
 # ERROR HANDLERS
 @app.errorhandler(404)
@@ -117,6 +124,7 @@ def login():
             oauth_link=oauth_link
         )
     else:
+        flash('You are already logged in!')
         return redirect(url_for('dashboard'))
 
 
