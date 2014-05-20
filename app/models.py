@@ -51,6 +51,7 @@ class User(UserMixin, db.Model):
         db.ForeignKey('roles.id'),
         nullable=False
     )
+    refresh_token = db.Column(db.String)
 
     threads = db.relationship(
         'Thread',
