@@ -159,14 +159,25 @@ def authorize():
         return redirect(url_for('dashboard'))
 
 
+# dashboard
 @app.route('/dashboard/')
 @admin_login_required
 @login_required
 def dashboard():
+    active_threads = db.session.query(Thread)\
+        .filter_by(user_id=g.user.id)\
+        .filter_by(open_for_comments=True)\
+        .all()
+    inactive_threads = db.session.query(Thread)\
+        .filter_by(user_id=g.user.id)\
+        .filter_by(open_for_comments=False)\
+        .all()
     return render_template(
         'dashboard.html',
         title="Dashboard",
-        page_title="Dashboard"
+        page_title="Dashboard",
+        active_threads=active_threads,
+        inactive_threads=inactive_threads
     )
 
 

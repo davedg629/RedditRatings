@@ -1,8 +1,29 @@
 {% extends "my_base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
+{% import "thread_macros.html" as thread_macros %}
 
 {% block page_content %}
 {{super()}}
 
+{% if active_threads %}
+<h3>Active Ratings</h3>
+<table class="table table-striped">
+    <tbody>
+    {% for thread in active_threads %}
+        {{ thread_macros.loop_table(thread) }}
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if inactive_threads %}
+<h3>Inactive Ratings</h3>
+<table class="table table-striped">
+    <tbody>
+    {% for thread in inactive_threads %}
+        {{ thread_macros.loop_table(thread) }}
+    {% endfor %}
+    </tbody>
+</table>
+{% endif %}
 
 {% endblock %}
