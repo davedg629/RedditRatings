@@ -4,6 +4,10 @@
 {% block page_content %}
 {{super()}}
 
+<ul>
+    <li><a href="{{ url_for('create_thread') }}">Create a Rating</a></li>
+</ul>
+
 {% if active_threads %}
 <h3>Active Ratings</h3>
 <table class="table table-striped">

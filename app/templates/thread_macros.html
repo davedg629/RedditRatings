@@ -70,6 +70,6 @@
 {% macro loop_table(thread) %}
 <tr>
     <td><a href="{{ url_for('thread', category_slug=thread.category.slug, thread_slug=thread.slug) }}">{{ thread.title }}</a></td>
-    <td>{% if thread.open_for_comments %}<a href="{{ url_for('edit_thread', thread_id=thread.id) }}">Edit</a>{% endif %}</td>
+    <td>{% if thread.open_for_comments %}<a href="{{ url_for('edit_thread', thread_id=thread.id) }}">Edit</a> | <a href="{{ url_for('close_thread', thread_id=thread.id) }}">Close</a>{% endif %}</td>
 </tr>
 {% endmacro %}

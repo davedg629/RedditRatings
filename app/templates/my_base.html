@@ -64,7 +64,12 @@
         <ul class="nav navbar-nav navbar-right">
             {% if current_user.is_authenticated() %}
             <li>
-                <a href="{{ url_for('logout') }}">Logout</a>
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dashboard <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('create_thread') }}">Create a Rating</a></li>
+                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                </ul>
             </li>
             {% else %}
             <li>

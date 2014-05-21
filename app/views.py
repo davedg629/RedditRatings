@@ -145,9 +145,13 @@ def authorize():
             if user is None:
                 user = User(
                     username=user_reddit.name,
-                    role_id=2
+                    role_id=2,
+                    refresh_token=access_info['refresh_token']
                 )
                 db.session.add(user)
+                db.session.commit()
+            else:
+                user.refresh_token = access_info['refresh_token']
                 db.session.commit()
             login_user(user)
             flash('Hi ' + user.username + '! You have successfully' +
