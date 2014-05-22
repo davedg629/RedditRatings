@@ -261,8 +261,13 @@ class Crawl(Command):
                 submission = r.get_submission(
                     submission_id=thread.reddit_id
                 )
-                submission.replace_more_comments(limit=None, threshold=0)
-                top_lvl_comments = submission.comments
+                if submission.author is None:
+                    thread.open_for_comments = False
+                    db.session.commit()
+                    continue
+                else:
+                    submission.replace_more_comments(limit=None, threshold=0)
+                    top_lvl_comments = submission.comments
             except HTTPError:
                 continue
 
