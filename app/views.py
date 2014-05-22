@@ -505,8 +505,8 @@ def create_thread():
 
     return render_template(
         'create_thread.html',
-        title="Create a Community Rating thread on reddit",
-        page_title="Create a Community Rating thread on reddit",
+        title="Create a Community Rating on reddit",
+        page_title="Create a Community Rating on reddit",
         form=form
     )
 
@@ -520,35 +520,44 @@ def edit_thread(thread_id):
         .filter_by(id=thread_id)\
         .first()
     if thread:
-        if thread.user.username == g.user.username:
-            form = EditThreadForm(obj=thread)
-            categories = db.session.query(Category)\
-                .order_by(Category.id.asc()).all()
-            form.category.choices = [
-                (cat.id, cat.name) for cat in categories
-            ]
+        if thread.open_for_comments:
+            if thread.user.username == g.user.username:
+                form = EditThreadForm(obj=thread)
+                categories = db.session.query(Category)\
+                    .order_by(Category.id.asc()).all()
+                form.category.choices = [
+                    (cat.id, cat.name) for cat in categories
+                ]
 
-            if form.validate_on_submit():
-                thread.category_id = form.category.data
-                db.session.commit()
-                flash('This thread has been updated.')
-                return redirect(url_for(
-                    'thread',
-                    category_slug=thread.category.slug,
-                    thread_slug=thread.slug
-                ))
+                if form.validate_on_submit():
+                    thread.category_id = form.category.data
+                    db.session.commit()
+                    flash('Your rating category has been updated.')
+                    return redirect(url_for(
+                        'thread',
+                        category_slug=thread.category.slug,
+                        thread_slug=thread.slug
+                    ))
 
-            form.category.data = thread.category_id
+                form.category.data = thread.category_id
 
-            return render_template(
-                'edit_thread.html',
-                title="Edit \"" + thread.title + "\"",
-                page_title="Edit \"" + thread.title + "\"",
-                form=form,
-                thread=thread
-            )
+                return render_template(
+                    'edit_thread.html',
+                    title="Edit \"" + thread.title + "\"",
+                    page_title="Edit \"" + thread.title + "\"",
+                    form=form,
+                    thread=thread
+                )
+            else:
+                flash("Sorry, you cannot edit a rating you didn't create!")
+                return redirect(url_for('index'))
         else:
-            return redirect(url_for('index'))
+            flash('This rating is not editable because it is closed.')
+            return redirect(url_for(
+                'thread',
+                category_slug=thread.category.slug,
+                thread_slug=thread.slug
+            ))
     else:
         abort(404)
 
@@ -581,7 +590,7 @@ def close_thread(thread_id):
                             submission_id=thread.reddit_id
                         )
                         if submission.selftext:
-                            new_selftext = '**Edit:** This thread has been ' + \
+                            new_selftext = '**Edit:** This rating thread has been ' + \
                                 ' closed. Thanks for participating!\n\n' + \
                                 submission.selftext
                             submission.edit(new_selftext)
@@ -590,7 +599,7 @@ def close_thread(thread_id):
                               'Please edit it so other users know it is closed.')
 
                     success_message = Markup(
-                        'This thread has been closed and '
+                        'This rating has been closed and '
                         '<a href="http://redd.it/' +
                         thread.reddit_id +
                         '" target="_blank">updated on reddit</a>.'
@@ -615,7 +624,7 @@ def close_thread(thread_id):
                 thread=thread
             )
         else:
-            flash('This ratings thread has already been closed.')
+            flash('This rating  has already been closed.')
             return redirect(url_for(
                 'thread',
                 category_slug=thread.category.slug,
