@@ -17,8 +17,8 @@ decorator==3.4.0
 distribute==0.7.3
 gunicorn==18.0
 itsdangerous==0.23
-praw==2.1.15
-requests==2.2.1
+praw==2.1.16
+requests==2.3.0
 six==1.6.1
 update-checker==0.10
 wsgiref==0.1.2
