@@ -9,7 +9,7 @@ from app.models import Category, Tag, Thread, \
     Comment, User
 from app.utils import pretty_date, reddit_body, generate_token
 from app.decorators import admin_login_required
-from datetime import datetime
+from datetime import datetime, timedelta
 import praw
 from app.utils import make_slug
 from sqlalchemy.sql import func
@@ -376,6 +376,13 @@ def user_profile(username):
 @admin_login_required
 @login_required
 def create_thread():
+    last_thread = g.user.threads\
+        .order_by(Thread.date_posted.desc()).first()
+    if last_thread.date_posted > \
+            (datetime.utcnow() -
+             timedelta(seconds=604800)) and 'logged_in' not in session:
+        flash('Sorry, you can only create 1 rating per week.')
+        return redirect(url_for('dashboard'))
     form = ThreadForm()
     categories = db.session.query(Category).order_by(Category.id.asc()).all()
     form.category.choices = [
