@@ -418,10 +418,6 @@ def create_thread():
                 .first()
 
             try:
-                r.login(
-                    app.config['REDDIT_USERNAME'],
-                    app.config['REDDIT_PASSWORD']
-                )
                 reddit_post = r.submit(
                     form.subreddit.data,
                     '[Community Rating] ' + form.reddit_title.data,
@@ -435,7 +431,7 @@ def create_thread():
 
                 if reddit_post:
                     new_thread = Thread(
-                        user_id=1,
+                        user_id=g.user.id,
                         title=form.title.data,
                         slug=new_slug,
                         category_id=form.category.data,
