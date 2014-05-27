@@ -378,7 +378,7 @@ def user_profile(username):
 def create_thread():
     last_thread = g.user.threads\
         .order_by(Thread.date_posted.desc()).first()
-    if last_thread.date_posted > \
+    if last_thread is not None and last_thread.date_posted > \
             (datetime.utcnow() -
              timedelta(seconds=604800)) and 'logged_in' not in session:
         flash('Sorry, you can only create 1 rating per week.')
@@ -418,6 +418,7 @@ def create_thread():
                 .first()
 
             try:
+                r.refresh_access_information(g.user.refresh_token)
                 reddit_post = r.submit(
                     form.subreddit.data,
                     '[Community Rating] ' + form.reddit_title.data,
@@ -583,10 +584,7 @@ def close_thread(thread_id):
                     db.session.commit()
 
                     # edit reddit thread
-                    r.login(
-                        app.config['REDDIT_USERNAME'],
-                        app.config['REDDIT_PASSWORD']
-                    )
+                    r.refresh_access_information(g.user.refresh_token)
 
                     try:
                         submission = r.get_submission(
