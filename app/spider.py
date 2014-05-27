@@ -1,7 +1,7 @@
 from app import db
 from app.models import User, Thread, Comment
-from config import REDDIT_USERNAME, REDDIT_PASSWORD, \
-    REDDIT_USER_AGENT, SERVER_NAME
+from config import REDDIT_USER_AGENT, REDDIT_APP_ID, \
+    REDDIT_APP_SECRET, OAUTH_REDIRECT_URI, SERVER_NAME
 from app.utils import is_number
 import praw
 import datetime
@@ -243,9 +243,11 @@ class Crawl(Command):
 
         # create praw instance with user agent
         r = praw.Reddit(user_agent=user_agent)
-
-        # login with reddit username/password
-        r.login(REDDIT_USERNAME, REDDIT_PASSWORD)
+        r.set_oauth_app_info(
+            REDDIT_APP_ID,
+            REDDIT_APP_SECRET,
+            OAUTH_REDIRECT_URI
+        )
 
         # get all threads uploaded to site
         threads = db.session.query(Thread)\
@@ -258,6 +260,7 @@ class Crawl(Command):
 
             # get submission from reddit, store comments in variable
             try:
+                r.refresh_access_information(thread.user.refresh_token)
                 submission = r.get_submission(
                     submission_id=thread.reddit_id
                 )
