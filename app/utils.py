@@ -109,10 +109,7 @@ def reddit_body(desc, title, cat_slug, slug):
         ' encouraged but optional'
         '\n\n    ---'
         '\n\n    If you want to say something not directly related to your'
-        ' rating, put it\n    below a horizontal rule ("---").'
-        '\n\n    verifyrating'
-        '\n\n    If the text "verifyrating" is included, then a PM will be'
-        ' sent to you\n    when your rating is parsed.'
+        ' rating, put it\n below a horizontal rule ("---").'
         '\n\n-'
         '\n---'
         '\n-'
@@ -134,5 +131,11 @@ def reddit_body(desc, title, cat_slug, slug):
         '\n\n* Only your first Rating will be counted.'
         '\n* You have 3 minutes to edit your Rating.'
         '\n* Upvote other Ratings that are informative.'
-        '\n* Post feedback and suggestions to /r/RedditRatings.')
+        '\n* Post feedback and suggestions to /r/RedditRatings.'
+        '\n\n-'
+        '\n---'
+        '\n-'
+        '\n\n [Create your own rating thread](http://'
+        + SERVER_NAME + '/create-thread)'
+    )
     return body

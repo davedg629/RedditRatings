@@ -1,7 +1,8 @@
 from app import db
 from app.models import User, Thread, Comment
 from config import REDDIT_USER_AGENT, REDDIT_APP_ID, \
-    REDDIT_APP_SECRET, OAUTH_REDIRECT_URI, SERVER_NAME
+    REDDIT_APP_SECRET, OAUTH_REDIRECT_URI, SERVER_NAME, \
+    REDDIT_USERNAME, REDDIT_PASSWORD
 from app.utils import is_number
 import praw
 import datetime
@@ -212,6 +213,9 @@ def update_comment(comment_body, comment_edited, reddit_id, body_label):
 
 
 def send_pm(author, thread, r):
+    #admin_user = db.session.query(User)\
+    #    .filter_by(id=1).first()
+    r.login(REDDIT_USERNAME, REDDIT_PASSWORD)
     r.send_message(
         author,
         'Success!',
@@ -260,7 +264,9 @@ class Crawl(Command):
 
             # get submission from reddit, store comments in variable
             try:
-                r.refresh_access_information(thread.user.refresh_token)
+                r.refresh_access_information(
+                    thread.user.refresh_token
+                )
                 submission = r.get_submission(
                     submission_id=thread.reddit_id
                 )
