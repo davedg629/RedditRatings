@@ -1,0 +1,7 @@
+{% if session.logged_in %}
+<div class="sidebar-module">
+
+    <div class="center"><a class="btn btn-success btn-block" href="{{ url_for('create_thread') }}">Create a Community Rating on reddit</a></div>
+
+</div>
+{% endif %}

@@ -9,3 +9,12 @@
     <p><a href="{{ url_for('index') }}">Go to home page</a></p>
 
 {% endblock %}
+
+{% block sidebar %}
+
+{% include 'sidebar_create_rating.html' %}
+{% include 'sidebar_connect.html' %}
+{% include 'sidebar_about.html' %}
+{% include 'sidebar_feedback.html' %}
+
+{% endblock %}

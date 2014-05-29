@@ -14,6 +14,8 @@ body {
 
 .divider {border-bottom: 1px solid #dce4ec; clear: both; height: 14px; margin-bottom: 20px; width: 100%;}
 
+.center {text-align: center;}
+
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-weight: bold;}
 
 .well h3, .well h4 {margin-top: 0;}

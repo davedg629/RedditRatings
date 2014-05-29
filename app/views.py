@@ -87,7 +87,7 @@ def admin_login():
                 request.form['password'] == app.config['ADMIN_PASSWORD']:
             session['logged_in'] = True
             flash('Login successful.')
-            return redirect(url_for('admin.index'))
+            return redirect(url_for('index'))
         else:
             flash('Invalid username or password.')
             return redirect(url_for('admin_login'))
@@ -178,8 +178,8 @@ def dashboard():
         .all()
     return render_template(
         'dashboard.html',
-        title="Dashboard",
-        page_title="Dashboard",
+        title="Your Dashboard",
+        page_title="Your Dashboard",
         active_threads=active_threads,
         inactive_threads=inactive_threads
     )
@@ -391,7 +391,7 @@ def create_thread():
     form.category.choices.insert(0, (0, 'Choose one...'))
     if form.validate_on_submit():
 
-        if form.test_mode.data:
+        if not form.test_mode.data:
 
             # post to reddit
             reddit_post = None
@@ -485,7 +485,7 @@ def create_thread():
                 flash(error_message)
         else:
             new_thread = Thread(
-                user_id=1,
+                user_id=g.user.id,
                 title=form.title.data,
                 category_id=form.category.data,
                 subreddit=form.subreddit.data,

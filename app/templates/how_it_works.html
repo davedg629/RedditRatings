@@ -4,21 +4,21 @@
 
     {{super()}}
 
-    <p>{{ config['APP_NAME'] }} is a 3rd party reddit app that enables subreddits to rate things together and then archives the ratings on this website. Here is how it works:</p>
+    <p>{{ config['APP_NAME'] }} is a 3rd party reddit app that enables subreddits to rate things together. Here is how it works:</p>
 
-        <h3>1. Create a "rating thread" on reddit</h3>
+        <h3>1. Create a "Community Rating" thread</h3>
        
-        <p>The rating thread presents something to be rated by the community and instruct users on how to submit a rating in the comments. Soon, you will be able to create your own rating threads from this website.</p>
+        <p>Anyone can create a Community Rating thread from this website. You fill out a simple form describing what you want to rate and what subreddit you want to conduct the Community Rating. The RedditRatings app creates the Community Rating thread automatically for you and posts it to the subreddit of your choice under your reddit username.</p>
+
+        <p><a href="http://www.reddit.com/r/Seattle/comments/25gc7k/how_would_you_rate_mayor_ed_murray_on_a_scale/" target="_blank">Here is what a Community Rating looks like on reddit.</a></p>
         
         <h3>2. Redditors submit ratings by leaving comments</h3>
        
-        <p>Using a specified format, redditors can leave a rating in the comment section of the thread. Ratings consist of a Rating and an optional Comment.</p>
+        <p>User Ratings consist of a Rating from 1 to 10 (whole numbers only) and an optional Comment. User Ratings must be submitted as comments using the following format.</p>
         
-        <p><strong>This is the format for leaving a rating in the comments section:</strong></p>
-
         <div class="review-format well">
             
-            <p><strong>Rating:</strong> Provide a rating from 1 to 10 here, integers only, required</p>
+            <p><strong>Rating:</strong> Provide a rating from 1 to 10 here, whole numbers only, required</p>
 
             <p><strong>Comments:</strong></p>
             
@@ -30,13 +30,28 @@
             
         </div>
 
-        <h3>3. /u/{{ config['APP_NAME'] }} catalogs the rating thread and calculates an average rating</h3>
-        <p>A crawler script aggregates the user ratings into a single "Community Rating". The Community Rating is cataloged on this website and features an average rating and other relevant information about the Community Rating.</p>
+        <h3>3. Every 10 minutes, your thread is scanned for new User Ratings</h3>
+        <p>Our script crawls your reddit thread for new User Ratings and calculates an average rating. The average rating, or "Community Rating", is updated on this website and in the "Live Results" section of your reddit thread.</p>
 
+        <h3>Note:</h3>
+
+        <ul>
+            <li>You can close your Community Rating at anytime from the Dashboard. All Community Ratings are closed automatically after three days.</li>
+            <li>You must give RedditRatings.com access to your reddit account via reddit's OAuth API. We will only use this access to create and edit posts at your direction.</li>
+        </ul>
         <hr />
 
         <p><strong>If you have any questions or ideas, <a href="http://www.reddit.com/message/compose/?to={{ config['APP_NAME'] }}" target="_blank">send me a PM</a> or a <a href="http://twitter.com/{{ config['APP_NAME'] }}" target="_blank">tweet</a>.</strong></p>
 
         <p><strong><a href="{{ url_for('about') }}">Click here to learn more about {{ config['APP_NAME'] }} and why we created it.</a></strong></p>
     
+{% endblock %}
+
+{% block sidebar %}
+
+{% include 'sidebar_create_rating.html' %}
+{% include 'sidebar_connect.html' %}
+{% include 'sidebar_about.html' %}
+{% include 'sidebar_feedback.html' %}
+
 {% endblock %}

@@ -4,9 +4,7 @@
 {% block page_content %}
 {{super()}}
 
-<ul>
-    <li><a href="{{ url_for('create_thread') }}">Create a Rating</a></li>
-</ul>
+<p><a class="btn btn-success" href="{{ url_for('create_thread') }}">Create a Community Rating on reddit</a></p>
 
 {% if active_threads %}
 <h3>Active Ratings</h3>
@@ -29,5 +27,12 @@
     </tbody>
 </table>
 {% endif %}
+
+{% endblock %}
+
+{% block sidebar %}
+
+{% include 'sidebar_connect.html' %}
+{% include 'sidebar_feedback.html' %}
 
 {% endblock %}

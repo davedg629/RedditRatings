@@ -42,7 +42,7 @@ class ThreadForm(Form):
         validators=[NoneOf([0], message="This field is required")],
         coerce=int
     )
-    test_mode = BooleanField('Post to reddit?')
+    test_mode = BooleanField('Don\'t post to reddit?')
     submit = SubmitField()
 
 
