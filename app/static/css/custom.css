@@ -30,6 +30,8 @@ h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {font-weight: bold;}
 
 .meta {font-size: 14px;}
 
+.btn-block {white-space: normal; padding-left: 10px; padding-right: 10px;}
+
 /** sidebar **/
 .sidebar-module {margin-bottom: 20px;}
 
