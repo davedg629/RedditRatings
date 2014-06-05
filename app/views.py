@@ -109,7 +109,6 @@ def admin_logout():
 
 # REDDIT LOGIN
 @app.route('/login/')
-@admin_login_required
 def login():
     if current_user.is_anonymous():
         session['oauth_token'] = generate_token()
@@ -131,7 +130,6 @@ def login():
 
 # finish OAuth login
 @app.route('/authorize/')
-@admin_login_required
 def authorize():
     state = request.args.get('state', '')
     if current_user.is_anonymous() and (state == session['oauth_token']):
@@ -165,7 +163,6 @@ def authorize():
 
 # dashboard
 @app.route('/dashboard/')
-@admin_login_required
 @login_required
 def dashboard():
     active_threads = db.session.query(Thread)\
@@ -373,7 +370,6 @@ def user_profile(username):
 
 # create thread form
 @app.route('/create-thread/', methods=['GET', 'POST'])
-@admin_login_required
 @login_required
 def create_thread():
     last_thread = g.user.threads\
@@ -517,7 +513,6 @@ def create_thread():
 
 # edit thread form
 @app.route('/edit-thread/<int:thread_id>', methods=['GET', 'POST'])
-@admin_login_required
 @login_required
 def edit_thread(thread_id):
     thread = db.session.query(Thread)\
@@ -568,7 +563,6 @@ def edit_thread(thread_id):
 
 # close thread
 @app.route('/close-thread/<int:thread_id>', methods=['GET', 'POST'])
-@admin_login_required
 @login_required
 def close_thread(thread_id):
     thread = db.session.query(Thread)\
