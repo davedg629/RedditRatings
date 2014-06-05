@@ -202,7 +202,7 @@ def index():
         .all()
     return render_template(
         'index.html',
-        title='Creating ratings on reddit, together.',
+        title='Create rating threads on reddit.',
         page_title='Latest Community Ratings',
         threads=threads
     )
