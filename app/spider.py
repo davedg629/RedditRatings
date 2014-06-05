@@ -386,7 +386,7 @@ class Crawl(Command):
             db.session.commit()
 
             # update results on reddit
-            if submission.selftext and thread.get_comment_count() != 0:
+            if submission.selftext and thread.get_comment_count() != '0':
                 results_label_pos = submission.selftext.lower().find(
                     '**live results**'
                 )
