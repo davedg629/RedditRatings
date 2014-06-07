@@ -76,6 +76,14 @@ def about():
     )
 
 
+@app.route('/privacy/', methods=['GET'])
+def privacy():
+    return render_template(
+        'privacy.html',
+        title="Privacy Policy",
+        page_title="Privacy Policy"
+    )
+
 # ADMIN LOGIN
 @app.route('/admin-login/', methods=['GET', 'POST'])
 def admin_login():
