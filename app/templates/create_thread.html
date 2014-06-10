@@ -75,11 +75,13 @@
 
     <div class="divider"></div>
 
+    {% if session.logged_in %}
     <div class="checkbox">
         <label>
             {{ form.test_mode }} Don't post to reddit? 
         </label>
     </div>
+    {% endif %}
 
     <input class="btn btn-default" id="submit" name="submit" type="submit" value="Submit">
 
