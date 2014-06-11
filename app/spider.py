@@ -417,7 +417,7 @@ class Crawl(Command):
                     thread.open_for_comments = False
                     db.session.commit()
 
-            else:
+            elif submission.selftext is None:
                 thread.open_for_comments = False
                 db.session.commit()
 
