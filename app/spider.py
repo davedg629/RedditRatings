@@ -318,7 +318,7 @@ class Crawl(Command):
                                 # parse comment
                                 comment_params = parse_comment(comment.body, body_label)
 
-                                if 1 <= comment_params['rating'] <= 10:
+                                if 0 <= comment_params['rating'] <= 10:
 
                                     # add user if not already in db and get user_id
                                     if not this_user:

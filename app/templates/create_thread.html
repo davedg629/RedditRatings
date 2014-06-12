@@ -30,7 +30,7 @@
     <div class="form-group{% if form.reddit_title.errors %} has-error{% endif %}">
         {{ form.reddit_title.label(class="control-label") }}
         <p><span class="help-block">This will be the title of your reddit thread. Choose a title that entices users to submit a rating. The [Community Rating] tag will be prepended to your title.</span></p>
-        {{ form.reddit_title(class="form-control", placeholder="Let's rate Super Mario Bros. 3. Submit your 1 to 10 rating in the comments.") }}
+        {{ form.reddit_title(class="form-control", placeholder="Let's rate Super Mario Bros. 3. Submit your 0 to 10 rating in the comments.") }}
         {% if form.reddit_title.errors %}
             <ul class="errors">{% for error in form.reddit_title.errors %}<li class="text-danger">{{ error }}</li>{% endfor %}</ul>
         {% endif %}

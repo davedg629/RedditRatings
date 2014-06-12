@@ -102,7 +102,7 @@ def reddit_body(desc, title, cat_slug, slug):
         '\n-'
         '\n\n**Submit a rating by leaving a comment with the '
         'following format:**'
-        '\n\n    Rating: Provide a rating from 1 to 10 here, whole numbers'
+        '\n\n    Rating: Provide a rating from 0 to 10 here, whole numbers'
         ' only, required'
         '\n\n    Comments: Include any comments related to your rating here,'
         ' encouraged but optional'
