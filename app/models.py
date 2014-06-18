@@ -233,7 +233,7 @@ class Comment(db.Model):
     )
     reddit_id = db.Column(db.String, nullable=False, unique=True)
     date_posted = db.Column(db.DateTime, nullable=False)
-    rating = db.Column(db.Integer, nullable=False)
+    rating = db.Column(db.Float, nullable=False)
     body = db.Column(db.Text)
     upvotes = db.Column(db.Integer, nullable=False)
     downvotes = db.Column(db.Integer, nullable=False)

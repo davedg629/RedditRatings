@@ -3,7 +3,6 @@ from app.models import User, Thread, Comment
 from config import REDDIT_USER_AGENT, REDDIT_APP_ID, \
     REDDIT_APP_SECRET, OAUTH_REDIRECT_URI, SERVER_NAME, \
     REDDIT_USERNAME, REDDIT_PASSWORD
-from app.utils import is_number
 import praw
 import datetime
 import time
@@ -11,110 +10,36 @@ from requests import HTTPError
 from flask.ext.script import Command, Option
 
 
-def parse_comment_rating(labelPos, label, comment_body):
-    """Parse rating from comment, given the rating label,
-    label position, and the comment body."""
-
-    for i in range(labelPos + len(label) + 1,
-                   labelPos + len(label) + 5):
-        if is_number(comment_body[i]):
-            if comment_body[i] == '1' \
-                    and comment_body[i + 1] == '0':
-                return int(comment_body[i:i + 2])
-            else:
-                return int(comment_body[i])
-
-    return 0
-
-
-def parse_comment_body(labelPos, label, comment_body):
-    """Parses comment body, given the label,
-    label position, and comment body."""
-
-    if comment_body.find('---', labelPos) > 0:
-        endPos = comment_body.find('---', labelPos)
-    elif comment_body.find('___', labelPos) > 0:
-        endPos = comment_body.find('___', labelPos)
-    elif comment_body.find('***', labelPos) > 0:
-        endPos = comment_body.find('***', labelPos)
-    else:
-        endPos = -1
-
-    if comment_body[labelPos - 2:
-                    labelPos +
-                    len(label) + 3] == '**' + label + ':**':
-        body = \
-            comment_body[
-                labelPos +
-                len(label) +
-                + 3:endPos
-            ].strip() \
-            if endPos != -1 else \
-            comment_body[
-                labelPos +
-                len(label) +
-                + 3:
-            ].strip()
-
-    elif comment_body[labelPos - 1:
-                      labelPos +
-                      len(label) + 2] == '*' + label + ':*':
-        body = \
-            comment_body[
-                labelPos +
-                len(label) +
-                + 2:endPos
-            ].strip() \
-            if endPos != -1 else \
-            comment_body[
-                labelPos +
-                len(label) +
-                + 2:
-            ].strip()
-
-    else:
-        body = \
-            comment_body[
-                labelPos +
-                len(label) +
-                + 1:endPos
-            ].strip() \
-            if endPos != -1 else \
-            comment_body[
-                labelPos +
-                len(label) +
-                + 1:
-            ].strip()
-
-    return body.replace("\n", "<br />")
-
-
-def parse_comment(comment_body, body_label):
+def parse_comment(comment_body):
     """Takes a reddit comment and pulls out rating details"""
-    labels = [
-        'rating',
-        body_label
-    ]
-
     comment_params = {}
 
-    for label in labels:
+    split_body = comment_body.replace('\n', ' ').split(' ', 1)
 
-        labelPos = comment_body.lower().find(label + ':')
-        if labelPos >= 0:
+    try:
+        comment_params['rating'] = round(float(split_body[0]), 1)
+    except:
+        comment_params['rating'] = False
 
-            # parse rating
-            if label == 'rating':
-                comment_params[label] = \
-                    parse_comment_rating(labelPos, label, comment_body)
+    if comment_params['rating'] is not False \
+            and (0 <= comment_params['rating'] <= 10):
+        if len(split_body) > 1:
+            comment = split_body[1]
+            if comment.find('---') > 0:
+                comment = comment[0:comment.find('---')]
+            elif comment.find('___') > 0:
+                comment = comment[0:comment.find('___')]
+            elif comment.find('***') > 0:
+                comment = comment[0:comment.find('***')]
 
-            # parse comment body
-            else:
-                comment_params[label] = \
-                    parse_comment_body(labelPos, label, comment_body)
+            comment_params['comment'] = comment.replace("\n", "<br />")
 
         else:
-            comment_params[label] = ''
+            comment_params['comment'] = ''
+
+    else:
+        comment_params['rating'] = False
+        comment_params['comment'] = ''
 
     return comment_params
 
@@ -140,76 +65,26 @@ def add_user(username):
     return user_check.id
 
 
-def update_comment(comment_body, comment_edited, reddit_id, body_label):
+def update_comment(comment_body):
     """Update a comment and last_edited value."""
-    label = body_label
-    labelPos = comment_body.lower().find(label)
-    if labelPos >= 0:
 
-        if comment_body.find('---', labelPos) > 0:
-            endPos = comment_body.find('---', labelPos)
-        elif comment_body.find('___', labelPos) > 0:
-            endPos = comment_body.find('___', labelPos)
-        elif comment_body.find('***', labelPos) > 0:
-            endPos = comment_body.find('***', labelPos)
-        else:
-            endPos = -1
+    split_body = comment_body.replace('\n', ' ').split(' ', 1)
 
-        if comment_body[labelPos - 2:
-                        labelPos +
-                        len(label) + 3] == '**' + label + ':**':
-            editedComment = \
-                comment_body[
-                    labelPos +
-                    len(label) +
-                    + 3:endPos
-                ].strip() \
-                if endPos != -1 else \
-                comment_body[
-                    labelPos +
-                    len(label) +
-                    + 3:
-                ].strip()
+    if len(split_body) > 1:
+        comment = split_body[1]
+        if comment.find('---') > 0:
+            comment = comment[0:comment.find('---')]
+        elif comment.find('___') > 0:
+            comment = comment[0:comment.find('___')]
+        elif comment.find('***') > 0:
+            comment = comment[0:comment.find('***')]
 
-        elif comment_body[labelPos - 1:
-                          labelPos +
-                          len(label) + 2] == '*' + label + ':*':
-            editedComment = \
-                comment_body[
-                    labelPos +
-                    len(label) +
-                    + 2:endPos
-                ].strip() \
-                if endPos != -1 else \
-                comment_body[
-                    labelPos +
-                    len(label) +
-                    + 2:
-                ].strip()
+        comment = comment.replace("\n", "<br />")
 
-        else:
-            editedComment = \
-                comment_body[
-                    labelPos +
-                    len(label) +
-                    + 1:endPos
-                ].strip() \
-                if endPos != -1 else \
-                comment_body[
-                    labelPos +
-                    len(label) +
-                    + 1:
-                ].strip()
     else:
-        editedComment = ''
+        comment = ''
 
-    db.session.query(Comment)\
-        .filter_by(reddit_id=reddit_id)\
-        .update({
-            "body": editedComment.replace("\n", "<br />"),
-            "edited_stamp": comment_edited
-        })
-    db.session.commit()
+    return comment
 
 
 def send_pm(author, thread, r):
@@ -236,11 +111,10 @@ class Crawl(Command):
 
     option_list = (
         Option('--silent', '-s', dest='silent'),
-        Option('--label', '-l', dest='body_label'),
         Option('--expire', '-e', dest='expire'),
     )
 
-    def run(self, silent, body_label, expire):
+    def run(self, silent, expire):
 
         # get reddit user agent
         user_agent = (REDDIT_USER_AGENT)
@@ -313,49 +187,47 @@ class Crawl(Command):
 
                         if not this_user_check:
 
-                            if 'rating:' in comment.body.lower():
+                            # parse comment
+                            comment_params = parse_comment(comment.body)
 
-                                # parse comment
-                                comment_params = parse_comment(comment.body, body_label)
+                            if comment_params['rating'] is not False:
 
-                                if 0 <= comment_params['rating'] <= 10:
+                                # add user if not already in db and get user_id
+                                if not this_user:
+                                    user_id = add_user(comment.author.name)
+                                else:
+                                    user_id = this_user.id
 
-                                    # add user if not already in db and get user_id
-                                    if not this_user:
-                                        user_id = add_user(comment.author.name)
-                                    else:
-                                        user_id = this_user.id
+                                # make sure last_edited value is an int
+                                if not comment.edited:
+                                    this_last_edited = 0
+                                else:
+                                    this_last_edited = comment.edited
 
-                                    # make sure last_edited value is an int
-                                    if not comment.edited:
-                                        this_last_edited = 0
-                                    else:
-                                        this_last_edited = comment.edited
+                                # add comment to db
+                                new_comment = Comment(
+                                    thread_id=thread.id,
+                                    user_id=user_id,
+                                    reddit_id=comment.id,
+                                    date_posted=datetime.datetime
+                                    .utcfromtimestamp(comment.created_utc),
+                                    rating=comment_params['rating'],
+                                    body=comment_params['comment'],
+                                    upvotes=comment.ups,
+                                    downvotes=comment.downs,
+                                    edited_stamp=this_last_edited
+                                )
+                                db.session.add(new_comment)
+                                db.session.commit()
 
-                                    # add comment to db
-                                    new_comment = Comment(
-                                        thread_id=thread.id,
-                                        user_id=user_id,
-                                        reddit_id=comment.id,
-                                        date_posted=datetime.datetime
-                                        .utcfromtimestamp(comment.created_utc),
-                                        rating=comment_params['rating'],
-                                        body=comment_params[body_label],
-                                        upvotes=comment.ups,
-                                        downvotes=comment.downs,
-                                        edited_stamp=this_last_edited
+                                # reply with a success message if user wants it
+                                if 'verifyrating' in comment.body.lower() \
+                                        and silent != 'true':
+                                    send_pm(
+                                        comment.author.name,
+                                        thread,
+                                        r
                                     )
-                                    db.session.add(new_comment)
-                                    db.session.commit()
-
-                                    # reply with a success message if user wants it
-                                    if 'verifyrating' in comment.body.lower() \
-                                            and silent != 'true':
-                                        send_pm(
-                                            comment.author.name,
-                                            thread,
-                                            r
-                                        )
 
                     # is the comment already in the db
                     elif this_comment:
@@ -363,12 +235,14 @@ class Crawl(Command):
                         if time_since_created < 3600:
 
                             if comment.edited > this_comment.edited_stamp:
-                                update_comment(
-                                    comment.body,
-                                    comment.edited,
-                                    comment.id,
-                                    body_label
-                                )
+                                editedComment = update_comment(comment.body)
+                                db.session.query(Comment)\
+                                    .filter_by(reddit_id=comment.id)\
+                                    .update({
+                                        "body": editedComment,
+                                        "edited_stamp": comment.edited
+                                    })
+                                db.session.commit()
 
                         if comment.ups != this_comment.upvotes:
                             this_comment.upvotes = comment.ups
