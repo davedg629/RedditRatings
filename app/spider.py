@@ -268,11 +268,11 @@ class Crawl(Command):
                     results_start_pos = submission.selftext.lower()\
                         .find('--', results_label_pos)
                     results_end_pos = submission.selftext.lower()\
-                        .find('--', results_start_pos)
+                        .find('--', results_start_pos + 1)
                     results_string = \
                         submission.selftext[
-                            results_start_pos + 2:results_end_pos
-                        ].trim()
+                            results_start_pos + 3:results_end_pos
+                        ]
                     new_comment_cnt = thread.get_comment_count()
                     if new_comment_cnt == '1':
                         comment_cnt_suffix = 'rating'
@@ -281,9 +281,9 @@ class Crawl(Command):
                     new_avg_rating = thread.get_avg_rating()
                     new_reddit_body = submission.selftext.replace(
                         results_string,
-                        new_avg_rating +
+                        ' ' + new_avg_rating +
                         ' out of 10, based on ' +
-                        new_comment_cnt + ' ' + comment_cnt_suffix
+                        new_comment_cnt + ' ' + comment_cnt_suffix + ' '
                     )
                     submission.edit(new_reddit_body)
 
