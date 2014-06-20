@@ -309,7 +309,7 @@ def tag(tag_slug):
 
 
 # thread single
-@app.route('/<category_slug>/<thread_slug>/<thread_id>')
+@app.route('/<category_slug>/<thread_slug>/<int:thread_id>')
 def thread(category_slug, thread_slug, thread_id):
     category = db.session.query(Category)\
         .filter_by(slug=category_slug)\
