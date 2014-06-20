@@ -14,7 +14,7 @@ def parse_comment(comment_body):
     """Takes a reddit comment and pulls out rating details"""
     comment_params = {}
 
-    split_body = comment_body.replace('\n', ' ').split(' ', 1)
+    split_body = comment_body.split(None, 1)
 
     try:
         comment_params['rating'] = round(float(split_body[0]), 1)
@@ -68,7 +68,7 @@ def add_user(username):
 def update_comment(comment_body):
     """Update a comment and last_edited value."""
 
-    split_body = comment_body.replace('\n', ' ').split(' ', 1)
+    split_body = comment_body.split(None, 1)
 
     if len(split_body) > 1:
         comment = split_body[1]
