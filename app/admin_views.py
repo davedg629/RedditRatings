@@ -9,8 +9,6 @@ from flask.ext.admin.babel import gettext
 from flask.ext.admin.helpers import validate_form_on_submit
 from flask.ext.admin.model.helpers import get_mdict_item_or_list
 
-from sqlalchemy.sql import func
-
 
 class AuthMixin(object):
     def is_accessible(self):
@@ -109,25 +107,16 @@ class ThreadView(AdminModelView):
             return redirect(return_url)
 
         form = self.edit_form(obj=model)
-        new_slug = make_slug(form.title.data)
-        slug_check = None
 
-        if new_slug != model.slug:
-            slug_check = db.session.query(models.Thread)\
-                .filter_by(category_id=form.category.data.id)\
-                .filter_by(slug=new_slug).first()
-
-        if validate_form_on_submit(form) and not slug_check:
-            if new_slug != model.slug:
-                model.slug = new_slug
+        if validate_form_on_submit(form):
+            if form.title.data != model.title:
+                model.slug = make_slug(form.title.data)
             if self.update_model(form, model):
                 if '_continue_editing' in request.form:
                     flash(gettext('Model was successfully saved.'))
                     return redirect(request.url)
                 else:
                     return redirect(return_url)
-        elif slug_check:
-            flash(gettext('Title must be unique to the category'))
 
         form_opts = None
 

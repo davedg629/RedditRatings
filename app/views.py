@@ -12,7 +12,6 @@ from app.decorators import admin_login_required
 from datetime import datetime, timedelta
 import praw
 from app.utils import make_slug
-from sqlalchemy.sql import func
 from requests import HTTPError
 
 # redirect to www
@@ -83,6 +82,7 @@ def privacy():
         title="Privacy Policy",
         page_title="Privacy Policy"
     )
+
 
 # ADMIN LOGIN
 @app.route('/admin-login/', methods=['GET', 'POST'])
@@ -309,15 +309,14 @@ def tag(tag_slug):
 
 
 # thread single
-@app.route('/<category_slug>/<thread_slug>')
-def thread(category_slug, thread_slug):
+@app.route('/<category_slug>/<thread_slug>/<thread_id>')
+def thread(category_slug, thread_slug, thread_id):
     category = db.session.query(Category)\
         .filter_by(slug=category_slug)\
         .first()
     if category:
         thread = db.session.query(Thread)\
-            .filter_by(category_id=category.id)\
-            .filter_by(slug=thread_slug)\
+            .filter_by(id=thread_id)\
             .first()
         if thread:
             last_crawl = None
@@ -400,27 +399,6 @@ def create_thread():
             # post to reddit
             reddit_post = None
 
-            # create a unique slug from the thread title
-            new_slug = make_slug(form.title.data)
-            slug_check = None
-            slug_check = db.session.query(Thread)\
-                .filter_by(category_id=form.category.data)\
-                .filter_by(title=form.title.data).first()
-
-            if slug_check:
-                same_slug_count = db.session\
-                    .query(func.count(Thread.id))\
-                    .filter_by(
-                        category_id=form.category.data
-                    )\
-                    .filter_by(title=form.title.data)
-                new_slug = new_slug + '-' + str(same_slug_count[0][0] + 1)
-
-            # get the category slug
-            category = db.session.query(Category)\
-                .filter_by(id=form.category.data)\
-                .first()
-
             try:
                 r.refresh_access_information(g.user.refresh_token)
                 reddit_post = r.submit(
@@ -428,9 +406,7 @@ def create_thread():
                     '[Community Rating] ' + form.reddit_title.data,
                     reddit_body(
                         form.description.data,
-                        form.title.data,
-                        category.slug,
-                        new_slug
+                        form.title.data
                     )
                 )
 
@@ -438,7 +414,7 @@ def create_thread():
                     new_thread = Thread(
                         user_id=g.user.id,
                         title=form.title.data,
-                        slug=new_slug,
+                        slug=make_slug(form.title.data),
                         category_id=form.category.data,
                         reddit_id=reddit_post.id,
                         reddit_permalink=reddit_post.permalink,
@@ -464,7 +440,8 @@ def create_thread():
                     return redirect(url_for(
                         'thread',
                         category_slug=this_thread.category.slug,
-                        thread_slug=this_thread.slug
+                        thread_slug=this_thread.slug,
+                        thread_id=this_thread.id
                     ))
 
                 else:
@@ -508,7 +485,8 @@ def create_thread():
             return redirect(url_for(
                 'thread',
                 category_slug=this_thread.category.slug,
-                thread_slug=this_thread.slug
+                thread_slug=this_thread.slug,
+                thread_id=this_thread.id
             ))
 
     return render_template(
@@ -543,7 +521,8 @@ def edit_thread(thread_id):
                     return redirect(url_for(
                         'thread',
                         category_slug=thread.category.slug,
-                        thread_slug=thread.slug
+                        thread_slug=thread.slug,
+                        thread_id=thread.id
                     ))
 
                 form.category.data = thread.category_id
@@ -563,7 +542,8 @@ def edit_thread(thread_id):
             return redirect(url_for(
                 'thread',
                 category_slug=thread.category.slug,
-                thread_slug=thread.slug
+                thread_slug=thread.slug,
+                thread_id=thread.id
             ))
     else:
         abort(404)
@@ -612,7 +592,8 @@ def close_thread(thread_id):
                     return redirect(url_for(
                         'thread',
                         category_slug=thread.category.slug,
-                        thread_slug=thread.slug
+                        thread_slug=thread.slug,
+                        thread_id=thread.id
                     ))
 
             else:

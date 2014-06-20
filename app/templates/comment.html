@@ -2,7 +2,7 @@
 
 {% block page_content %}
 
-<div class="page-header"><h2>User Rating of <a href="{{ url_for('thread', category_slug=comment.thread.category.slug, thread_slug=comment.thread.slug) }}">{{ comment.thread.title }}</a></h2></div>
+<div class="page-header"><h2>User Rating of <a href="{{ url_for('thread', category_slug=comment.thread.category.slug, thread_slug=comment.thread.slug, thread_id=comment.thread.id) }}">{{ comment.thread.title }}</a></h2></div>
 
 <div class="user-review">
 

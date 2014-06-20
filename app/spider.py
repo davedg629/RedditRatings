@@ -266,13 +266,13 @@ class Crawl(Command):
                 )
                 if results_label_pos > 0:
                     results_start_pos = submission.selftext.lower()\
-                        .find('[', results_label_pos)
+                        .find('--', results_label_pos)
                     results_end_pos = submission.selftext.lower()\
-                        .find(']', results_label_pos)
+                        .find('--', results_start_pos)
                     results_string = \
                         submission.selftext[
-                            results_start_pos + 1:results_end_pos
-                        ]
+                            results_start_pos + 2:results_end_pos
+                        ].trim()
                     new_comment_cnt = thread.get_comment_count()
                     if new_comment_cnt == '1':
                         comment_cnt_suffix = 'rating'

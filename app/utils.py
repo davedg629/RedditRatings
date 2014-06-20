@@ -89,7 +89,7 @@ def pretty_date(time=False):
 
 
 # construct reddit post body
-def reddit_body(desc, title, cat_slug, slug):
+def reddit_body(desc, title):
     body = (
         desc +
         '\n\n-'
@@ -118,9 +118,7 @@ def reddit_body(desc, title, cat_slug, slug):
         '\n---'
         '\n-'
         '\n\n**Live results**'
-        '\n\n[?? out of 10, based on 0 ratings]('
-        'http://' + SERVER_NAME +
-        '/' + cat_slug + '/' + slug + ')'
+        '\n\n-- ?? out of 10, based on 0 ratings --'
         '\n\n*^Updates ^every ^10 ^minutes*'
         '\n\n-'
         '\n---'

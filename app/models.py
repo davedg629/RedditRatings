@@ -139,23 +139,7 @@ class Thread(db.Model):
     title = db.Column(db.String, nullable=False)
 
     def get_slug(context):
-        new_slug = make_slug(context.current_parameters['title'])
-        slug_check = None
-        slug_check = db.session.query(Thread)\
-            .filter_by(category_id=context.current_parameters['category_id'])\
-            .filter_by(title=context.current_parameters['title']).first()
-
-        # check if slug already exists for category
-        if slug_check:
-            same_slug_count = db.session\
-                .query(func.count(Thread.id))\
-                .filter_by(
-                    category_id=context.current_parameters['category_id']
-                )\
-                .filter_by(title=context.current_parameters['title'])
-            new_slug = new_slug + '-' + str(same_slug_count[0][0] + 1)
-
-        return new_slug
+        return make_slug(context.current_parameters['title'])
 
     slug = db.Column(
         db.String,
