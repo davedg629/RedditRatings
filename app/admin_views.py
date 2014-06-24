@@ -48,7 +48,6 @@ class ThreadView(AdminModelView):
         'comments',
         'slug',
         'upvotes',
-        'downvotes',
         'last_crawl'
     ]
     list_template = 'admin/thread_list.html'

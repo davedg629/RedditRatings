@@ -325,7 +325,7 @@ def thread(category_slug, thread_slug, thread_id):
                 last_crawl = pretty_date(thread.last_crawl)
                 comments = thread.comments\
                     .order_by(
-                        (Comment.upvotes - Comment.downvotes).desc()
+                        (Comment.upvotes).desc()
                     ).all()
             return render_template(
                 'thread.html',

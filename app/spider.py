@@ -222,8 +222,7 @@ class Crawl(Command):
                                     .utcfromtimestamp(comment.created_utc),
                                     rating=comment_params['rating'],
                                     body=comment_params['comment'],
-                                    upvotes=comment.ups,
-                                    downvotes=comment.downs,
+                                    upvotes=comment.score,
                                     edited_stamp=this_last_edited
                                 )
                                 db.session.add(new_comment)
@@ -253,19 +252,14 @@ class Crawl(Command):
                                     })
                                 db.session.commit()
 
-                        if comment.ups != this_comment.upvotes:
-                            this_comment.upvotes = comment.ups
-                            db.session.commit()
-                        if comment.downs != this_comment.downvotes:
-                            this_comment.downvotes = comment.downs
+                        if comment.score != this_comment.upvotes:
+                            this_comment.upvotes = comment.score
                             db.session.commit()
 
-            # update last_crawl and up/downvotes for thread
+            # update last_crawl and reddit score for thread
             thread.last_crawl = datetime.datetime.now()
-            if thread.upvotes != submission.ups:
-                thread.upvotes = submission.ups
-            if thread.downvotes != submission.downs:
-                thread.downvotes = submission.downs
+            if thread.upvotes != submission.score:
+                thread.upvotes = submission.score
             db.session.commit()
 
             # update results on reddit

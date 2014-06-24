@@ -30,7 +30,7 @@
     <li><span class="detail-label"># of User Ratings:</span> &nbsp; {{ thread.get_comment_count() }}</li>
     {% endif %}
 
-    <li><span class="detail-label">Reddit Votes:</span> &nbsp; {{ thread.upvotes }} up, {{ thread.downvotes}} down</li>
+    <li><span class="detail-label">Reddit Score:</span> &nbsp; {{ thread.upvotes }}</li>
 
     <li><span class="detail-label">Subreddit:</span> &nbsp; <a href="{{ url_for('subreddit', subreddit=thread.subreddit) }}">{{ thread.subreddit }}</a></li>
 

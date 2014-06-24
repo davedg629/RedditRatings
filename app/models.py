@@ -158,7 +158,6 @@ class Thread(db.Model):
     link_url = db.Column(db.String)
     link_text = db.Column(db.String)
     upvotes = db.Column(db.Integer, nullable=False, default=1)
-    downvotes = db.Column(db.Integer, nullable=False, default=0)
     date_posted = db.Column(
         db.DateTime,
         default=datetime.utcnow(),
@@ -220,7 +219,6 @@ class Comment(db.Model):
     rating = db.Column(db.Float, nullable=False)
     body = db.Column(db.Text)
     upvotes = db.Column(db.Integer, nullable=False)
-    downvotes = db.Column(db.Integer, nullable=False)
     edited_stamp = db.Column(db.Integer, nullable=False)
 
     def __unicode__(self):
