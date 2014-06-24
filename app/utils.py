@@ -104,7 +104,7 @@ def reddit_body(desc, title):
         'following format:**'
         '\n\n    5.0'
         '\n\n    Your comment must start with a rating from 0.0 to 10.0.'
-        ' Include an optional comment anywhere after your rating.'
+        '\n    Include an optional comment anywhere after your rating.'
         '\n\n    ---'
         '\n\n    If you want to say something not directly related to your'
         ' rating, put it\n    below a horizontal rule ("---").'
@@ -131,7 +131,7 @@ def reddit_body(desc, title):
         '\n\n-'
         '\n---'
         '\n-'
-        '\n\n [Create your own rating thread](http://'
+        '\n\n [Create a rating thread like this one](http://'
         + SERVER_NAME + '/create-thread)'
     )
     return body

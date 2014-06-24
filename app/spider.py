@@ -25,14 +25,19 @@ def parse_comment(comment_body):
             and (0 <= comment_params['rating'] <= 10):
         if len(split_body) > 1:
             comment = split_body[1]
-            if comment.find('---') > 0:
-                comment = comment[0:comment.find('---')]
-            elif comment.find('___') > 0:
-                comment = comment[0:comment.find('___')]
-            elif comment.find('***') > 0:
-                comment = comment[0:comment.find('***')]
+            if comment.find('---') == 0 or comment.find('___') == 0 \
+                    or comment.find('***') == 0:
+                comment_params['comment'] = ''
+            else:
+                if comment.find('---') > 0:
+                    comment = comment[0:comment.find('---')]
+                elif comment.find('___') > 0:
+                    comment = comment[0:comment.find('___')]
+                elif comment.find('***') > 0:
+                    comment = comment[0:comment.find('***')]
 
-            comment_params['comment'] = comment.replace("\n", "<br />")
+                comment_params['comment'] = \
+                    comment.strip().replace("\n", "<br />")
 
         else:
             comment_params['comment'] = ''
@@ -72,14 +77,18 @@ def update_comment(comment_body):
 
     if len(split_body) > 1:
         comment = split_body[1]
-        if comment.find('---') > 0:
-            comment = comment[0:comment.find('---')]
-        elif comment.find('___') > 0:
-            comment = comment[0:comment.find('___')]
-        elif comment.find('***') > 0:
-            comment = comment[0:comment.find('***')]
+        if comment.find('---') == 0 or comment.find('___') == 0 \
+                or comment.find('***') == 0:
+            comment = ''
+        else:
+            if comment.find('---') > 0:
+                comment = comment[0:comment.find('---')]
+            elif comment.find('___') > 0:
+                comment = comment[0:comment.find('___')]
+            elif comment.find('***') > 0:
+                comment = comment[0:comment.find('***')]
 
-        comment = comment.replace("\n", "<br />")
+            comment = comment.strip().replace("\n", "<br />")
 
     else:
         comment = ''
