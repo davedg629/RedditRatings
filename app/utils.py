@@ -132,6 +132,6 @@ def reddit_body(desc, title):
         '\n---'
         '\n-'
         '\n\n [Create a rating thread like this one](http://'
-        + SERVER_NAME + '/create-thread)'
+        + SERVER_NAME + ')'
     )
     return body
