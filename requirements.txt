@@ -13,13 +13,14 @@ SQLAlchemy==0.9.3
 WTForms==1.0.5
 Werkzeug==0.9.4
 alembic==0.6.3
+certifi==14.05.14
 decorator==3.4.0
 distribute==0.7.3
 gunicorn==18.0
 itsdangerous==0.23
-praw==2.1.17
-requests==2.3.0
-six==1.7.2
+praw==2.1.18
+requests==2.4.0
+six==1.7.3
 update-checker==0.10
 wsgiref==0.1.2
 psycopg2
