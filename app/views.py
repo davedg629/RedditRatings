@@ -383,7 +383,7 @@ def create_thread():
         .order_by(Thread.date_posted.desc()).first()
     if last_thread is not None and last_thread.date_posted > \
             (datetime.utcnow() -
-             timedelta(seconds=604800)) and 'logged_in' not in session:
+             timedelta(seconds=43200)) and 'logged_in' not in session:
         flash('Sorry, you can only create 1 rating per week.')
         return redirect(url_for('dashboard'))
     form = ThreadForm()
