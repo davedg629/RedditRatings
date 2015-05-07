@@ -14,19 +14,6 @@ import praw
 from app.utils import make_slug
 from requests import HTTPError
 
-# redirect to www
-if app.config['ENVIRONMENT'] == 'heroku':
-    from urlparse import urlparse, urlunparse
-
-    @app.before_request
-    def redirect_nonwww():
-        """Redirect non-www requests to www."""
-        urlparts = urlparse(request.url)
-        if urlparts.netloc == app.config['NAKED_SERVER_NAME']:
-            urlparts_list = list(urlparts)
-            urlparts_list[1] = app.config['SERVER_NAME']
-            return redirect(urlunparse(urlparts_list), code=301)
-
 
 @app.before_request
 def before_request():
