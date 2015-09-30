@@ -17,7 +17,7 @@ from requests import HTTPError
 
 @app.before_request
 def before_request():
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         g.user = current_user
     else:
         g.user = None
@@ -105,7 +105,7 @@ def admin_logout():
 # REDDIT LOGIN
 @app.route('/login/')
 def login():
-    if current_user.is_anonymous():
+    if current_user.is_anonymous:
         session['oauth_token'] = generate_token()
         oauth_link = r.get_authorize_url(
             session['oauth_token'],
@@ -127,7 +127,7 @@ def login():
 @app.route('/authorize/')
 def authorize():
     state = request.args.get('state', '')
-    if current_user.is_anonymous() and (state == session['oauth_token']):
+    if current_user.is_anonymous and (state == session['oauth_token']):
         try:
             code = request.args.get('code', '')
             access_info = r.get_access_information(code)
